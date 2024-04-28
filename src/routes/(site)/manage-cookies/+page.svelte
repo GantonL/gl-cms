@@ -24,12 +24,12 @@
 </script>
 
 <h1 class="text-2xl">Manage cookie preferences</h1>
-<article class="prose prose-xl text-primary text-justify">
+<article class="prose prose-xl text-justify text-secondary-foreground">
   When you visit any of our websites, it may store or retrieve information on your browser, mostly in the form of cookies. This information might be about you, your preferences or your device and is mostly used to make the site work as you expect it to. The information does not usually directly identify you, but it can give you a more personalized web experience. Because we respect your right to privacy, you can choose not to allow some types of cookies. Click on the different category headings to find out more and manage your preferences. Please note, blocking some types of cookies may impact your experience of the site and the services we are able to offer.
 </article>
 <div class="flex flex-col items-center gap-6">
   {#each CookieManagerConfiguration['cookies-categories'] as cookieCategory}
-    <section class="border rounded-md p-2 prose prose-xl text-primary text-justify prose-headings:text-primary">
+    <section class="border rounded-md p-2 prose prose-xl text-justify text-secondary-foreground prose-headings:text-secondary-foreground">
       <section class="flex flex-row justify-between items-center">
         <h2 class="text-xl mt-1 capitalize">{cookieCategory["name"]}</h2>
         <div class="flex items-center space-x-2">
