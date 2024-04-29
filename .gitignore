@@ -11,3 +11,4 @@ vite.config.ts.timestamp-*
 .vscode
 .firebase*
 firebase*
+configurations
