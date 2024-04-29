@@ -6,17 +6,8 @@
 	import { User, UserRoundCheck } from "lucide-svelte";
 	import { LoggedInUserMenuConfiguration, LoggedOutUserMenuConfiguration } from "./configurations";
 	import { user } from "$lib/client/stores";
-	import { auth, setAuth } from "$lib/client/auth";
-	import { onMount } from "svelte";
-
-  onMount(() => {
-    const currentUser = auth()?.currentUser;
-    currentUser?.getIdTokenResult(true)?.then((tokenRes) => {
-      setAuth(tokenRes?.token);
-      user.set(currentUser);
-    });
-  });
-  
+	import { auth } from "$lib/client/auth";
+	  
   function onGroupItemClick(item: UserMenuItem) {
     if (item.onClick) {
       item.onClick(auth());
