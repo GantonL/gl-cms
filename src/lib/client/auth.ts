@@ -1,7 +1,8 @@
 import { Cookies } from "$lib/enums/cookies";
 import { getApp, initializeApp } from "firebase/app";
 import { FIREBASE_CONFIG } from "../../configurations/firebase";
-import { getAuth } from "firebase/auth";
+import { browserLocalPersistence, getAuth, onAuthStateChanged, setPersistence, type User } from "firebase/auth";
+import { user } from "./stores";
 
 export const setAuth = (token?: string) => {
   if (!token) { token = '' };
@@ -22,5 +23,16 @@ export const app = () => {
 }
 
 export const auth = () => {
-  return getAuth(app())
+  return getAuth(app());
+}
+
+export const initializeAuthentication = () => {
+  const authentication = auth();
+  setPersistence(authentication, browserLocalPersistence);
+  onAuthStateChanged(authentication, (currentUser: User | null) => {
+    currentUser?.getIdTokenResult(true)?.then((tokenRes) => {
+      setAuth(tokenRes?.token);
+      user.set(currentUser);
+    });
+  });
 }
