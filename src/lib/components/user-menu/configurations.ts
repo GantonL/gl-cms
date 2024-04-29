@@ -1,11 +1,26 @@
+import { setAuth } from "$lib/client/auth";
+import { user } from "$lib/client/stores";
 import type { UserMenuItem } from "$lib/models/menu-item";
-import { LogIn, UserPlus } from "lucide-svelte";
+import { signOut, type Auth } from "firebase/auth";
+import { LogIn, LogOut } from "lucide-svelte";
  
 export const LoggedOutUserMenuConfiguration: UserMenuItem[] = [
   {
     group: [
       { label: 'Login', icon: LogIn, link: '/login' },
-      { label: 'Sign in', icon: UserPlus, link: '/sign-in' },
+    ]
+  }
+];
+
+export const LoggedInUserMenuConfiguration: UserMenuItem[] = [
+  {
+    group: [
+      { label: 'Logout', icon: LogOut, link: '/login',
+       onClick: (auth: Auth) => {
+        setAuth();
+        user.set(undefined);
+        return signOut(auth);
+      } },
     ]
   }
 ];

@@ -3,26 +3,36 @@
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
 	import type { UserMenuItem } from "$lib/models/menu-item";
 	import { Button } from "../ui/button";
-	import { User, UserRoundCheck, UserX } from "lucide-svelte";
-	import { LoggedOutUserMenuConfiguration } from "./configurations";
+	import { User, UserRoundCheck } from "lucide-svelte";
+	import { LoggedInUserMenuConfiguration, LoggedOutUserMenuConfiguration } from "./configurations";
+	import { user } from "$lib/client/stores";
+	import { auth, setAuth } from "$lib/client/auth";
+	import { onMount } from "svelte";
 
-  export let user: any = null; // Replace with your User model
-  let menuItems: UserMenuItem[] = LoggedOutUserMenuConfiguration;
-
+  onMount(() => {
+    const currentUser = auth()?.currentUser;
+    currentUser?.getIdTokenResult(true)?.then((tokenRes) => {
+      setAuth(tokenRes?.token);
+      user.set(currentUser);
+    });
+  });
+  
   function onGroupItemClick(item: UserMenuItem) {
     if (item.onClick) {
-      item.onClick();
+      item.onClick(auth());
     }
   }
+  
+  $: menuItems = !$user ? LoggedOutUserMenuConfiguration : LoggedInUserMenuConfiguration;
 </script>
 
 <DropdownMenu.Root>
   <DropdownMenu.Trigger asChild let:builder>
     <Button name="User Menu" aria-label="User Menu" variant="ghost" builders={[builder]} class="relative aspect-square rounded-full">
       <Avatar.Root>
-        <Avatar.Image src={user?.photoURL} alt={user?.displayName} />
+        <Avatar.Image src={$user?.photoURL} alt={$user?.displayName} />
         <Avatar.Fallback>
-          {#if user}
+          {#if $user}
             <UserRoundCheck />
           {:else}
             <User />
@@ -32,13 +42,13 @@
     </Button>
   </DropdownMenu.Trigger>
   <DropdownMenu.Content class="w-48" align="end">
-    {#if user}
+    {#if $user}
       <div class="bg-secondary/50 text-muted-foreground p-4">
         <DropdownMenu.Label class="font-normal">
           <div class="flex flex-col space-y-1">
-            <p class="text-sm font-bold leading-none">{user.displayName || 'Anonymous'}</p>
-            {#if user?.email}
-              <p class="text-xs leading-none text-muted-foreground">{user.email}</p>
+            <p class="text-sm font-bold leading-none">{$user.displayName || 'Anonymous'}</p>
+            {#if $user?.email}
+              <p class="text-xs leading-none text-muted-foreground">{$user.email}</p>
             {/if}
           </div>
         </DropdownMenu.Label>
