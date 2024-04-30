@@ -3,7 +3,7 @@
 </script>
 <div class="flex items-center justify-center h-80">
   {#if $page?.error}
-      <div class="flex flex-col gap-4 border border-destructive/50 bg-accent/50 text-destructive-foreground rounded-lg p-8">
+      <div class="flex flex-col gap-4 border border-destructive/50 bg-accent/50 rounded-lg p-8">
           <h1 class="text-xl">
             Oh no! 
             {#if $page?.status === 404}
@@ -12,7 +12,7 @@
               Something went wrong.
             {/if} 
           </h1>
-          <section class="text-destructive-foreground/60">
+          <section class="text-muted-foreground">
             {#if $page?.status}
                 <p>Error Code: {$page?.status}</p>
             {/if}

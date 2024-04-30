@@ -2,11 +2,11 @@
 	import { ChevronsLeft, ChevronsRight } from "lucide-svelte";
   import Button from "../ui/button/button.svelte";
   import { Separator } from "../ui/separator";
-  import { MoreNavigationItems } from "./configuration";
+  import { MoreNavigationItems, ItemsConfiguration } from "./configuration";
 	import NavigationItem from "./navigation-item.svelte";
-	import type { NavigationLink } from "$lib/models/navigation-link";
+	import { user } from "$lib/client/stores";
   export let currentPath: string;
-  export let items: NavigationLink[] = [];
+  $: items = ItemsConfiguration['admin'];
   let expanded = true;
 </script>
 <nav class="flex items-start border-r flex-col h-full gap-2 p-2">
