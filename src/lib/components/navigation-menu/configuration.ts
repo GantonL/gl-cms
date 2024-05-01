@@ -1,5 +1,5 @@
 import type { NavigationLink } from "$lib/models/navigation-link";
-import type { UserRole } from "$lib/types/user-role";
+import { UserRole } from "$lib/enums/user-role";
 import { PanelsTopLeft, Settings, Users } from "lucide-svelte";
 
 const AdminItemsConfiguration: NavigationLink[] = [
@@ -11,8 +11,8 @@ const NavigationItemsConfiguration: NavigationLink[] = [
 ];
 
 export const ItemsConfiguration: Record<UserRole, NavigationLink[]> = {
-  admin: AdminItemsConfiguration,
-  user: NavigationItemsConfiguration,
+  [UserRole.Admin]: AdminItemsConfiguration,
+  [UserRole.User]: NavigationItemsConfiguration,
 }
 
 export const MoreNavigationItems: NavigationLink[] = [

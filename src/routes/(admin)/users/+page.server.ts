@@ -1,22 +1,49 @@
 import { getAuthenticatedUser, isAdminUser } from "$lib/server/auth";
-import { error } from "@sveltejs/kit";
+import { error, fail, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
-import { getUsers } from "$lib/server/users.db";
+import { createUser, getUsers } from "$lib/server/users.db";
+import { superValidate } from "sveltekit-superforms";
+import { zod } from "sveltekit-superforms/adapters";
+import { formSchema } from "./schema";
+import type { UserRole } from "$lib/enums/user-role";
 
 export const load: PageServerLoad = async (event) => {
   const autheticatedUser = await getAuthenticatedUser(event);
   if (!autheticatedUser) {
     error(401, 'Unauthorized');
   }
-  // const isAdmin = await isAdminUser(autheticatedUser.uid);
-  // if (!isAdmin) {
-  //   error(403, 'Forbidden');
-  // }
+  const isAdmin = await isAdminUser(autheticatedUser.uid);
+  if (!isAdmin) {
+    error(403, 'Forbidden');
+  }
   const users = await getUsers();
   return {
+    form: await superValidate(zod(formSchema)),
     users: users ?? [],
     seo: {
       title: 'Admin - Users',
     }
   }
 }
+
+export const actions: Actions = {
+  default: async (event) => {
+    const form = await superValidate(event, zod(formSchema));
+    if (!form.valid) {
+      return fail(400, {
+        form,
+      });
+    }
+    const userCreated = await createUser({
+      name: form.data.name,
+      email: form.data.email,
+      role: form.data.role as UserRole,
+    });
+    if (!userCreated) {
+      return fail(400, {form});
+    }
+    return {
+      form,
+    };
+  },
+};

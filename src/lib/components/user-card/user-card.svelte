@@ -7,13 +7,13 @@
 	import * as Tooltip from "../ui/tooltip"; 
   import { createEventDispatcher } from 'svelte'
 	import * as Dialog from "../ui/dialog";
-	import { Label } from "../ui/label";
-	import { Input } from "../ui/input";
+	import CreateUserForm from "../../../routes/(admin)/users/create-user-form.svelte";
 
   export let user: User | null;
+  export let form = undefined;
   const dispatch = createEventDispatcher();
 </script>
-<Card.Root class="w-60 aspect-video">
+<Card.Root class="w-60">
   {#if user === null}
     <div class="flex items-center justify-center w-full h-full">
       <Dialog.Root>
@@ -25,49 +25,42 @@
           <Dialog.Header>
             <Dialog.Title>Create user</Dialog.Title>
           </Dialog.Header>
-          <div class="grid gap-4 py-4">
-            <div class="grid grid-cols-4 items-center gap-4">
-              <Label for="name" class="text-right">Name</Label>
-              <Input id="name" class="col-span-3" />
-            </div>
-            <div class="grid grid-cols-4 items-center gap-4">
-              <Label for="email" class="text-right">Email</Label>
-              <Input id="email" type="email" class="col-span-3" />
-            </div>
-            <div class="grid grid-cols-4 items-center gap-4">
-              <Label for="role" class="text-right">Role</Label>
-              <Input id="role" type="text" class="col-span-3" />
-            </div>
-          </div>
-          <Dialog.Footer>
-            <Button type="submit">Create</Button>
-          </Dialog.Footer>
+          {#if form}
+            <CreateUserForm data={form}/>
+          {/if}
         </Dialog.Content>
       </Dialog.Root>
     </div>
+
   {:else}
     <Card.Header>
       <Card.Title>
-        <Avatar.Root>
-          <Avatar.Image src={user.image} alt="User Avatar" />
-          <Avatar.Fallback>{user.name.split(' ')[0].charAt(0).toUpperCase()}</Avatar.Fallback>
-        </Avatar.Root>
-        {user.name}
+        <div class="flex flex-row items-center gap-2">
+          <Avatar.Root>
+            <Avatar.Image src={user.image} alt="User Avatar" />
+            <Avatar.Fallback>{user.name.split(' ')[0].charAt(0).toUpperCase()}</Avatar.Fallback>
+          </Avatar.Root>
+          <div class="flex flex-col gap-1">
+            <span>{user.name}</span>
+            <span class="text-sm text-muted-foreground font-italic">{user.email}</span>
+          </div>
+        </div>
       </Card.Title>
-      <Card.Description>{user.email}</Card.Description>
+      <Card.Description></Card.Description>
     </Card.Header>
     <Card.Content>
-      <p>Role: <span class="text-primary/20 flex flex-row gap-2">
-        {#if user.role == "admin"}
-          <ShieldCheck size=16/>
-        {/if}  
-        {user.role}
+      <p class="flex flex-row gap-2 text-sm text-muted-foreground font-italic">
+        Role: <span class="text-primary/50 flex flex-row gap-2">
+          {#if user.role == "admin"}
+            <ShieldCheck size=16/>
+          {/if}  
+          <span>{user.role}</span>
         </span>
       </p>
+      <p class="text-sm text-muted-foreground font-italic">Created at: {new Intl.DateTimeFormat('en-US').format(user.created_at)}</p>
     </Card.Content>
     <Card.Footer>
-      <section class="w-full flex fex-row justify-between">
-        <p class="text-sm text-muted-foreground font-italic">Created at: {user.created_at}</p>
+      <section class="w-full flex fex-row flex-row-reverse">
         <section class="flex flex-row gap-2">
           <Tooltip.Root>
             <Tooltip.Trigger>

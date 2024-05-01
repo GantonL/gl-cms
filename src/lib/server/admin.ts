@@ -29,9 +29,9 @@ export const setCustomClaims = async (uid: string, claims: object) => {
   return auth.setCustomUserClaims(uid, claims);
 }
 
-export const isAdmin = async (uid: string) => {
+export const getCustomClaims = async (uid: string) => {
   const application = app();
   const auth = getAuth(application);
   const user = await auth.getUser(uid);
-  return !!user?.customClaims?.admin;
+  return user?.customClaims;
 }

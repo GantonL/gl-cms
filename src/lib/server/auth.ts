@@ -1,6 +1,7 @@
 import { Cookies } from "$lib/enums/cookies";
 import type { RequestEvent } from "@sveltejs/kit";
-import { isAdmin, setCustomClaims, verifyToken } from "./admin";
+import { setCustomClaims, verifyToken, getCustomClaims } from "./admin";
+import { UserRole } from "$lib/enums/user-role";
 
 export const getAuthenticatedUser = async (event: RequestEvent) => {
   const token = event.cookies.get(Cookies.Session);
@@ -21,5 +22,9 @@ export const setAdminUser = async (id: string) => {
 }
 
 export const isAdminUser = async (id: string) => {
-  return isAdmin(id);
+  return (await getCustomClaims(id))?.role === UserRole.Admin;
+}
+
+export const getUserCustomClaims = async (uid: string) => {
+  return getCustomClaims(uid);
 }
