@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from "$app/stores";
 	import UserCard from "$lib/components/user-card/user-card.svelte";
-	import type { User } from "$lib/types/user";
+	import type { User } from "$lib/models/user";
 	import { toast } from "svelte-sonner";
 
   let deleting: Record<string, boolean> = {};

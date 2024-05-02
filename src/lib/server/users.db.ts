@@ -1,7 +1,7 @@
 import { getFirestore } from "firebase-admin/firestore";
 import { uuidv4 } from '@firebase/util';
 import { Collections } from "$lib/enums/collections";
-import type { User } from "$lib/types/user";
+import type { User } from "$lib/models/user";
 import { app } from "./admin";
 
 export const createUser = async (user: Pick<User, 'email' | 'name' | 'role'>): Promise<User | undefined> => {

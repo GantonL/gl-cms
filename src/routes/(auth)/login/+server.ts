@@ -2,7 +2,7 @@ import { Cookies } from "$lib/enums/cookies";
 import { getCustomClaims, setCustomClaims } from "$lib/server/admin";
 import { getAuthenticatedUser } from "$lib/server/auth";
 import { getUser, updateUser } from "$lib/server/users.db";
-import type { User } from "$lib/types/user";
+import type { User } from "$lib/models/user";
 import { json, type RequestEvent } from "@sveltejs/kit"
 
 export async function POST(event: RequestEvent) {

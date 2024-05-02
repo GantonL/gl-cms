@@ -1,7 +1,7 @@
 <script lang="ts">
   import * as Card from "$lib/components/ui/card";
   import * as Avatar from "$lib/components/ui/avatar";
-	import type { User } from "$lib/types/user";
+	import type { User } from "$lib/models/user";
 	import { Button } from "../ui/button";
 	import { ShieldCheck, Trash, UserCog, UserPlus } from "lucide-svelte";
 	import * as Tooltip from "../ui/tooltip"; 
