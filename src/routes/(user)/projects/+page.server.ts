@@ -1,10 +1,11 @@
 import { getAuthenticatedUser, isAdminUser } from "$lib/server/auth";
 import { error, fail, type Actions } from "@sveltejs/kit";
-import type { PageServerLoad } from "./$types";
 import { superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
 import { formSchema } from "./schema";
 import { createProject, getProjects } from "$lib/server/projects.db";
+import type { PageServerLoad } from "./$types";
+import { getUser } from "$lib/server/users.db";
 
 export const load: PageServerLoad = async (event) => {
   const autheticatedUser = await getAuthenticatedUser(event);
@@ -12,15 +13,16 @@ export const load: PageServerLoad = async (event) => {
     error(401, 'Unauthorized');
   }
   const isAdmin = await isAdminUser(autheticatedUser.uid);
+  let names: string[] | undefined;
   if (!isAdmin) {
-    error(403, 'Forbidden');
+    names = (await getUser(autheticatedUser.email!))?.projects;
   }
-  const projects = await getProjects();
+  const projects = await getProjects(names);
   return {
     form: await superValidate(zod(formSchema)),
-    projects: projects ?? [],
+    projects,
     seo: {
-      title: 'Admin - Projects',
+      title: 'Projects',
     }
   }
 }

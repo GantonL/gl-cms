@@ -20,12 +20,17 @@ export const createProject = async (user: Pick<Project, 'name'>): Promise<Projec
   }
 }
 
-export const getProjects = async (): Promise<Project[] | null> => {
+export const getProjects = async (names?: string[]): Promise<Project[] | null> => {
   try {
     const db = getFirestore(app());
     const projectsRef = db.collection(Collections.Projects);
-    const projects = (await projectsRef.get()).docs.map(doc => doc.data() as Project);
-    return projects;
+    let projects;
+    if (names) {
+      projects = await projectsRef.where('name', 'in', names).get();
+    } else {
+      projects = await projectsRef.get();
+    }
+    return projects?.docs?.map(doc => doc.data() as Project) || null;
   } catch {
     return null;
   }

@@ -6,7 +6,7 @@
   import { createEventDispatcher } from 'svelte'
 	import * as Dialog from "../ui/dialog";
 	import type { Project } from "$lib/models/project";
-	import CreateProjectForm from "../../../routes/(admin)/projects/create-project-form.svelte";
+	import CreateProjectForm from "../../../routes/(user)/projects/create-project-form.svelte";
 
   export let project: Project | null;
   export let form = undefined;
