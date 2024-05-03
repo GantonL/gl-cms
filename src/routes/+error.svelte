@@ -1,5 +1,13 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
   import { page } from '$app/stores';
+	import { onMount } from 'svelte';
+
+  onMount(() => {
+    if ($page.status === 401) {
+      goto('/login')
+    }
+  })
 </script>
 <div class="flex items-center justify-center h-80">
   {#if $page?.error}

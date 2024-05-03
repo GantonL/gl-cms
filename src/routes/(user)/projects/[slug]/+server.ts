@@ -1,7 +1,7 @@
 import { getAuthenticatedUser, isAdminUser } from "$lib/server/auth";
 import { error, json } from "@sveltejs/kit";
-import type { RequestEvent } from "./$types";
 import { deleteProject } from "$lib/server/projects.db";
+import type { RequestEvent } from "./$types";
 
 export async function DELETE(event: RequestEvent) {
   const autheticatedUser = await getAuthenticatedUser(event);

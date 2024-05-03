@@ -28,6 +28,15 @@
         <Form.FieldErrors />
       </Form.Field>
     </div>
+    <div class="grid items-center gap-4">
+      <Form.Field {form} name="url">
+        <Form.Control let:attrs>
+          <Form.Label>URL</Form.Label>
+          <Input {...attrs} bind:value={$formData.url} />
+        </Form.Control>
+        <Form.FieldErrors />
+      </Form.Field>
+    </div>
   </div>
   <Form.Button>Submit</Form.Button>
 </form>

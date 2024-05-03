@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
 	import ProjectCard from "$lib/components/project-card/project-card.svelte";
 	import type { User } from "$lib/models/user";
@@ -24,13 +25,24 @@
       })
     }
   }
-  $: projects = $page.data.projects; 
+
+  function selectProject(event: CustomEvent) {
+    goto(`/projects/${event.detail}`);
+  }
+  $: projects = $page.data.projects;
+  $: permissions = $page.data.permissions;
 </script>
  
 <h1 class="text-xl">Projects</h1>
 <div class="grid grid-cols-3 gap-4">
-  <ProjectCard project={null} form={$page.data.form} />
+  <ProjectCard project={null} form={$page.data.form} {permissions}/>
   {#each projects as project}
-    <ProjectCard project={project} inProcess={deleting[project.id]} on:delete={(event) => deleteProject(event)}/>
+    <ProjectCard 
+      project={project} 
+      inProcess={deleting[project.id]}
+      {permissions}
+      on:delete={(event) => deleteProject(event)}
+      on:select={(event) => selectProject(event)}
+      on:navigate={(event) => window.open(event.detail, '_blank')}/>
   {/each}
 </div>

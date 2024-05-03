@@ -6,6 +6,7 @@ import { formSchema } from "./schema";
 import { createProject, getProjects } from "$lib/server/projects.db";
 import type { PageServerLoad } from "./$types";
 import { getUser } from "$lib/server/users.db";
+import { UserPermissions } from "$lib/enums/permission";
 
 export const load: PageServerLoad = async (event) => {
   const autheticatedUser = await getAuthenticatedUser(event);
@@ -14,13 +15,18 @@ export const load: PageServerLoad = async (event) => {
   }
   const isAdmin = await isAdminUser(autheticatedUser.uid);
   let names: string[] | undefined;
+  const permissions: UserPermissions[] = [];
   if (!isAdmin) {
     names = (await getUser(autheticatedUser.email!))?.projects;
+  } else {
+    permissions.push(UserPermissions.CreateProject);
+    permissions.push(UserPermissions.DeleteProject);
   }
   const projects = await getProjects(names);
   return {
     form: await superValidate(zod(formSchema)),
     projects,
+    permissions,
     seo: {
       title: 'Projects',
     }
@@ -37,6 +43,7 @@ export const actions: Actions = {
     }
     const userCreated = await createProject({
       name: form.data.name,
+      url: form.data.url,
     });
     if (!userCreated) {
       return fail(400, {form});
