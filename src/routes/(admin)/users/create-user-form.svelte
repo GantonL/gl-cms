@@ -8,10 +8,14 @@
     superForm,
   } from "sveltekit-superforms";
   import { zodClient } from "sveltekit-superforms/adapters";
+  import * as Select from "$lib/components/ui/select";
+
+  export let data: {
+    form: SuperValidated<Infer<FormSchema>>
+    projects: string[],    
+  };
  
-  export let data: SuperValidated<Infer<FormSchema>>;
- 
-  const form = superForm(data, {
+  const form = superForm(data.form, {
     validators: zodClient(formSchema),
   });
  
@@ -42,6 +46,27 @@
         <Form.Control let:attrs>
           <Form.Label>Role</Form.Label>
           <Input {...attrs} bind:value={$formData.role} />
+        </Form.Control>
+        <Form.FieldErrors />
+      </Form.Field>
+    </div>
+    <div class="grid items-center gap-4">
+      <Form.Field {form} name="projects">
+        <Form.Control let:attrs>
+          <Form.Label>Project</Form.Label>
+          <Select.Root
+            onSelectedChange={(v) => v && ($formData.projects = [v.value])}
+          >
+            <Select.Trigger {...attrs}>
+              <Select.Value placeholder="Select a project to assign" />
+            </Select.Trigger>
+            <Select.Content>
+              {#each data.projects as project}
+                <Select.Item value={project} label={project} />                
+              {/each}
+            </Select.Content>
+          </Select.Root>
+          <input hidden bind:value={$formData.projects} name={attrs.name} />
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>

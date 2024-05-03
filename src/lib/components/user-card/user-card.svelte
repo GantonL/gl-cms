@@ -3,7 +3,7 @@
   import * as Avatar from "$lib/components/ui/avatar";
 	import type { User } from "$lib/models/user";
 	import { Button } from "../ui/button";
-	import { ShieldCheck, Trash, UserCog, UserPlus } from "lucide-svelte";
+	import { ShieldCheck, Trash, UserPlus } from "lucide-svelte";
 	import * as Tooltip from "../ui/tooltip"; 
   import { createEventDispatcher } from 'svelte'
 	import * as Dialog from "../ui/dialog";
@@ -12,6 +12,7 @@
   export let user: User | null;
   export let form = undefined;
   export let inProcess = false;
+  export let projects: string[] = [];
   const dispatch = createEventDispatcher();
 </script>
 <div class:blur-sm={inProcess}>
@@ -28,7 +29,7 @@
               <Dialog.Title>Create user</Dialog.Title>
             </Dialog.Header>
             {#if form}
-              <CreateUserForm data={form}/>
+              <CreateUserForm data={{form, projects}}/>
             {/if}
           </Dialog.Content>
         </Dialog.Root>
@@ -69,12 +70,6 @@
                 <Button variant="destructive" size="icon" class="border border-destructive" on:click={() => dispatch('delete', user.id)}><Trash size=16/></Button>
               </Tooltip.Trigger>
               <Tooltip.Content>Delete</Tooltip.Content>
-            </Tooltip.Root>
-            <Tooltip.Root>
-              <Tooltip.Trigger>
-                <Button variant="outline" size="icon" on:click={() => dispatch('setRole', user.id)}><UserCog size=16 /></Button>
-              </Tooltip.Trigger>
-              <Tooltip.Content>Set role</Tooltip.Content>
             </Tooltip.Root>
           </section>
         </section>

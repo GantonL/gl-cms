@@ -24,16 +24,14 @@
       })
     }
   }
-  function setRole(event: CustomEvent) {
-
-  }
-  $: users = $page.data.users; 
+  $: users = $page.data.users;
+  $: projects = $page.data.projects;
 </script>
  
 <h1 class="text-xl">Users</h1>
 <div class="grid grid-cols-3 gap-4">
-  <UserCard user={null} form={$page.data.form} />
+  <UserCard user={null} form={$page.data.form} {projects}/>
   {#each users as user}
-    <UserCard user={user} inProcess={deleting[user.id]} on:delete={(event) => deleteUser(event)} on:setRole={(event) => setRole(event)}/>
+    <UserCard user={user} inProcess={deleting[user.id]} on:delete={(event) => deleteUser(event)}/>
   {/each}
 </div>

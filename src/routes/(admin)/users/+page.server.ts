@@ -6,6 +6,7 @@ import { superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
 import { formSchema } from "./schema";
 import type { UserRole } from "$lib/enums/user-role";
+import { getProjects } from "$lib/server/projects.db";
 
 export const load: PageServerLoad = async (event) => {
   const autheticatedUser = await getAuthenticatedUser(event);
@@ -17,9 +18,11 @@ export const load: PageServerLoad = async (event) => {
     error(403, 'Forbidden');
   }
   const users = await getUsers();
+  const projects = await getProjects();
   return {
     form: await superValidate(zod(formSchema)),
     users: users ?? [],
+    projects: projects?.map(p=>p.name) ?? [],
     seo: {
       title: 'Admin - Users',
     }
@@ -38,6 +41,7 @@ export const actions: Actions = {
       name: form.data.name,
       email: form.data.email,
       role: form.data.role as UserRole,
+      projects: form.data.projects,
     });
     if (!userCreated) {
       return fail(400, {form});
