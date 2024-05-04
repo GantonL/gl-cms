@@ -32,7 +32,7 @@ export const load: PageServerLoad = async (event) => {
   return {
     project,
     permissions,
-    credentialsForm: await superValidate(zod(credentialsFormSchema)),
+    credentialsForm: await superValidate(project.credentails, zod(credentialsFormSchema)),
     seo: {
       title: project?.name || 'Unknown project',
     }
