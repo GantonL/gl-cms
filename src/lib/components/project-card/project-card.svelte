@@ -78,7 +78,7 @@
             {/if}
             <Tooltip.Root>
               <Tooltip.Trigger>
-                <Button variant="outline" size="icon" on:click={() => project && dispatch('select', project.name)}><Edit2 size=16/></Button>
+                <Button variant="outline" size="icon" on:click={() => project && dispatch('select', project.id)}><Edit2 size=16/></Button>
               </Tooltip.Trigger>
               <Tooltip.Content>Edit</Tooltip.Content>
             </Tooltip.Root>

@@ -3,4 +3,5 @@ export interface Project {
   name: string;
   created_at: number;
   url?: string;
+  credentails?: Record<string, string>
 }

@@ -40,7 +40,7 @@ export const getProjects = async (names?: string[]): Promise<Project[] | null> =
 export const getProject = async (id: Project['id']): Promise<Project | null> => {
   try {
     const db = getFirestore(app());
-    const query = await db.collection(Collections.Projects).where('email', '==', id).get();
+    const query = await db.collection(Collections.Projects).where('id', '==', id).get();
     if (query.empty) {
       return null;
     }
@@ -60,6 +60,21 @@ export const deleteProject = async (id: Project['id']): Promise<boolean> => {
     }
     const deleteRes = await query?.docs[0]?.ref?.delete();
     return !!deleteRes;
+  } catch {
+    return false;
+  }
+}
+
+
+export const updateProject = async (id: Project['id'], data: Partial<Pick<Project, 'credentails'>>): Promise<boolean> => {
+  try {
+    const db = getFirestore(app());
+    const query = await db.collection(Collections.Projects).where('id', '==', id).get();
+    if (query.empty) {
+      return false;
+    }
+    const setRes = await query.docs[0].ref.set(data, { merge: true });
+    return !!setRes;
   } catch {
     return false;
   }
