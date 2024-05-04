@@ -4,20 +4,20 @@ import { Collections } from "$lib/enums/collections";
 import type { User } from "$lib/models/user";
 import { app } from "./admin";
 
-export const createUser = async (user: Pick<User, 'email' | 'name' | 'role' | 'projects'>): Promise<User | undefined> => {
+export const createUser = async (user: Pick<User, 'email' | 'name' | 'role' | 'projects'>, path?: string): Promise<User | undefined> => {
   try {
     const db = getFirestore(app());
     const usersRef = db.collection(Collections.Users);
     const newUser: User = {
-      id: uuidv4(),
+      id: path ?? uuidv4(),
       name: user.name,
       email: user.email,
       role: user.role,
       projects: user.projects,
       created_at: new Date().getTime(),
     }
-    const res = await usersRef.add(newUser);
-    return res?.id ? newUser : undefined;
+    const res = await usersRef.doc(newUser.id).set(newUser);
+    return res ? newUser : undefined;
   } catch {
     return;
   }
