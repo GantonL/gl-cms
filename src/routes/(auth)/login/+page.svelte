@@ -10,8 +10,14 @@
     const provider = new GoogleAuthProvider();
     const signInWithPopupRes = await signInWithPopup(auth, provider).catch((_error) => setAuth());
     const tokenRes = await signInWithPopupRes?.user?.getIdTokenResult();
-    setAuth(tokenRes?.token);
-    user.set(signInWithPopupRes?.user);
+    setAuth(tokenRes?.token)
+      .then((authRes) => {
+        authRes.json().then((res) => {
+          if (res?.success) {
+            user.set(res.user);
+          }
+        })
+      });
     goto('/');
   }
   

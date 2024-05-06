@@ -9,7 +9,7 @@ export const setAuth = (token?: string) => {
   if (!token) { token = '' };
   const body = new FormData();
   body.set(Cookies.Session, token);
-  fetch('/login', {
+  return fetch('/login', {
     method: 'POST',
     body,
   });
@@ -43,8 +43,14 @@ export const initializeAuthentication = () => {
   setPersistence(authentication, browserLocalPersistence);
   onAuthStateChanged(authentication, (currentUser: User | null) => {
     currentUser?.getIdTokenResult(true)?.then((tokenRes) => {
-      setAuth(tokenRes?.token);
-      user.set(currentUser);
+      setAuth(tokenRes?.token)
+        .then((authRes) => {
+          authRes.json().then((res) => {
+            if (res?.success) {
+              user.set(res.user);
+            }
+          })
+        });
     });
   });
 }

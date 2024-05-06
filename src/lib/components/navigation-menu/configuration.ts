@@ -1,6 +1,6 @@
 import type { NavigationLink } from "$lib/models/navigation-link";
 import { UserRole } from "$lib/enums/user-role";
-import { FilePen, HandMetal, Images, PanelsTopLeft, Settings, Users } from "lucide-svelte";
+import { FilePen, HandMetal, Images, Settings, Users } from "lucide-svelte";
 
 const sharedItemsConfiguration: NavigationLink[] = [
   { label: 'Projects', icon: HandMetal, link: '/projects' }, 
@@ -12,7 +12,6 @@ const AdminItemsConfiguration: NavigationLink[] = [
 ];
 
 const NavigationItemsConfiguration: NavigationLink[] = [
-  { label: 'Overview', icon: PanelsTopLeft, link: '/' },
   { label: 'Content', icon: FilePen, link: '/content' },
   { label: 'Images', icon: Images, link: '/images' },
   ...sharedItemsConfiguration,

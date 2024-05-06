@@ -8,11 +8,12 @@ import { json, type RequestEvent } from "@sveltejs/kit"
 export async function POST(event: RequestEvent) {
   const body = await event.request.formData();
   const authToken = body.get(Cookies.Session)?.toString();
+  let user: User | null = null;
   if (authToken) {
     event.cookies.set(Cookies.Session, authToken, { path: '/' });
     const authenticatedUser = await getAuthenticatedUser(event);
     if (authenticatedUser?.email) {
-      const user = await getUser(authenticatedUser.email);
+      user = await getUser(authenticatedUser.email);
       if (!user) {
         return json({ success: false, error: {code: 403, message: 'Invalid user'} });
       }
@@ -30,7 +31,13 @@ export async function POST(event: RequestEvent) {
       }
       if (!user?.image && authenticatedUser.picture) {
         updateUserObject.image = authenticatedUser.picture;  
-        await updateUser(user.id, updateUserObject);
+        const userUpdated = await updateUser(user.id, updateUserObject);
+        if (userUpdated) {
+          user = {
+            ...user,
+            ...updateUserObject,
+          };
+        }
       }
       const customClaims = await getCustomClaims(authenticatedUser.uid);
       if (customClaims?.role !== user?.role) {
@@ -40,5 +47,5 @@ export async function POST(event: RequestEvent) {
   } else {
     event.cookies.delete(Cookies.Session, {path: '/'});
   }
-  return json({ success: true });
+  return json({ success: true, user });
 }

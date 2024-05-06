@@ -21,7 +21,7 @@
   <DropdownMenu.Trigger asChild let:builder>
     <Button name="User Menu" aria-label="User Menu" variant="ghost" builders={[builder]} class="relative aspect-square rounded-full">
       <Avatar.Root>
-        <Avatar.Image src={$user?.photoURL} alt={$user?.displayName} />
+        <Avatar.Image src={$user?.image} alt={$user?.name} />
         <Avatar.Fallback>
           {#if $user}
             <UserRoundCheck />
@@ -37,7 +37,7 @@
       <div class="bg-secondary/50 text-muted-foreground p-4">
         <DropdownMenu.Label class="font-normal">
           <div class="flex flex-col space-y-1">
-            <p class="text-sm font-bold leading-none">{$user.displayName || 'Anonymous'}</p>
+            <p class="text-sm font-bold leading-none">{$user.name || 'Anonymous'}</p>
             {#if $user?.email}
               <p class="text-xs leading-none text-muted-foreground">{$user.email}</p>
             {/if}
