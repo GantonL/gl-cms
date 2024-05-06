@@ -1,7 +1,7 @@
 <script lang="ts">
   import * as Card from "$lib/components/ui/card";
 	import { Button } from "../ui/button";
-	import { Edit2, ExternalLink, Plus, Trash } from "lucide-svelte";
+	import { ExternalLink, Plus, Trash, Edit2 } from "lucide-svelte";
 	import * as Tooltip from "../ui/tooltip"; 
   import { createEventDispatcher } from 'svelte'
 	import * as Dialog from "../ui/dialog";

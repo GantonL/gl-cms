@@ -29,6 +29,7 @@
   function selectProject(event: CustomEvent) {
     goto(`/projects/${event.detail}`);
   }
+
   $: projects = $page.data.projects;
   $: permissions = $page.data.permissions;
 </script>

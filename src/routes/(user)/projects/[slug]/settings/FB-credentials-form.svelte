@@ -1,6 +1,7 @@
 <script lang="ts">
   import * as Form from "$lib/components/ui/form";
   import { Input } from "$lib/components/ui/input";
+	import { UserPermissions } from "$lib/enums/permission";
   import { credentialsFormSchema, type CredentialsFormSchema } from "./schema";
   import {
     type SuperValidated,
@@ -10,12 +11,14 @@
   import { zodClient } from "sveltekit-superforms/adapters";
  
   export let data: SuperValidated<Infer<CredentialsFormSchema>>;
- 
+  export let permissions: UserPermissions;
+
   const form = superForm(data, {
     validators: zodClient(credentialsFormSchema),
   });
  
   const { form: formData, enhance } = form;
+  $: disabled = !permissions.includes(UserPermissions.EditDBCredentials)
 </script>
 <form method="POST" action="?/fb_credentials" use:enhance>
   <div class="grid gap-4 py-4">
@@ -24,12 +27,12 @@
         <Form.Field {form} name={key}>
           <Form.Control let:attrs>
             <Form.Label>{key}</Form.Label>
-            <Input {...attrs} bind:value={$formData[key]} />
+            <Input {...attrs} bind:value={$formData[key]} {disabled}/>
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>
       </div>
     {/each}
   </div>
-  <Form.Button>SAVE CHANGES</Form.Button>
+  <Form.Button {disabled}>SAVE CHANGES</Form.Button>
 </form>

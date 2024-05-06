@@ -3,6 +3,7 @@ import { getApp, initializeApp } from "firebase/app";
 import { FIREBASE_CONFIG } from "../../configurations/firebase";
 import { browserLocalPersistence, getAuth, onAuthStateChanged, setPersistence, type User } from "firebase/auth";
 import { user } from "./stores";
+import type { Project } from "$lib/models/project";
 
 export const setAuth = (token?: string) => {
   if (!token) { token = '' };
@@ -19,6 +20,17 @@ export const app = () => {
     return getApp();
   } catch {
     return initializeApp(FIREBASE_CONFIG);
+  }
+}
+
+export const getSecondaryApp = (project: Project) => {
+  try {
+    return getApp(project.name);
+  } catch {
+    if (project.credentails) {
+      return initializeApp(project.credentails, project.name);
+    }
+    return;
   }
 }
 
