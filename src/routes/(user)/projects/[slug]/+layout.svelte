@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { page } from "$app/stores";
+  import { page } from "$app/stores";
 	import { onDestroy, onMount } from "svelte";
 	import { currentProject } from "$lib/client/stores";
+  import * as ToggleGroup from "$lib/components/ui/toggle-group";
 
   onMount(() => {
     currentProject.set(project.name);
@@ -12,9 +13,20 @@
   $: project = $page.data.project;
 </script>
 
-<a href={`/projects/${project.id}/content`}>Content</a>
-<a href={`/projects/${project.id}/images`}>Images</a>
-<a href={`/projects/${project.id}/settings`}>Settings</a>
+<ToggleGroup.Root type="single" class="border rounded-md">
+  <ToggleGroup.Item value="management">
+    <a href={`/projects/${project.id}/management`}>Management</a>
+  </ToggleGroup.Item>
+  <ToggleGroup.Item value="content">
+    <a href={`/projects/${project.id}/content`}>Content</a>
+  </ToggleGroup.Item>
+  <ToggleGroup.Item value="images">
+    <a href={`/projects/${project.id}/images`}>Images</a>
+  </ToggleGroup.Item>
+  <ToggleGroup.Item value="settings">
+    <a href={`/projects/${project.id}/settings`}>Settings</a>
+  </ToggleGroup.Item>
+</ToggleGroup.Root>
 <div class="w-full">
   <slot />
 </div>

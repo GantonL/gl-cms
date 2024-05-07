@@ -8,11 +8,11 @@
 	import { Toaster } from "$lib/components/ui/sonner";
 	import { initializeAuthentication } from '$lib/client/auth';
 	
-	initializeAuthentication();
+	$: path = $page.url.pathname;
+	initializeAuthentication(path);
 	
 	$: pageTitle = $page?.data?.seo?.title;
   $: pageDescription = $page?.data?.seo?.description;
-	$: path = $page.url.pathname;
 	$: cookieBannerOpen = $page?.data?.cookieBannerOpen;
 	$: preferences = $page?.data?.cookiePreferences;
 </script>

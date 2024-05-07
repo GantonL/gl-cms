@@ -3,7 +3,7 @@
   import * as Avatar from "$lib/components/ui/avatar";
 	import type { User } from "$lib/models/user";
 	import { Button } from "../ui/button";
-	import { ShieldCheck, Trash, UserPlus } from "lucide-svelte";
+	import { Edit2, ShieldCheck, Trash, UserPlus } from "lucide-svelte";
 	import * as Tooltip from "../ui/tooltip"; 
   import { createEventDispatcher } from 'svelte'
 	import * as Dialog from "../ui/dialog";
@@ -70,6 +70,12 @@
                 <Button variant="destructive" size="icon" class="border border-destructive" on:click={() => dispatch('delete', user.id)}><Trash size=16/></Button>
               </Tooltip.Trigger>
               <Tooltip.Content>Delete</Tooltip.Content>
+            </Tooltip.Root>
+            <Tooltip.Root>
+              <Tooltip.Trigger>
+                <Button variant="outline" size="icon" on:click={() => dispatch('edit', user.id)}><Edit2 size=16/></Button>
+              </Tooltip.Trigger>
+              <Tooltip.Content>Edit</Tooltip.Content>
             </Tooltip.Root>
           </section>
         </section>

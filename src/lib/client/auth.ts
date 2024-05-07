@@ -4,6 +4,7 @@ import { FIREBASE_CONFIG } from "../../configurations/firebase";
 import { browserLocalPersistence, getAuth, onAuthStateChanged, setPersistence, type User } from "firebase/auth";
 import { user } from "./stores";
 import type { Project } from "$lib/models/project";
+import { goto } from "$app/navigation";
 
 export const setAuth = (token?: string) => {
   if (!token) { token = '' };
@@ -38,7 +39,7 @@ export const auth = () => {
   return getAuth(app());
 }
 
-export const initializeAuthentication = () => {
+export const initializeAuthentication = (currentNavigationPath?: string) => {
   const authentication = auth();
   setPersistence(authentication, browserLocalPersistence);
   onAuthStateChanged(authentication, (currentUser: User | null) => {
@@ -48,6 +49,9 @@ export const initializeAuthentication = () => {
           authRes.json().then((res) => {
             if (res?.success) {
               user.set(res.user);
+              if (currentNavigationPath) {
+                goto(currentNavigationPath);
+              }
             }
           })
         });
