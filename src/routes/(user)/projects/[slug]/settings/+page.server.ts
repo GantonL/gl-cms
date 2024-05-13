@@ -10,6 +10,7 @@ let projectId: string;
 
 export const load: PageServerLoad = async ({parent}) => {
   const parentData = await parent();
+  projectId = parentData.project.id;
   return {
     credentialsForm: await superValidate(parentData.project.credentails, zod(credentialsFormSchema)),
   }

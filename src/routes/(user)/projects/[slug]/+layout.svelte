@@ -14,8 +14,8 @@
 </script>
 
 <ToggleGroup.Root type="single" class="border rounded-md">
-  <ToggleGroup.Item value="management">
-    <a href={`/projects/${project.id}/management`}>Management</a>
+  <ToggleGroup.Item value="dashboard">
+    <a href={`/projects/${project.id}/dashboard`}>Dashboard</a>
   </ToggleGroup.Item>
   <ToggleGroup.Item value="content">
     <a href={`/projects/${project.id}/content`}>Content</a>

@@ -2,6 +2,7 @@
   import * as Form from "$lib/components/ui/form";
   import { Input } from "$lib/components/ui/input";
 	import { UserPermissions } from "$lib/enums/permission";
+	import { toast } from "svelte-sonner";
   import { credentialsFormSchema, type CredentialsFormSchema } from "./schema";
   import {
     type SuperValidated,
@@ -15,6 +16,17 @@
 
   const form = superForm(data, {
     validators: zodClient(credentialsFormSchema),
+    onUpdate: (event) => {
+      if (event.result.status === 200) {
+        toast.success('Successfully updated credentials');
+        formData.set(event.result.data.form)
+      } else {
+        toast.error('Failed to update credentials');
+      }
+    },
+    onError: (event) => {
+      toast.error('Failed to update credentials');
+    }
   });
  
   const { form: formData, enhance } = form;
