@@ -55,7 +55,7 @@
         <Form.Control let:attrs>
           <Form.Label>Project</Form.Label>
           <Select.Root
-            onSelectedChange={(v) => v && ($formData.projects.push(`${v.value}`))}
+            onSelectedChange={(v) => v && ($formData.projects = [`${v.value}`])}
           >
             <Select.Trigger {...attrs}>
               <Select.Value placeholder="Select a project to assign" />

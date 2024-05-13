@@ -23,6 +23,9 @@
   <ToggleGroup.Item value="images">
     <a href={`/projects/${project.id}/images`}>Images</a>
   </ToggleGroup.Item>
+  <ToggleGroup.Item value="files">
+    <a href={`/projects/${project.id}/files`}>Files</a>
+  </ToggleGroup.Item>
   <ToggleGroup.Item value="settings">
     <a href={`/projects/${project.id}/settings`}>Settings</a>
   </ToggleGroup.Item>

@@ -36,7 +36,9 @@
  
 <h1 class="text-xl">Projects</h1>
 <div class="grid grid-cols-3 gap-4">
-  <ProjectCard project={null} form={$page.data.form} {permissions}/>
+  {#if permissions?.length}
+    <ProjectCard project={null} form={$page.data.form} {permissions}/>
+  {/if}
   {#each projects as project}
     <ProjectCard 
       project={project} 

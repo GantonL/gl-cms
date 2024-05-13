@@ -22,8 +22,8 @@
         <ChevronsRight size=16/>
       {/if}
     </Button>
-    <Separator />
     {#each MoreNavigationItems as navItem}
+      <Separator />
       <NavigationItem navLink={navItem} active={navItem.link === currentPath} {expanded}/>
     {/each}
   {:else }

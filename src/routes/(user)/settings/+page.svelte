@@ -1,4 +1,0 @@
-<script>
-  
-</script>
-<h1 class="text-2xl">Settings</h1>
