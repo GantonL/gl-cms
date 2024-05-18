@@ -1,7 +1,6 @@
 import { getAuthenticatedUser, isAdminUser } from "$lib/server/auth";
 import { error } from "@sveltejs/kit";
 import type { LayoutServerLoad } from "./$types";
-import { UserPermissions } from "$lib/enums/permission";
 import { getProject } from "$lib/server/projects.db";
 import { getUser } from "$lib/server/users.db";
 
@@ -11,11 +10,6 @@ export const load: LayoutServerLoad = async (event) => {
     error(401, 'Unauthorized');
   }
   const isAdmin = await isAdminUser(autheticatedUser.uid);
-  const permissions: UserPermissions[] = [];
-  if (isAdmin) {
-    permissions.push(UserPermissions.ViewDBCredentials);
-    permissions.push(UserPermissions.EditDBCredentials);
-  }
   const user = await getUser(autheticatedUser.email!);
   const project = await getProject(event.params.slug);
   if (!project) {
@@ -26,7 +20,6 @@ export const load: LayoutServerLoad = async (event) => {
   }
   return {
     project,
-    permissions,
     seo: {
       title: project?.name || 'Unknown project',
     }
