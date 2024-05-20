@@ -4,15 +4,16 @@ import { Collections } from "$lib/enums/collections";
 import { app } from "./admin";
 import type { Project } from "$lib/models/project";
 
-export const createProject = async (user: Pick<Project, 'name' | 'url'>): Promise<Project | undefined> => {
+export const createProject = async (project: Pick<Project, 'name' | 'url' | 'type'>): Promise<Project | undefined> => {
   try {
     const db = getFirestore(app());
     const projectsRef = db.collection(Collections.Projects);
     const newProject: Project = {
       id: uuidv4(),
-      name: user.name,
-      url: user.url,
+      name: project.name,
+      url: project.url,
       created_at: new Date().getTime(),
+      type: project.type,
     }
     const res = await projectsRef.add(newProject);
     return res?.id ? newProject : undefined;
@@ -66,7 +67,7 @@ export const deleteProject = async (id: Project['id']): Promise<boolean> => {
 }
 
 
-export const updateProject = async (id: Project['id'], data: Partial<Pick<Project, 'keys'>>): Promise<boolean> => {
+export const updateProject = async (id: Project['id'], data: Partial<Pick<Project, 'url'>>): Promise<boolean> => {
   try {
     const db = getFirestore(app());
     const query = await db.collection(Collections.Projects).where('id', '==', id).get();

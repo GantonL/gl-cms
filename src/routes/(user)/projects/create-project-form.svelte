@@ -29,6 +29,15 @@
       </Form.Field>
     </div>
     <div class="grid items-center gap-4">
+      <Form.Field {form} name="type">
+        <Form.Control let:attrs>
+          <Form.Label>Type</Form.Label>
+          <Input {...attrs} bind:value={$formData.type} />
+        </Form.Control>
+        <Form.FieldErrors />
+      </Form.Field>
+    </div>
+    <div class="grid items-center gap-4">
       <Form.Field {form} name="url">
         <Form.Control let:attrs>
           <Form.Label>URL</Form.Label>

@@ -13,7 +13,8 @@ export const getSecondaryApp = (project: Project) => {
           projectId: keys['fb-project-id'],
           clientEmail: keys['fb-client-email'],
           privateKey: keys['fb-private-key'].replace(/\\n/gm, "\n"),
-        })
+        }),
+        storageBucket: keys['fb-storage-bucket'],
       }
       , project.name);
     }

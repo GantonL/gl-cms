@@ -3,3 +3,8 @@ export enum Projects {
   DRLK = 'drlk',
   RaichDesigns = 'raich-designs',
 }
+
+export enum ProjectType {
+  Website = 'website',
+  Store = 'store',
+}

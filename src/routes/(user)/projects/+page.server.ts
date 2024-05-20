@@ -7,6 +7,7 @@ import { createProject, getProjects } from "$lib/server/projects.db";
 import type { PageServerLoad } from "./$types";
 import { getUser } from "$lib/server/users.db";
 import { UserPermissions } from "$lib/enums/permission";
+import type { ProjectType } from "$lib/enums/projects";
 
 export const load: PageServerLoad = async (event) => {
   const autheticatedUser = await getAuthenticatedUser(event);
@@ -44,6 +45,7 @@ export const actions: Actions = {
     const userCreated = await createProject({
       name: form.data.name,
       url: form.data.url,
+      type: form.data.type as ProjectType,
     });
     if (!userCreated) {
       return fail(400, {form});
