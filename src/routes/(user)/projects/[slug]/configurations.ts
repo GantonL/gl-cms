@@ -10,30 +10,53 @@ const dashboard: NavigationTab =
     name: 'Dashboard',
     value: 'dashboard',
   };
+const storeDashboard: NavigationTab = 
+  {
+    name: 'Dashboard',
+    value: 'store-dashboard',
+  };
 const settings: NavigationTab = 
   {
     name: 'Settings',
     value: 'settings',
   };
-const content: NavigationTab = 
+const storeSettings: NavigationTab = 
   {
-    name: 'Content',
-    value: 'content',
+    name: 'Settings',
+    value: 'store-settings',
+  };
+const products: NavigationTab = 
+  {
+    name: 'Products',
+    value: 'products',
+  };
+const categories: NavigationTab = 
+  {
+    name: 'Categories',
+    value: 'categories',
+  };
+const clients: NavigationTab = 
+  {
+    name: 'Clients',
+    value: 'clients',
+  };
+const orders: NavigationTab = 
+  {
+    name: 'Orders',
+    value: 'orders',
   };
 
 export const ProjectNavigationConfigurations: Record<ProjectType, NavigationTab[]> = {
   [ProjectType.Store]: [
-    dashboard,
-    content,
-    {
-      name: 'Store',
-      value: 'store'
-    },
-    settings,
+    storeDashboard,
+    orders,
+    clients,
+    products,
+    categories,
+    storeSettings,
   ],
   [ProjectType.Website]: [
     dashboard,
-    content,
     settings,
   ],
 }
