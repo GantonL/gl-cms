@@ -15,7 +15,7 @@ export async function POST(event: RequestEvent) {
   if (settingsId === undefined) {
     return error(400, {message: 'Missing data'});
   }
-  const updateObject: Pick<StoreSettings, 'id'> & Partial<Pick<StoreSettings, 'active' | 'bunner' | 'global_discount'>> = {
+  const updateObject: Pick<StoreSettings, 'id'> & Partial<Pick<StoreSettings, 'active' | 'banner' | 'global_discount'>> = {
     id: settingsId
   };
   const activeValue = body.get('active')?.toString();
@@ -28,7 +28,11 @@ export async function POST(event: RequestEvent) {
     const globalDiscount = Number(globalDiscountValue);
     updateObject.global_discount = globalDiscount;
   }
-  if (Object.keys(updateObject).length === 0) {
+  const bannerValue = body.get('banner')?.toString();
+  if (bannerValue !== undefined) {
+    updateObject.banner = bannerValue;
+  }
+  if (Object.keys(updateObject).length <= 1) {
     return error(400, {message: 'Missing data'});
   }
   const project = await getProject(event.params.slug);

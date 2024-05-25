@@ -16,7 +16,7 @@ export const getSettings = async (project: Project): Promise<StoreSettings | und
   return data;
 }
 
-export const updateSettings = async (project: Project, settings: Pick<StoreSettings, 'id'> & Partial<Pick<StoreSettings, 'active' | 'bunner' | 'global_discount'>>): Promise<boolean> => {
+export const updateSettings = async (project: Project, settings: Pick<StoreSettings, 'id'> & Partial<Pick<StoreSettings, 'active' | 'banner' | 'global_discount'>>): Promise<boolean> => {
   const app = getSecondaryApp(project);
   if (!app) { return error(500) };
   const settingsCollectionRef = getFirestore(app).collection(StoreCollections.Settings);
