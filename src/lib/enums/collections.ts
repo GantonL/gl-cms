@@ -5,4 +5,5 @@ export enum Collections {
 
 export enum StoreCollections {
   Settings = 'settings',
+  Categories = 'categories',
 }

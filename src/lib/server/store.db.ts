@@ -2,7 +2,7 @@ import type { Project } from "$lib/models/project";
 import { getFirestore } from "firebase-admin/firestore";
 import { getSecondaryApp } from "./secondary.db";
 import { StoreCollections } from "$lib/enums/collections";
-import { type StoreSettings } from "$lib/models/store";
+import { type StoreSettings, type StoreCategory } from "$lib/models/store";
 import { error } from "@sveltejs/kit";
 
 export const getSettings = async (project: Project): Promise<StoreSettings | undefined> => {
@@ -24,3 +24,15 @@ export const updateSettings = async (project: Project, settings: Pick<StoreSetti
   return !!updateRes;
 }
 
+export const getCategories = async (project: Project): Promise<StoreCategory[]> => {
+  const categories: StoreCategory[] = [];
+  const app = getSecondaryApp(project);
+  if (!app) { return categories };
+  const categoriesCollectionRef = getFirestore(app).collection(StoreCollections.Categories);
+  const categoriesRes = await categoriesCollectionRef.orderBy('display_location').get();
+  if (!categoriesRes || categoriesRes.empty) {
+    return categories;
+  }
+  categories.push(...categoriesRes.docs.map(doc => doc.data() as StoreCategory))
+  return categories;
+}
