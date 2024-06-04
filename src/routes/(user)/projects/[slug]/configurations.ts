@@ -45,6 +45,11 @@ const orders: NavigationTab =
     name: 'Orders',
     value: 'orders',
   };
+const personal_details: NavigationTab = 
+  {
+    name: 'Personal details',
+    value: 'personal_details',
+  };
 
 export const ProjectNavigationConfigurations: Record<ProjectType, NavigationTab[]> = {
   [ProjectType.Store]: [
@@ -53,10 +58,12 @@ export const ProjectNavigationConfigurations: Record<ProjectType, NavigationTab[
     clients,
     products,
     categories,
+    personal_details,
     storeSettings,
   ],
   [ProjectType.Website]: [
     dashboard,
+    personal_details,
     settings,
   ],
 }

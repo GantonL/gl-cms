@@ -5,6 +5,7 @@
 	import * as Card from "../ui/card";
 	import * as Tooltip from "../ui/tooltip";
 	import { createEventDispatcher } from "svelte";
+	import * as Avatar from "../ui/avatar";
 
   export let category: StoreCategory | null;
   export let inProcess = false;
@@ -13,13 +14,20 @@
 <div class:blur-sm={inProcess}>
   <Card.Root class="w-60 h-full min-h-60">
     {#if category === null}
-      <Button variant="ghost" class="w-full h-full" on:click={() => category && dispatch('create')}><Plus size=24/></Button>
+      <Button variant="ghost" class="w-full h-full" on:click={() => dispatch('create')}><Plus size=24/></Button>
     {:else}
     <Card.Header>
       <Card.Title>{category.title}</Card.Title>
     </Card.Header>
     <Card.Content>
-      <p class="text-sm text-muted-foreground font-italic">Created at: {new Intl.DateTimeFormat('en-US').format(category.created_at)}</p>
+      <div class="flex flex-row gap-2">
+        <p class="text-sm text-muted-foreground font-italic">Created at: {new Intl.DateTimeFormat('en-US').format(category.created_at)}</p>
+        {#if category.image?.url}
+          <figure class="max-w-24">
+            <img class="border rounded-md" src={category.image?.url} alt="Category">
+          </figure>
+        {/if}
+      </div>
     </Card.Content>
     <Card.Footer>
       <section class="w-full flex fex-row flex-row-reverse">
