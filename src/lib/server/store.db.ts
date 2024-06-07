@@ -84,3 +84,32 @@ export const uploadCategoryImage = async (project: Project, id: string, image: F
   }
   return uploadedImage;
 }
+
+export const deleteCategoryImage = async (project: Project, id: string): Promise<boolean> => {
+  const app = getSecondaryApp(project);
+  if (!app) { return false };
+  const bucket = getStorage(app).bucket();
+  const fileRef = bucket.file(`${StoreStorageDirectories.Catgories}/${id}`);
+  const deleteRes = await fileRef.delete();
+  return !!deleteRes?.at(0);
+}
+
+export const deleteCategory = async (project: Project, id: string): Promise<boolean> => {
+  const app = getSecondaryApp(project);
+  if (!app) { return false };
+  const categoriesCollectionRef = getFirestore(app).collection(StoreCollections.Categories);
+  const categoryRes = await categoriesCollectionRef.where('id', '==', id).get();
+  const categoryDoc = categoryRes?.docs?.pop();
+  if (!categoryDoc?.exists) { return false; };
+  const categoryData = categoryDoc.data();
+  if (!categoryData?.image) {
+    const deleteRes = await categoryDoc.ref.delete();
+    return !!deleteRes;
+  }
+  const deleteImageRes = await deleteCategoryImage(project, id);
+  if (deleteImageRes) {
+    const deleteRes = await categoryDoc.ref.delete();
+    return !!deleteRes;
+  }
+  return false;
+}

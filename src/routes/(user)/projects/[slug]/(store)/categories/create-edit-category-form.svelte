@@ -6,16 +6,27 @@
     type SuperValidated,
     type Infer,
     superForm,
+	type SuperForm,
   } from "sveltekit-superforms";
   import { zodClient } from "sveltekit-superforms/adapters";
  
   export let data: SuperValidated<Infer<FormSchema>>;
  
-  const form = superForm(data, {
-    validators: zodClient(formSchema),
-  });
- 
-  const { form: formData, enhance } = form;
+  let enhance: SuperForm<Infer<FormSchema>>['enhance'];
+  let form: SuperForm<Infer<FormSchema>>;
+  let formData: SuperForm<Infer<FormSchema>>['form'];
+
+  function updateFormData() {
+    form = superForm(data.data, {
+      validators: zodClient(formSchema),
+    });
+    
+    enhance = form.enhance;
+    formData = form.form;
+  }
+
+  updateFormData();
+    
 </script>
 <form method="POST" enctype="multipart/form-data" use:enhance>
   <div class="grid gap-4 py-4">
@@ -38,7 +49,7 @@
       </Form.Field>
     </div>
     <div class="grid items-center gap-4">
-      <Form.Field {form} name="display_location">
+      <Form.Field {form} name="discount">
         <Form.Control let:attrs>
           <Form.Label>Discount</Form.Label>
           <Input {...attrs} type="number" bind:value={$formData.discount} />

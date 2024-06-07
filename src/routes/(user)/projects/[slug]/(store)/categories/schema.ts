@@ -3,8 +3,8 @@ import { z } from "zod";
 
 const categorySchema = z.object({
   title: z.string().min(3),
-  display_location: z.number().default(1),
-  discount: z.number().optional(),
+  display_location: z.number({coerce: true}).default(1),
+  discount: z.number({coerce: true}).optional(),
   imageFile: z
   .any()
   .optional()

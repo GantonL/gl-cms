@@ -9,6 +9,7 @@
 	import { formSchema, type FormSchema } from "./schema";
 	import { LoaderCircle } from "lucide-svelte";
   import * as AlertDialog from "$lib/components/ui/alert-dialog";
+  import { toast } from "svelte-sonner";
 
   let deleting: Record<string, boolean> = {};
   let editCategoryOpened = false;
@@ -16,50 +17,71 @@
   let selectedCategory: StoreCategory | undefined;
   let selectedCategoryForm: SuperValidated<Infer<FormSchema>>;
   function createCategory() {
-    editCategoryOpened = true;
+    selectedCategory = undefined;
     superValidate(zod(formSchema)).then((form) => {
       selectedCategoryForm = form;
+      editCategoryOpened = true;
     })
   }
-  
+    
   function onDeleteCategory(event: CustomEvent) {
-    selectedCategory = categories.find((category) => category.id === event.detail);
-    if (selectedCategory?.id !== event.detail) { return; };
+    selectedCategory = event.detail;
     deleteCategoryOpened = true;
   }
 
   function editCategory(event: CustomEvent) {
-    selectedCategory = categories.find((category) => category.id === event.detail);
-    if (selectedCategory?.id !== event.detail) { return; };
+    selectedCategory = event.detail;
     superValidate(selectedCategory, zod(formSchema)).then((form) => {
-      editCategoryOpened = true;
       selectedCategoryForm = form;
+      editCategoryOpened = true;
     })
   }
 
   function deleteCategory(id?: string) {
-    console.log(id)
+    if (!id) return;
+    const body = new FormData();
+    body.append('project', JSON.stringify(project));
+    body.append('id', id);
+    fetch(`/projects/${project.id}/categories`, { method: 'DELETE', body })
+      .then((res) => {
+        res?.json().then((res) => {
+          if (res?.success) {
+            toast.success('Successfuly deleted category');
+            const categoryIndex = categories.findIndex(c => c.id === id);
+            categories.splice(categoryIndex, 1);
+            categories = categories;
+          } else {
+            toast.error('failed to delete category')
+          }
+        }, () => {
+          toast.error('failed to delete category')
+        });
+      }, () => {
+        toast.error('failed to delete category')
+      });
   }
 
+  $: project = $page.data.project;
   $: categories = $page.data.categories as StoreCategory[];
 </script>
+
 
 <div class="grid grid-cols-3 gap-4">
   <CategoryCard category={null} 
     on:create={(_) => createCategory()}/>
-  {#each categories as category}
-    <CategoryCard 
-      {category} 
-      inProcess={deleting[category.id]}
-      on:delete={(event) => onDeleteCategory(event)}
-      on:edit={(event) => editCategory(event)} />
-  {/each}
+    {#each categories as category}
+      <CategoryCard 
+        {category} 
+        inProcess={deleting[category.id]}
+        on:delete={(event) => onDeleteCategory(event)}
+        on:edit={(event) => editCategory(event)} />
+    {/each}
 </div>
 
 <Dialog.Root bind:open={editCategoryOpened}>
   <Dialog.Content class="sm:max-w-[425px]">
     <Dialog.Header>
-      <Dialog.Title>Edit category</Dialog.Title>
+      <Dialog.Title>{selectedCategory ? 'Edit' : 'Create'} category</Dialog.Title>
     </Dialog.Header>
     {#if selectedCategoryForm}
       <CreateEditCategoryForm data={selectedCategoryForm}/>
@@ -79,7 +101,7 @@
     </AlertDialog.Header>
     <AlertDialog.Footer>
       <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-      <AlertDialog.Action on:click={() => deleteCategory(selectedCategory?.id)}>Continue</AlertDialog.Action>
+      <AlertDialog.Action class="bg-destructive text-destructive-foreground hover:bg-destructive/80" on:click={() => deleteCategory(selectedCategory?.id)}>DELETE</AlertDialog.Action>
     </AlertDialog.Footer>
   </AlertDialog.Content>
 </AlertDialog.Root>

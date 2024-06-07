@@ -3,6 +3,7 @@ import { cert, getApp, initializeApp } from "firebase-admin/app";
 import { PROJECTS_KEYS } from "./configurations";
 
 export const getSecondaryApp = (project: Project) => {
+  if (!project?.name) { return; }
   try {
     return getApp(project.name);
   } catch {

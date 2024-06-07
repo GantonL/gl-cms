@@ -5,7 +5,6 @@
 	import * as Card from "../ui/card";
 	import * as Tooltip from "../ui/tooltip";
 	import { createEventDispatcher } from "svelte";
-	import * as Avatar from "../ui/avatar";
 
   export let category: StoreCategory | null;
   export let inProcess = false;
@@ -34,13 +33,13 @@
         <section class="flex flex-row gap-2">
           <Tooltip.Root>
             <Tooltip.Trigger>
-              <Button variant="destructive" size="icon" class="border border-destructive" on:click={() => category && dispatch('delete', category.id)}><Trash size=16/></Button>
+              <Button variant="destructive" size="icon" class="border border-destructive" on:click={() => category && dispatch('delete', category)}><Trash size=16/></Button>
             </Tooltip.Trigger>
             <Tooltip.Content>Delete</Tooltip.Content>
           </Tooltip.Root>
           <Tooltip.Root>
             <Tooltip.Trigger>
-              <Button variant="outline" size="icon" on:click={() => category && dispatch('edit', category.id)}><Edit2 size=16/></Button>
+              <Button variant="outline" size="icon" on:click={() => category && dispatch('edit', category)}><Edit2 size=16/></Button>
             </Tooltip.Trigger>
             <Tooltip.Content>Edit</Tooltip.Content>
           </Tooltip.Root>
