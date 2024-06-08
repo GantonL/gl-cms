@@ -11,7 +11,7 @@
   import { zodClient } from "sveltekit-superforms/adapters";
  
   export let data: SuperValidated<Infer<FormSchema>>;
- 
+  export let action: 'update' | 'create';
   let enhance: SuperForm<Infer<FormSchema>>['enhance'];
   let form: SuperForm<Infer<FormSchema>>;
   let formData: SuperForm<Infer<FormSchema>>['form'];
@@ -28,7 +28,7 @@
   updateFormData();
     
 </script>
-<form method="POST" enctype="multipart/form-data" use:enhance>
+<form method="POST" action={`?/${action}`} enctype="multipart/form-data" use:enhance>
   <div class="grid gap-4 py-4">
     <div class="grid items-center gap-4">
       <Form.Field {form} name="title">

@@ -2,7 +2,7 @@ import type { Project } from "$lib/models/project";
 import { getFirestore } from "firebase-admin/firestore";
 import { getSecondaryApp } from "./secondary.db";
 import { StoreCollections } from "$lib/enums/collections";
-import { type StoreSettings, type StoreCategory } from "$lib/models/store";
+import { type StoreSettings, type StoreCategory, type StoreContact } from "$lib/models/store";
 import { error } from "@sveltejs/kit";
 import { getDownloadURL, getStorage } from "firebase-admin/storage";
 import { StoreStorageDirectories } from "$lib/enums/storage";
@@ -113,3 +113,23 @@ export const deleteCategory = async (project: Project, id: string): Promise<bool
   }
   return false;
 }
+
+export const getContact = async (project: Project): Promise<StoreContact | undefined> => {
+  const app = getSecondaryApp(project);
+  if (!app) { return };
+  const contactCollectionRef = getFirestore(app).collection(StoreCollections.Contact);
+  const contactDocs = await contactCollectionRef.listDocuments();
+  if (!contactDocs?.length) { return; }
+  const data = (await contactDocs[0].get()).data() as StoreContact;
+  data.id = contactDocs[0].id;
+  return data;
+}
+
+export const updateContactDetails = async (project: Project, contact: Pick<StoreContact, 'id'> & Partial<Pick<StoreContact, 'name' | 'address' | 'email' | 'phone_number' | 'embeded_map_url' | 'navigation_url'>>): Promise<boolean> => {
+  const app = getSecondaryApp(project);
+  if (!app) { return false };
+  const contactCollectionRef = getFirestore(app).collection(StoreCollections.Contact);
+  const updateRes = await contactCollectionRef.doc(contact.id).set(contact, { merge: true });
+  return !!updateRes;
+}
+

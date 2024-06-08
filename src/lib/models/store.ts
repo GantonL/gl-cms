@@ -16,3 +16,13 @@ export interface StoreCategory {
   image?: Image;
   children?: StoreCategory[];
 }
+
+export interface StoreContact {
+  id: string;
+  name: string;
+  email: string;
+  address: string;
+  phone_number: string;
+  embeded_map_url?: string;
+  navigation_url?: string;
+}

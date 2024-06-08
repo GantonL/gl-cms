@@ -83,11 +83,7 @@
     <Dialog.Header>
       <Dialog.Title>{selectedCategory ? 'Edit' : 'Create'} category</Dialog.Title>
     </Dialog.Header>
-    {#if selectedCategoryForm}
-      <CreateEditCategoryForm data={selectedCategoryForm}/>
-    {:else}
-      <LoaderCircle class="animate-spin"></LoaderCircle>
-    {/if}
+    <CreateEditCategoryForm data={selectedCategoryForm} action={selectedCategory ? 'update' : 'create'}/>
   </Dialog.Content>
 </Dialog.Root>
 
