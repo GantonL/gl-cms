@@ -2,7 +2,7 @@ import type { Project } from "$lib/models/project";
 import { getFirestore } from "firebase-admin/firestore";
 import { getSecondaryApp } from "./secondary.db";
 import { StoreCollections } from "$lib/enums/collections";
-import { type StoreSettings, type StoreCategory, type StoreContact } from "$lib/models/store";
+import { type StoreSettings, type StoreCategory, type StoreContact, type StoreClient } from "$lib/models/store";
 import { error } from "@sveltejs/kit";
 import { getDownloadURL, getStorage } from "firebase-admin/storage";
 import { StoreStorageDirectories } from "$lib/enums/storage";
@@ -133,3 +133,15 @@ export const updateContactDetails = async (project: Project, contact: Pick<Store
   return !!updateRes;
 }
 
+export const getClients = async (project: Project, page: number): Promise<StoreClient[]> => {
+  const clients: StoreClient[] = [];
+  const app = getSecondaryApp(project);
+  if (!app) { return clients };
+  const clientsCollectionRef = getFirestore(app).collection(StoreCollections.Clients);
+  const clientsRes = await clientsCollectionRef.orderBy('created_at').get();
+  if (!clientsRes || clientsRes.empty) {
+    return clients;
+  }
+  clients.push(...clientsRes.docs.map(doc => doc.data() as StoreClient))
+  return clients;
+}

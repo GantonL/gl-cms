@@ -26,3 +26,31 @@ export interface StoreContact {
   embeded_map_url?: string;
   navigation_url?: string;
 }
+
+export interface StoreClient {
+  id: string;
+  name: string;
+  home_address: string;
+  shipping_address: string;
+  created_at: number;
+  email: string;
+}
+
+export type StoreOrderStatus = 'pending_approval' | 'approved' | 'in_progress' | 'delivered';
+
+export interface StoreOrderItem {
+  product_id: string;
+  amount: number;
+  price: number;
+}
+
+export interface StoreOrder {
+  id: string;
+  created_at: number;
+  client_id: string;
+  shipping_option: 'delivery' | 'pickup',
+  status: StoreOrderStatus;
+  total_price: number;
+  items: StoreOrderItem[];
+  additional_discount?: number;
+}

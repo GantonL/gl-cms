@@ -5,16 +5,6 @@ interface NavigationTab {
   value: string;
 }
 
-const dashboard: NavigationTab = 
-  {
-    name: 'Dashboard',
-    value: 'dashboard',
-  };
-const storeDashboard: NavigationTab = 
-  {
-    name: 'Dashboard',
-    value: 'store-dashboard',
-  };
 const settings: NavigationTab = 
   {
     name: 'Settings',
@@ -53,7 +43,6 @@ const contact: NavigationTab =
 
 export const ProjectNavigationConfigurations: Record<ProjectType, NavigationTab[]> = {
   [ProjectType.Store]: [
-    storeDashboard,
     orders,
     clients,
     products,
@@ -62,7 +51,6 @@ export const ProjectNavigationConfigurations: Record<ProjectType, NavigationTab[
     storeSettings,
   ],
   [ProjectType.Website]: [
-    dashboard,
     contact,
     settings,
   ],
