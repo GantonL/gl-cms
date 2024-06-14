@@ -145,3 +145,14 @@ export const getClients = async (project: Project, page: number): Promise<StoreC
   clients.push(...clientsRes.docs.map(doc => doc.data() as StoreClient))
   return clients;
 }
+
+export const deleteClient = async (project: Project, id: string): Promise<boolean> => {
+  const app = getSecondaryApp(project);
+  if (!app) { return false };
+  const clientsCollectionRef = getFirestore(app).collection(StoreCollections.Clients);
+  const clientRes = await clientsCollectionRef.where('id', '==', id).get();
+  const clientDoc = clientRes?.docs?.pop();
+  if (!clientDoc?.exists) { return false; };
+  const deleteRes = await clientDoc.ref.delete();
+  return !!deleteRes;
+}

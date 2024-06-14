@@ -6,6 +6,7 @@
 	import { emptyResultsConfiguration, tableConfiguration } from "./configurations";
 	import { LoaderCircle } from "lucide-svelte";
   import EmptyResults from "$lib/components/empty-results/empty-results.svelte";
+	import { page } from "$app/stores";
 
   let clients: StoreClient[] = [];
   let fetchingClients = false;
@@ -28,11 +29,39 @@
     
   }
 
+  function onDeleteClient(client: StoreClient) {
+    if (!client?.id) return;
+    const body = new FormData();
+    body.append('id', client.id);
+    const errMsg = `failed to delete client ${client.name}`;
+    fetch(`/projects/${project.id}/clients`, { method: 'DELETE', body })
+      .then((res) => {
+        res?.json().then((res) => {
+          if (res?.success) {
+            toast.success(`Successfuly deleted client ${client.name}`);
+          } else {
+            toast.error(errMsg);
+          }
+        }, () => {
+          toast.error(errMsg);
+        });
+      }, () => {
+        toast.error(errMsg);
+      });
+  }
+
+  function onEditClient(client: StoreClient) {
+
+  }
+
+$: project = $page.data.project;
 </script>
 <div class="container mx-auto py-10">
   {#if !fetchingClients}
     {#if clients?.length > 0}
-      <DataTable data={clients} configuration={tableConfiguration} />
+      <DataTable data={clients} configuration={tableConfiguration} 
+        on:delete={(event)=> onDeleteClient(event.detail)} 
+        on:edit={(event)=> onEditClient(event.detail)}/>
     {:else}
       <EmptyResults configuration={emptyResultsConfiguration} on:create={createClient}/>
     {/if}

@@ -2,10 +2,39 @@ import DiceBearAvatar from "$lib/components/dice-bear-avatar/dice-bear-avatar.sv
 import type { EmptyResultsConfiguration } from "$lib/models/common";
 import type { StoreClient } from "$lib/models/store";
 import type { TableConfiguration } from "$lib/models/table";
-import { CircleOff } from "lucide-svelte";
+import { CircleOff, Edit, Ellipsis, Trash2 } from "lucide-svelte";
 import { createRender } from "svelte-headless-table";
 import * as dicebearCollections from '@dicebear/collection'; 
-import { writable } from "svelte/store";
+import ActionsMenu from "$lib/components/actions-menu/actions-menu.svelte";
+import type { ActionMenuConfiguration } from "$lib/models/menu-item";
+
+const rowActions: ActionMenuConfiguration<StoreClient> = {
+  items: [
+    {
+      group: [
+        {
+          label: 'Edit',
+          icon: Edit,
+          event: 'edit',
+        },
+        {
+          label: 'Delete',
+          icon: Trash2,
+          event: 'delete',
+          class: 'bg-destructive/10 text-destructive'
+        }
+      ]
+    },
+  ],
+  trigger: {
+    label: 'Table row actions menu',
+    labelClass: 'sr-only',
+    icon: Ellipsis,
+    iconClass: 'h-4 w-4 rotate-90'
+  }
+}
+
+const actionsRender = createRender(ActionsMenu, { configuration: rowActions });
 
 export const tableConfiguration: TableConfiguration<StoreClient> = {
   columns: [
@@ -35,8 +64,21 @@ export const tableConfiguration: TableConfiguration<StoreClient> = {
         return formatted;
       },
     },
+    {
+      header: 'Actions',
+      dataPath: (client) => client,
+      cell: (c) => {
+        actionsRender.props = { configuration: rowActions };
+        actionsRender.props.configuration!.data = c.value;
+        return actionsRender;
+      },
+      render: actionsRender,
+      events: ['edit', 'delete'],
+      class: 'align-center'
+    }
   ],
   pageSize: 10,
+
 };
 
 export const emptyResultsConfiguration: EmptyResultsConfiguration = {

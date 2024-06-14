@@ -6,12 +6,14 @@
     type TableBodyAttributes, 
 	Table, 
 	type TableViewModel} from "svelte-headless-table";
-  import { readable, writable, type Readable, type Writable } from "svelte/store";
+  import { readable, type Readable, type Writable } from "svelte/store";
   import * as TableComponent from "$lib/components/ui/table";
-	import { afterUpdate } from "svelte";
+	import { afterUpdate, createEventDispatcher } from "svelte";
   import { type TableConfiguration }from "$lib/models/table";
   import { addPagination, type NewTablePropSet, type PaginationState, type PluginStates, type TablePlugin } from "svelte-headless-table/plugins";
   import { Button } from "$lib/components/ui/button";
+
+  const dispatch = createEventDispatcher();
 
   export let data: any[] = [];
   export let configuration: TableConfiguration<any>;
@@ -55,9 +57,16 @@
     pageSize = pluginStates.page.pageSize;
     pageSize.set(configuration.pageSize);
   });
-
+  
   function getColumns(config: TableConfiguration<any>['columns'], table: Table<any, any>): Column<any>[] {
     return config.map((item) => {
+      if (item.render) {
+        item.events?.forEach((eventType) => {
+          item.render!.on(eventType, e => {
+            dispatch(e.type, e.detail)
+          });
+        });
+      }
       return table.column({
         accessor: item.dataPath ?? '',
         header: item.header ?? '',
