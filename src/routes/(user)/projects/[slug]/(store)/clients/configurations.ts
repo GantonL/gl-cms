@@ -77,8 +77,14 @@ export const tableConfiguration: TableConfiguration<StoreClient> = {
       class: 'align-center'
     }
   ],
-  pageSize: 10,
-
+  pageSize: 2,
+  createItemButton: {
+    label: 'Create client',
+    class: 'self-end'
+  },
+  search: {
+    placeholder: 'Name or email...'
+  }
 };
 
 export const emptyResultsConfiguration: EmptyResultsConfiguration = {

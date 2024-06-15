@@ -1,3 +1,5 @@
+import type { Icon } from "lucide-svelte";
+import type { ComponentType } from "svelte";
 import type { Column, ComponentRenderConfig, DataLabel } from "svelte-headless-table";
 
 export type TableCellType = 'text' | 'component';
@@ -14,4 +16,13 @@ export interface TableColumn<T> {
 export interface TableConfiguration<T> {
   columns: TableColumn<T>[];
   pageSize: number;
+  createItemButton?: {
+    label: string;
+    icon?: ComponentType<Icon>
+    class?: string;
+  };
+  search?: {
+    placeholder?: string;
+    debounceTime?: number;
+  };
 }

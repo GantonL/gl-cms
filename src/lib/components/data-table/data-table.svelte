@@ -12,6 +12,8 @@
   import { type TableConfiguration }from "$lib/models/table";
   import { addPagination, type NewTablePropSet, type PaginationState, type PluginStates, type TablePlugin } from "svelte-headless-table/plugins";
   import { Button } from "$lib/components/ui/button";
+	import { Plus } from "lucide-svelte";
+	import Input from "$lib/components/ui/input/input.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -74,8 +76,34 @@
       });
     })
   }
+
+  let debounceSearchPhraseTimer: string | number | NodeJS.Timeout | undefined;
+  function debounceSearchPhrase(event: InputEvent) {
+    clearTimeout(debounceSearchPhraseTimer);
+    debounceSearchPhraseTimer = setTimeout(() => {
+      dispatch('search', event?.target?.value);
+    }, configuration?.search?.debounceTime ?? 250);
+  }
+
 </script>
 
+<div class="flex flex-row items-center gap-2 mb-2 w-full">
+  {#if configuration?.search}
+    <Input placeholder={configuration?.search?.placeholder ?? ''}
+      on:input={debounceSearchPhrase}/>
+  {/if}
+  {#if configuration?.createItemButton}
+    <Button variant="outline" class="flex flex-row items-center gap-2 w-fit {configuration.createItemButton.class ?? ''}"
+      on:click={() => dispatch('create')}>
+      {#if configuration.createItemButton.icon}
+        <svelte:component this={configuration.createItemButton.icon} size=16></svelte:component>
+      {:else}
+        <Plus size=16/>
+      {/if}
+      <span>{configuration.createItemButton.label}</span>
+    </Button>
+  {/if}
+</div>
 <div class="rounded-md border">
   {#if tableViewModel}
     <TableComponent.Root {...$tableAttrs}>

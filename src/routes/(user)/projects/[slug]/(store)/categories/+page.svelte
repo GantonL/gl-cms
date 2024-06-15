@@ -7,7 +7,6 @@
 	import { superValidate, type Infer, type SuperValidated } from "sveltekit-superforms/client";
 	import { zod } from "sveltekit-superforms/adapters";
 	import { formSchema, type FormSchema } from "./schema";
-	import { LoaderCircle } from "lucide-svelte";
   import * as AlertDialog from "$lib/components/ui/alert-dialog";
   import { toast } from "svelte-sonner";
 
