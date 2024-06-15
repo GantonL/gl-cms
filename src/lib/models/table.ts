@@ -25,4 +25,13 @@ export interface TableConfiguration<T> {
     placeholder?: string;
     debounceTime?: number;
   };
+  serverSide?: {
+    totalItems: number;
+    route: string;
+    paginationQuery?: {
+      paramName?: string;
+      paramValueDataPath?: keyof T | string;
+    };
+    resultDataPath?: string;
+  }
 }

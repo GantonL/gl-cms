@@ -84,7 +84,7 @@ export const tableConfiguration: TableConfiguration<StoreClient> = {
   },
   search: {
     placeholder: 'Name or email...'
-  }
+  },
 };
 
 export const emptyResultsConfiguration: EmptyResultsConfiguration = {

@@ -6,14 +6,15 @@
     type TableBodyAttributes, 
 	Table, 
 	type TableViewModel} from "svelte-headless-table";
-  import { readable, type Readable, type Writable } from "svelte/store";
+  import { readable, writable, type Readable, type Writable } from "svelte/store";
   import * as TableComponent from "$lib/components/ui/table";
-	import { afterUpdate, createEventDispatcher } from "svelte";
+	import { createEventDispatcher, onMount } from "svelte";
   import { type TableConfiguration }from "$lib/models/table";
-  import { addPagination, type NewTablePropSet, type PaginationState, type PluginStates, type TablePlugin } from "svelte-headless-table/plugins";
+  import { addPagination, type NewTablePropSet, type PaginationConfig, type PaginationState, type PluginStates, type TablePlugin } from "svelte-headless-table/plugins";
   import { Button } from "$lib/components/ui/button";
 	import { Plus } from "lucide-svelte";
 	import Input from "$lib/components/ui/input/input.svelte";
+	import { toast } from "svelte-sonner";
 
   const dispatch = createEventDispatcher();
 
@@ -36,13 +37,20 @@
   let pageIndex: Writable<number>;
   let pageCount: Readable<number>;
   let pageSize: Writable<number>;
+  let serverPaginationInprogress = false; 
+  let tableData: Writable<any[]>; 
 
-
-  afterUpdate(() => {
-    if (!data?.length) { return; }
-    if (tableViewModel) { return; }
-    const table = createTable(readable(data), {
-      page: addPagination(),
+  onMount(() => {
+    let serverSideOptions: PaginationConfig = {};
+    if (configuration?.serverSide) {
+      serverSideOptions = {
+        serverSide: true,
+        serverItemCount: readable(configuration.serverSide.totalItems),
+      }
+    }
+    tableData = writable(data);
+    const table = createTable(tableData, {
+      page: addPagination(serverSideOptions),
     });
     columns = getColumns(configuration.columns, table);
     const tableColumns = table.createColumns(columns);
@@ -85,15 +93,59 @@
     }, configuration?.search?.debounceTime ?? 250);
   }
 
+  function paginateNextOrPrevious(index: number) {
+    if (configuration?.serverSide) {
+      const route = configuration.serverSide.route;
+      serverPaginationInprogress = true;
+      const failure = () => {
+        toast.error('Failed to fetch page data');
+        serverPaginationInprogress = false;
+      };
+      const pageSize = configuration.pageSize;
+      const lastItemIndex = index * pageSize;
+      if (index < $pageIndex) {
+        tableData.update(() => data.slice(lastItemIndex, pageSize));
+        serverPaginationInprogress = false;
+        $pageIndex = index;
+        return;
+      }
+      const isDataInIndexExistsInMemory = data[lastItemIndex];
+      if (isDataInIndexExistsInMemory) {
+        tableData.update(() => data.slice(lastItemIndex, pageSize));
+        serverPaginationInprogress = false;
+        $pageIndex = index;
+        return;
+      }
+      const queryParamName = configuration.serverSide.paginationQuery?.paramName; 
+      const queryParamValueDataPath = configuration.serverSide.paginationQuery?.paramValueDataPath; 
+      const queryParamValue = queryParamValueDataPath ? data[lastItemIndex - 1][queryParamValueDataPath] : index;
+      fetch(`${route}?${queryParamName ?? 'pageIndex'}=${queryParamValue}&pageSize=${pageSize}`, {method: 'GET'})
+        .then((res) => {
+          res.json().then((res) => {
+            const resultDataPath = configuration.serverSide?.resultDataPath;
+            const incoming = resultDataPath ? res[resultDataPath] : res;
+            data.push(...incoming);
+            tableData.update(() => incoming);
+            serverPaginationInprogress = false;
+            $pageIndex = index;
+          }, failure);
+        }, failure);
+    } else {
+      $pageIndex = index;
+    }
+  }
+
 </script>
 
 <div class="flex flex-row items-center gap-2 mb-2 w-full">
   {#if configuration?.search}
     <Input placeholder={configuration?.search?.placeholder ?? ''}
+      disabled={serverPaginationInprogress}
       on:input={debounceSearchPhrase}/>
   {/if}
   {#if configuration?.createItemButton}
     <Button variant="outline" class="flex flex-row items-center gap-2 w-fit {configuration.createItemButton.class ?? ''}"
+      disabled={serverPaginationInprogress}
       on:click={() => dispatch('create')}>
       {#if configuration.createItemButton.icon}
         <svelte:component this={configuration.createItemButton.icon} size=16></svelte:component>
@@ -146,14 +198,14 @@
     <Button
       variant="outline"
       size="sm"
-      on:click={() => ($pageIndex--)}
-      disabled={!$hasPreviousPage}>Previous</Button
+      on:click={() => paginateNextOrPrevious($pageIndex - 1)}
+      disabled={!$hasPreviousPage || serverPaginationInprogress}>Previous</Button
     >
     <Button
       variant="outline"
       size="sm"
-      disabled={!$hasNextPage}
-      on:click={() => ($pageIndex++)}>Next</Button
+      disabled={!$hasNextPage || serverPaginationInprogress}
+      on:click={() => paginateNextOrPrevious($pageIndex + 1)}>Next</Button
     >
   </div>
 </div>

@@ -14,19 +14,33 @@
   let deleteClientOpened = false;
   let selectedClient: StoreClient;
 
+  const getDataRoute = 'clients';
+  
   onMount(() => {
-    getClients();
+    tableConfiguration.serverSide = {
+      totalItems: $page.data.totalClients,
+      route: getDataRoute,
+      paginationQuery: {
+        paramName: 'pageAfterIndex',
+        paramValueDataPath: 'created_at',
+      },
+      resultDataPath: 'clients',
+    }
+    getFirstPageClients();
   });
     
-  function getClients(page: number = 1) {
+  function getFirstPageClients() {
     fetchingClients = true;
     const failureMessage = 'Failed to fetch clients:';
-    fetch(`clients?page=${page}`, { method: 'GET' })
+    const failure = (error: any) => toast.error(`${failureMessage} ${error?.message || ''}`) 
+    fetch(`${getDataRoute}?pageSize=${tableConfiguration?.pageSize}`, { method: 'GET' })
       .then((res) => res.json().then((res) => {
-        clients = res?.clients ?? [];
-        fetchingClients = false;
-      }, error => toast.error(`${failureMessage} ${error?.message || ''}`)), 
-      error => toast.error(`${failureMessage} ${error?.message || ''}`));
+          clients = res?.clients ?? [];
+          fetchingClients = false;
+        }, failure
+      ),
+      failure
+    );
   }
 
   function createClient() {

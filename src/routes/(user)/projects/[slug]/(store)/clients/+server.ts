@@ -20,8 +20,9 @@ export async function GET(event: RequestEvent) {
   if (!isAdmin && !user?.projects?.includes(project!.name)) {
     error(401, 'Unauthorized');
   }
-  const page = Number(event.url.searchParams.get('page') ?? 1);
-  const clients = await getClients(project, page);
+  const pageAfterIndex = Number(event.url.searchParams.get('pageAfterIndex') ?? 0);
+  const pageSize = Number(event.url.searchParams.get('pageSize') ?? 10);
+  const clients = await getClients(project, pageAfterIndex, pageSize);
   return json({
     clients
   })
