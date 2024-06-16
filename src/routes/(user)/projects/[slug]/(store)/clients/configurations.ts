@@ -77,7 +77,7 @@ export const tableConfiguration: TableConfiguration<StoreClient> = {
       class: 'align-center'
     }
   ],
-  pageSize: 2,
+  pageSize: 1,
   createItemButton: {
     label: 'Create client',
     class: 'self-end'

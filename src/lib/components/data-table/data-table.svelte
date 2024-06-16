@@ -104,14 +104,14 @@
       const pageSize = configuration.pageSize;
       const lastItemIndex = index * pageSize;
       if (index < $pageIndex) {
-        tableData.update(() => data.slice(lastItemIndex, pageSize));
+        tableData.update(() => data.slice(lastItemIndex, lastItemIndex + pageSize));
         serverPaginationInprogress = false;
         $pageIndex = index;
         return;
       }
       const isDataInIndexExistsInMemory = data[lastItemIndex];
       if (isDataInIndexExistsInMemory) {
-        tableData.update(() => data.slice(lastItemIndex, pageSize));
+        tableData.update(() => data.slice(lastItemIndex, lastItemIndex + pageSize));
         serverPaginationInprogress = false;
         $pageIndex = index;
         return;

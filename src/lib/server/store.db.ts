@@ -141,16 +141,16 @@ export const getClientsCount = async (project: Project): Promise<number | undefi
   return countQuery.data().count;
 }
 
-export const getClients = async (project: Project, startAfter: number, limit: number): Promise<StoreClient[]> => {
+export const getClients = async (project: Project, limit: number, startAfter?: number | string | Document): Promise<StoreClient[]> => {
   const clients: StoreClient[] = [];
   const app = getSecondaryApp(project);
   if (!app) { return clients };
   const clientsCollectionRef = getFirestore(app).collection(StoreCollections.Clients);
-  const clientsRes = await clientsCollectionRef
-    .orderBy('created_at', 'desc')
-    .startAfter(startAfter)
-    .limit(limit)
-    .get();
+  let clientsCursor = clientsCollectionRef.orderBy('created_at', 'desc');
+  if (startAfter !== undefined && (typeof startAfter === 'number' && startAfter > -1)) {
+    clientsCursor = clientsCursor.startAfter(startAfter);
+  }
+  const clientsRes = await clientsCursor.limit(limit).get();
   if (!clientsRes || clientsRes.empty) {
     return clients;
   }
