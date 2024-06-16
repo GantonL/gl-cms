@@ -94,7 +94,9 @@
   }
 
   function paginateNextOrPrevious(index: number) {
-    if (configuration?.serverSide) {
+    if (!configuration?.serverSide) {
+      $pageIndex = index;
+    } else {
       const route = configuration.serverSide.route;
       serverPaginationInprogress = true;
       const failure = () => {
@@ -129,9 +131,7 @@
             serverPaginationInprogress = false;
             $pageIndex = index;
           }, failure);
-        }, failure);
-    } else {
-      $pageIndex = index;
+        }, failure);      
     }
   }
 

@@ -43,12 +43,8 @@
     );
   }
 
-  function createClient() {
-    
-  }
-  
   function onCreateClient() {
-    console.log('create?');
+    
   }
 
   function onDeleteClient(client: StoreClient) {
@@ -83,6 +79,8 @@
 
   function onSearch(searchPhrase: string) {
     console.log(searchPhrase);
+    // update total items
+    // filter data by search phrase
   }
 
 $: project = $page.data.project;
@@ -96,7 +94,7 @@ $: project = $page.data.project;
         on:create={(_) => onCreateClient()}
         on:search={(event) => onSearch(event.detail)}/>
     {:else}
-      <EmptyResults configuration={emptyResultsConfiguration} on:create={createClient}/>
+      <EmptyResults configuration={emptyResultsConfiguration} on:create={onCreateClient}/>
     {/if}
   {:else}
     <div class="flex flex-row items-center justify-center w-full">

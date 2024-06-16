@@ -40,6 +40,8 @@ export const initializeAuthentication = (currentNavigationPath?: string) => {
               if (currentNavigationPath) {
                 goto(currentNavigationPath);
               }
+            } else {
+              user.set(undefined);
             }
           })
         });
