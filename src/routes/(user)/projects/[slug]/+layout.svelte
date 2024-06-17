@@ -21,7 +21,7 @@
   });
 
   onMount(() => {
-    currentProject.set(project.name);
+    currentProject.set({name: project.name, type: project.type});
   })
   onDestroy(() => {
     currentProject.set(undefined);

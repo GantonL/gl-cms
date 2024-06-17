@@ -2,11 +2,17 @@
 	import { ChevronsLeft, ChevronsRight, EyeOff, HeartCrack } from "lucide-svelte";
   import Button from "../ui/button/button.svelte";
   import { Separator } from "../ui/separator";
-  import { MoreNavigationItems, ItemsConfiguration } from "./configuration";
+  import { MoreNavigationItems, ItemsConfiguration, projectItemsConfiguraion } from "./configuration";
 	import NavigationItem from "./navigation-item.svelte";
-	import { user } from "$lib/client/stores";
+	import { currentProject, user } from "$lib/client/stores";
+	import { ProjectType } from "$lib/enums/projects";
+
   export let currentPath: string;
-  $: items = $user ? ItemsConfiguration[$user.role] : [];
+  
+  $: items = $user ? [
+    ...ItemsConfiguration[$user.role],
+    ...projectItemsConfiguraion[$currentProject?.type ?? ProjectType.None]
+    ] : [];
   let expanded = true;
 </script>
 <nav class="flex items-start border-r flex-col h-full gap-2 p-2">
