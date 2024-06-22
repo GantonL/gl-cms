@@ -34,6 +34,8 @@ export interface StoreClient {
   shipping_address: string;
   created_at: number;
   email: string;
+  phone_number: string;
+  date_of_birth?: string;
 }
 
 export type StoreOrderStatus = 'pending_approval' | 'approved' | 'in_progress' | 'delivered';

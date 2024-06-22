@@ -8,13 +8,20 @@
   import EmptyResults from "$lib/components/empty-results/empty-results.svelte";
 	import { page } from "$app/stores";
   import * as AlertDialog from "$lib/components/ui/alert-dialog";
+	import * as Dialog from "$lib/components/ui/dialog";
+	import CreateEditClientForm from "./create-edit-client-form.svelte";
+	import { formSchema, type FormSchema } from "./schema";
+	import { superValidate, type Infer, type SuperValidated } from "sveltekit-superforms";
+	import { zod } from "sveltekit-superforms/adapters";
 
   let clients: StoreClient[] = [];
   let fetchingClients = false;
   let deleteClientOpened = false;
-  let selectedClient: StoreClient;
-
-  const getDataRoute = 'clients';
+  let selectedClient: StoreClient | undefined;
+  let editClientOpened = false;
+  let selectedClientForm: SuperValidated<Infer<FormSchema>>;
+  
+    const getDataRoute = 'clients';
   
   onMount(() => {
     tableConfiguration.serverSide = {
@@ -44,7 +51,11 @@
   }
 
   function onCreateClient() {
-    
+    selectedClient = undefined;
+    superValidate(zod(formSchema)).then((form) => {
+      selectedClientForm = form;
+      editClientOpened = true;
+    })
   }
 
   function onDeleteClient(client: StoreClient) {
@@ -74,7 +85,11 @@
   }
 
   function onEditClient(client: StoreClient) {
-
+    selectedClient = client;
+    superValidate(selectedClient, zod(formSchema)).then((form) => {
+      selectedClientForm = form;
+      editClientOpened = true;
+    })
   }
 
   function onSearch(searchPhrase: string) {
@@ -114,7 +129,17 @@ $: project = $page.data.project;
     </AlertDialog.Header>
     <AlertDialog.Footer>
       <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-      <AlertDialog.Action class="bg-destructive text-destructive-foreground hover:bg-destructive/80" on:click={() => deleteClient(selectedClient)}>DELETE</AlertDialog.Action>
+      <AlertDialog.Action class="bg-destructive text-destructive-foreground hover:bg-destructive/80" on:click={() => selectedClient && deleteClient(selectedClient)}>DELETE</AlertDialog.Action>
     </AlertDialog.Footer>
   </AlertDialog.Content>
 </AlertDialog.Root>
+
+
+<Dialog.Root bind:open={editClientOpened}>
+  <Dialog.Content class="sm:max-w-[425px]">
+    <Dialog.Header>
+      <Dialog.Title>{selectedClient ? 'Edit' : 'Create'} client</Dialog.Title>
+    </Dialog.Header>
+    <CreateEditClientForm data={selectedClientForm} action={selectedClient ? 'update' : 'create'}/>
+  </Dialog.Content>
+</Dialog.Root>

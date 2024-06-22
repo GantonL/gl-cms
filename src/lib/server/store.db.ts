@@ -168,3 +168,21 @@ export const deleteClient = async (project: Project, id: string): Promise<boolea
   const deleteRes = await clientDoc.ref.delete();
   return !!deleteRes;
 }
+
+export const createClient = async (project: Project, client: Pick<StoreClient, 'name' | 'email' | 'home_address' | 'shipping_address' | 'date_of_birth' | 'phone_number'>): Promise<StoreClient | undefined> => {
+  const app = getSecondaryApp(project);
+  if (!app) { return };
+  const clientsCollectionRef = getFirestore(app).collection(StoreCollections.Clients);
+  const newClient: StoreClient = {
+    id: uuidv4(),
+    created_at: new Date().getTime(),
+    name: client.name,
+    home_address: client.home_address,
+    shipping_address: client.shipping_address,
+    date_of_birth: client.date_of_birth,
+    phone_number: client.phone_number,
+    email: client.email,
+  };
+  const addRes = await clientsCollectionRef.add(newClient);
+  return addRes?.id ? newClient : undefined;
+}
