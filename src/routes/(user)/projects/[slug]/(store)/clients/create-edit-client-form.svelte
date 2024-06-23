@@ -68,7 +68,7 @@
       <Form.Field {form} name="name">
         <Form.Control let:attrs>
           <Form.Label>Name</Form.Label>
-          <Input {...attrs} bind:value={$formData.name} required/>
+          <Input {...attrs} bind:value={$formData.name}/>
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>
@@ -77,7 +77,7 @@
       <Form.Field {form} name="email">
         <Form.Control let:attrs>
           <Form.Label>Email</Form.Label>
-          <Input {...attrs} bind:value={$formData.email} required/>
+          <Input {...attrs} bind:value={$formData.email} />
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>
@@ -86,7 +86,7 @@
       <Form.Field {form} name="home_address">
         <Form.Control let:attrs>
           <Form.Label>Home address</Form.Label>
-          <Input {...attrs} bind:value={$formData.home_address} required/>
+          <Input {...attrs} bind:value={$formData.home_address} />
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>
@@ -95,7 +95,7 @@
       <Form.Field {form} name="shipping_address">
         <Form.Control let:attrs>
           <Form.Label>Shipping address</Form.Label>
-          <Input {...attrs} bind:value={$formData.shipping_address} required/>
+          <Input {...attrs} bind:value={$formData.shipping_address} />
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>
@@ -104,7 +104,7 @@
       <Form.Field {form} name="phone_number">
         <Form.Control let:attrs>
           <Form.Label>Phone number</Form.Label>
-          <Input {...attrs} bind:value={$formData.phone_number} required/>
+          <Input {...attrs} bind:value={$formData.phone_number} />
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>
@@ -112,7 +112,7 @@
     <div class="grid items-center gap-4">
       <Form.Field {form} name="date_of_birth" class="flex flex-col">
         <Form.Control let:attrs>
-          <Form.Label>Date of birth</Form.Label>
+          <Form.Label>Date of birth <span class="text-sm text-muted-foreground">(Optional)</span></Form.Label>
           <Popover.Root>
             <Popover.Trigger
               {...attrs}

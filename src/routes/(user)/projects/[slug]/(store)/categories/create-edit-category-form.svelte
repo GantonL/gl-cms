@@ -51,7 +51,7 @@
     <div class="grid items-center gap-4">
       <Form.Field {form} name="discount">
         <Form.Control let:attrs>
-          <Form.Label>Discount</Form.Label>
+          <Form.Label>Discount <span class="text-sm text-muted-foreground">(Optional)</span></Form.Label>
           <Input {...attrs} type="number" bind:value={$formData.discount} />
         </Form.Control>
         <Form.FieldErrors />
@@ -60,7 +60,7 @@
     <div class="grid items-center gap-4">
       <Form.Field {form} name="imageFile">
         <Form.Control let:attrs>
-          <Form.Label>Image</Form.Label>
+          <Form.Label>Image <span class="text-sm text-muted-foreground">(Optional)</span></Form.Label> 
           <Input {...attrs} type="file" bind:value={$formData.imageFile} />
         </Form.Control>
         <Form.FieldErrors />

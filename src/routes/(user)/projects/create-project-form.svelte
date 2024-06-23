@@ -40,7 +40,7 @@
     <div class="grid items-center gap-4">
       <Form.Field {form} name="url">
         <Form.Control let:attrs>
-          <Form.Label>URL</Form.Label>
+          <Form.Label>URL <span class="text-sm text-muted-foreground">(Optional)</span></Form.Label>
           <Input {...attrs} bind:value={$formData.url} />
         </Form.Control>
         <Form.FieldErrors />
