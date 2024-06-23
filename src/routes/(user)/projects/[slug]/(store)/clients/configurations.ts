@@ -2,7 +2,7 @@ import DiceBearAvatar from "$lib/components/dice-bear-avatar/dice-bear-avatar.sv
 import type { EmptyResultsConfiguration } from "$lib/models/common";
 import type { StoreClient } from "$lib/models/store";
 import type { TableConfiguration } from "$lib/models/table";
-import { CircleOff, Edit, Ellipsis, MessageSquare, Trash2 } from "lucide-svelte";
+import { CircleOff, Copy, Edit, Ellipsis, MessageSquare, ShoppingCart, Trash2 } from "lucide-svelte";
 import { createRender } from "svelte-headless-table";
 import * as dicebearCollections from '@dicebear/collection'; 
 import ActionsMenu from "$lib/components/actions-menu/actions-menu.svelte";
@@ -14,10 +14,24 @@ const rowActions: ActionMenuConfiguration<StoreClient> = {
     {
       group: [
         {
-          label: 'Chat',
-          icon: MessageSquare,
-          event: 'chat'
+          label: 'Orders history',
+          icon: ShoppingCart,
+          event: 'view'
         },
+        {
+          label: 'Open chat',
+          icon: MessageSquare,
+          event: 'open'
+        },
+        {
+          label: 'Copy ID',
+          icon: Copy,
+          event: 'copy'
+        },
+      ],
+    },
+    {
+      group: [
         {
           label: 'Edit',
           icon: Edit,
@@ -30,7 +44,7 @@ const rowActions: ActionMenuConfiguration<StoreClient> = {
           class: 'bg-destructive/10 text-destructive'
         }
       ]
-    },
+    }
   ],
   trigger: {
     label: 'Table row actions menu',
@@ -73,7 +87,7 @@ export const tableConfiguration: TableConfiguration<StoreClient> = {
       dataPath: (client) => client,
       cell: (c) => {
         const render = createRender(ActionsMenu, { configuration: { ...rowActions, data: c.value } });
-        ['chat', 'edit', 'delete'].forEach(eventType => {
+        ['view', 'open', 'copy', 'edit', 'delete'].forEach(eventType => {
           render.on(eventType, (event) => {
             dispatch(event.type, event.detail);
           })

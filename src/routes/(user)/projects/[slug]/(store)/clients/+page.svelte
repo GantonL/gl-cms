@@ -100,6 +100,23 @@
 
   function onChat(client: StoreClient) {
     // open whatsapp with client.pone_number
+    console.log(client);
+  }
+  
+  function viewOrdersHistory(client: StoreClient) {
+    // Open a dialog with orders history?
+    // Redirect back to orders with filtering by client id?
+    console.log(client);
+  }
+
+  function copy(client: StoreClient) {
+    navigator.clipboard.writeText(client.id)
+      .then(() => {
+        toast.success('Coppied to clipboard')
+      })
+      .catch((error) => {
+        toast.error('Failed to copy: ', error)
+      })
   }
 
   $: project = $page.data.project;
@@ -112,7 +129,9 @@
         on:edit={(event)=> onEditClient(event.detail)}
         on:create={(_) => onCreateClient()}
         on:search={(event) => onSearch(event.detail)}
-        on:chat={(event) => onChat(event.detail)}/>
+        on:open={(event) => onChat(event.detail)}
+        on:view={(event) => viewOrdersHistory(event.detail)}
+        on:copy={(event) => copy(event.detail)}/>
     {:else}
       <EmptyResults configuration={emptyResultsConfiguration} on:create={onCreateClient}/>
     {/if}
