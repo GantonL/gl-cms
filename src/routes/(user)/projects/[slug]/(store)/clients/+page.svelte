@@ -121,7 +121,7 @@
 
   $: project = $page.data.project;
 </script>
-<div class="container mx-auto py-5">
+<div class="py-5">
   {#if !fetchingClients}
     {#if clients?.length > 0}
       <DataTable data={clients} configuration={tableConfiguration} 
