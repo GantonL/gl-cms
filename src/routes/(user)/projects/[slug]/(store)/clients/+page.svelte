@@ -98,7 +98,11 @@
     // filter data by search phrase
   }
 
-$: project = $page.data.project;
+  function onChat(client: StoreClient) {
+    // open whatsapp with client.pone_number
+  }
+
+  $: project = $page.data.project;
 </script>
 <div class="container mx-auto py-5">
   {#if !fetchingClients}
@@ -107,7 +111,8 @@ $: project = $page.data.project;
         on:delete={(event)=> onDeleteClient(event.detail)} 
         on:edit={(event)=> onEditClient(event.detail)}
         on:create={(_) => onCreateClient()}
-        on:search={(event) => onSearch(event.detail)}/>
+        on:search={(event) => onSearch(event.detail)}
+        on:chat={(event) => onChat(event.detail)}/>
     {:else}
       <EmptyResults configuration={emptyResultsConfiguration} on:create={onCreateClient}/>
     {/if}

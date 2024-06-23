@@ -1,6 +1,6 @@
 import type { Icon } from "lucide-svelte";
-import type { ComponentType } from "svelte";
-import type { Column, ComponentRenderConfig, DataLabel } from "svelte-headless-table";
+import type { ComponentType, EventDispatcher } from "svelte";
+import type { Column, DataLabel } from "svelte-headless-table";
 
 export type TableCellType = 'text' | 'component';
 
@@ -9,12 +9,10 @@ export interface TableColumn<T> {
   header?: Column<T>['header'];
   cell?: DataLabel<T>;
   class?: string;
-  render?: ComponentRenderConfig;
-  events?: string[];
 }
 
 export interface TableConfiguration<T> {
-  columns: TableColumn<T>[];
+  columns: (dispatch: EventDispatcher<Record<string, string>>) => TableColumn<T>[];
   pageSize: number;
   createItemButton?: {
     label: string;

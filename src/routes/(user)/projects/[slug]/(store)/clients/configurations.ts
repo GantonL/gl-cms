@@ -2,16 +2,22 @@ import DiceBearAvatar from "$lib/components/dice-bear-avatar/dice-bear-avatar.sv
 import type { EmptyResultsConfiguration } from "$lib/models/common";
 import type { StoreClient } from "$lib/models/store";
 import type { TableConfiguration } from "$lib/models/table";
-import { CircleOff, Edit, Ellipsis, Trash2 } from "lucide-svelte";
+import { CircleOff, Edit, Ellipsis, MessageSquare, Trash2 } from "lucide-svelte";
 import { createRender } from "svelte-headless-table";
 import * as dicebearCollections from '@dicebear/collection'; 
 import ActionsMenu from "$lib/components/actions-menu/actions-menu.svelte";
 import type { ActionMenuConfiguration } from "$lib/models/menu-item";
+import { type EventDispatcher } from "svelte";
 
 const rowActions: ActionMenuConfiguration<StoreClient> = {
   items: [
     {
       group: [
+        {
+          label: 'Chat',
+          icon: MessageSquare,
+          event: 'chat'
+        },
         {
           label: 'Edit',
           icon: Edit,
@@ -34,10 +40,8 @@ const rowActions: ActionMenuConfiguration<StoreClient> = {
   }
 }
 
-const actionsRender = createRender(ActionsMenu, { configuration: rowActions });
-
 export const tableConfiguration: TableConfiguration<StoreClient> = {
-  columns: [
+  columns: (dispatch: EventDispatcher<Record<string, string>>) => [
     {
       dataPath: 'id',
       cell: (item) => {
@@ -68,12 +72,14 @@ export const tableConfiguration: TableConfiguration<StoreClient> = {
       header: 'Actions',
       dataPath: (client) => client,
       cell: (c) => {
-        actionsRender.props = { configuration: rowActions };
-        actionsRender.props.configuration!.data = c.value;
-        return actionsRender;
+        const render = createRender(ActionsMenu, { configuration: { ...rowActions, data: c.value } });
+        ['chat', 'edit', 'delete'].forEach(eventType => {
+          render.on(eventType, (event) => {
+            dispatch(event.type, event.detail);
+          })
+        })
+        return render;  
       },
-      render: actionsRender,
-      events: ['edit', 'delete'],
       class: 'align-center'
     }
   ],

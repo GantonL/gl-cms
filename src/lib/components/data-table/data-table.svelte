@@ -9,7 +9,7 @@
   import { readable, writable, type Readable, type Writable } from "svelte/store";
   import * as TableComponent from "$lib/components/ui/table";
 	import { createEventDispatcher, onMount } from "svelte";
-  import { type TableConfiguration }from "$lib/models/table";
+  import { type TableColumn, type TableConfiguration }from "$lib/models/table";
   import { addPagination, type NewTablePropSet, type PaginationConfig, type PaginationState, type PluginStates, type TablePlugin } from "svelte-headless-table/plugins";
   import { Button } from "$lib/components/ui/button";
 	import { Plus } from "lucide-svelte";
@@ -52,7 +52,7 @@
     const table = createTable(tableData, {
       page: addPagination(serverSideOptions),
     });
-    columns = getColumns(configuration.columns, table);
+    columns = getColumns(configuration.columns(dispatch), table);
     const tableColumns = table.createColumns(columns);
     tableViewModel = table.createViewModel(tableColumns);
     headerRows = tableViewModel.headerRows;
@@ -68,15 +68,8 @@
     pageSize.set(configuration.pageSize);
   });
   
-  function getColumns(config: TableConfiguration<any>['columns'], table: Table<any, any>): Column<any>[] {
+  function getColumns(config: TableColumn<any>[], table: Table<any, any>): Column<any>[] {
     return config.map((item) => {
-      if (item.render) {
-        item.events?.forEach((eventType) => {
-          item.render!.on(eventType, e => {
-            dispatch(e.type, e.detail)
-          });
-        });
-      }
       return table.column({
         accessor: item.dataPath ?? '',
         header: item.header ?? '',

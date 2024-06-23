@@ -34,7 +34,8 @@
 
   updateFormData();
 
-  const dateFormatter = new DateFormatter("en-UK", {
+  const dateFormat = 'en-UK';
+  const dateFormatter = new DateFormatter(dateFormat, {
     dateStyle: "long"
   });
 
@@ -53,7 +54,7 @@
 
   const months = [...Array(12).keys()].map((_, index) => {
     const dateInMonth = new CalendarDate(earliestYear, index+1, 1);
-    const label = new Intl.DateTimeFormat('en-UK', {month: 'short'});
+    const label = new Intl.DateTimeFormat(dateFormat, {month: 'short'});
     const value = dateInMonth.month; 
     return {
       value,
@@ -67,7 +68,7 @@
       <Form.Field {form} name="name">
         <Form.Control let:attrs>
           <Form.Label>Name</Form.Label>
-          <Input {...attrs} bind:value={$formData.name} />
+          <Input {...attrs} bind:value={$formData.name} required/>
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>
@@ -76,7 +77,7 @@
       <Form.Field {form} name="email">
         <Form.Control let:attrs>
           <Form.Label>Email</Form.Label>
-          <Input {...attrs} bind:value={$formData.email} />
+          <Input {...attrs} bind:value={$formData.email} required/>
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>
@@ -85,7 +86,7 @@
       <Form.Field {form} name="home_address">
         <Form.Control let:attrs>
           <Form.Label>Home address</Form.Label>
-          <Input {...attrs} bind:value={$formData.home_address} />
+          <Input {...attrs} bind:value={$formData.home_address} required/>
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>
@@ -94,7 +95,7 @@
       <Form.Field {form} name="shipping_address">
         <Form.Control let:attrs>
           <Form.Label>Shipping address</Form.Label>
-          <Input {...attrs} bind:value={$formData.shipping_address} />
+          <Input {...attrs} bind:value={$formData.shipping_address} required/>
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>
@@ -103,7 +104,7 @@
       <Form.Field {form} name="phone_number">
         <Form.Control let:attrs>
           <Form.Label>Phone number</Form.Label>
-          <Input {...attrs} bind:value={$formData.phone_number} />
+          <Input {...attrs} bind:value={$formData.phone_number} required/>
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>
