@@ -7,6 +7,7 @@ export const formSchema = z.object({
   shipping_address: z.string(),
   phone_number: z.string(),
   date_of_birth: z.string().optional(),
+  id: z.string().optional(),
 });
  
 export type FormSchema = typeof formSchema;

@@ -8,7 +8,7 @@
 	type TableViewModel} from "svelte-headless-table";
   import { readable, writable, type Readable, type Writable } from "svelte/store";
   import * as TableComponent from "$lib/components/ui/table";
-	import { createEventDispatcher, onMount } from "svelte";
+	import { afterUpdate, createEventDispatcher, onMount } from "svelte";
   import { type TableColumn, type TableConfiguration }from "$lib/models/table";
   import { addPagination, type NewTablePropSet, type PaginationConfig, type PaginationState, type PluginStates, type TablePlugin } from "svelte-headless-table/plugins";
   import { Button } from "$lib/components/ui/button";
@@ -40,6 +40,12 @@
   let serverPaginationInprogress = false; 
   let tableData: Writable<any[]>; 
 
+  afterUpdate(() => {
+    if (tableData) {
+      tableData.update((value) => value = data);
+    }
+  });
+  
   onMount(() => {
     let serverSideOptions: PaginationConfig = {};
     if (configuration?.serverSide) {

@@ -186,3 +186,14 @@ export const createClient = async (project: Project, client: Pick<StoreClient, '
   const addRes = await clientsCollectionRef.add(newClient);
   return addRes?.id ? newClient : undefined;
 }
+
+export const updateClient = async (project: Project, id: StoreClient['id'], client: Partial<Omit<StoreClient, 'id' | 'created_at'>>): Promise<boolean> => {
+  const app = getSecondaryApp(project);
+  if (!app) { return false };
+  const query = await getFirestore(app).collection(StoreCollections.Clients).where('id', '==', id).get();
+  if (query.empty) {
+    return false;
+  }
+  const setRes = await query.docs[0].ref.set(client, { merge: true });
+  return !!setRes;
+}

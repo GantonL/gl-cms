@@ -21,7 +21,7 @@
   let editClientOpened = false;
   let selectedClientForm: SuperValidated<Infer<FormSchema>>;
   
-    const getDataRoute = 'clients';
+  const getDataRoute = 'clients';
   
   onMount(() => {
     tableConfiguration.serverSide = {
@@ -119,6 +119,16 @@
       })
   }
 
+  function onClientUpdated(event: CustomEvent) {
+    const updatedClient = event.detail;
+    const clientIndex = clients.findIndex(client => client.id === updatedClient.id);
+    if (clientIndex > -1) {
+      clients[clientIndex] = updatedClient;
+      clients = clients;
+    }
+    editClientOpened = false
+  }
+
   $: project = $page.data.project;
 </script>
 <div class="py-5">
@@ -164,6 +174,9 @@
     <Dialog.Header>
       <Dialog.Title>{selectedClient ? 'Edit' : 'Create'} client</Dialog.Title>
     </Dialog.Header>
-    <CreateEditClientForm data={selectedClientForm} action={selectedClient ? 'update' : 'create'}/>
+    <CreateEditClientForm 
+      data={selectedClientForm} 
+      action={selectedClient ? 'update' : 'create'}
+      on:updated={(event) => onClientUpdated(event)}/>
   </Dialog.Content>
 </Dialog.Root>

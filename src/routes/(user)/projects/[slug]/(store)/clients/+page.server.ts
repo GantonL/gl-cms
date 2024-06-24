@@ -1,4 +1,4 @@
-import { createClient, getClientsCount } from "$lib/server/store.db";
+import { createClient, getClientsCount, updateClient } from "$lib/server/store.db";
 import { fail, superValidate } from "sveltekit-superforms";
 import type { Actions, PageServerLoad } from "./$types";
 import { zod } from "sveltekit-superforms/adapters";
@@ -42,6 +42,20 @@ export const actions: Actions = {
     const form = await superValidate(event, zod(formSchema));
     if (!form.valid) {
       return fail(400, { form });
+    }
+    const clientUpdateObject: Partial<Omit<StoreClient, 'id' | 'created_at'>> = {
+      name: form.data.name,
+      email: form.data.email,
+      home_address: form.data.home_address,
+      shipping_address: form.data.shipping_address,
+      phone_number: form.data.phone_number,
+    };
+    if (form.data.date_of_birth && form.data.date_of_birth !== 'undefined') {
+      clientUpdateObject.date_of_birth = form.data.date_of_birth;
+    }
+    const updateRes = await updateClient(currentProject, form.data.id!, clientUpdateObject)
+    if (!updateRes) {
+      return fail(403, { form });
     }
     return { form };
   }

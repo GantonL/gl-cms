@@ -15,17 +15,42 @@
   import { Calendar } from "$lib/components/ui/calendar";
   import * as Popover from "$lib/components/ui/popover";
   import * as Select from "$lib/components/ui/select";
-  import { CalendarDays } from "lucide-svelte";
+  import { CalendarDays, LoaderCircle } from "lucide-svelte";
+	import { toast } from "svelte-sonner";
+	import { createEventDispatcher } from "svelte";
 
   export let data: SuperValidated<Infer<FormSchema>>;
   export let action: 'update' | 'create';
   let enhance: SuperForm<Infer<FormSchema>>['enhance'];
   let form: SuperForm<Infer<FormSchema>>;
   let formData: SuperForm<Infer<FormSchema>>['form'];
+  const dispath = createEventDispatcher();
+  let submissionInProgress = false;
 
   function updateFormData() {
     form = superForm(data.data, {
       validators: zodClient(formSchema),
+      onSubmit: (input) => {
+        submissionInProgress = true;
+        input.formData.append('id', String($formData.id))
+      },
+      onUpdated: ({form: f}) => {
+        if (f?.valid) {
+          toast.success('Client details were successfuly updated');
+          if (f.data.date_of_birth === 'undefined') {
+            f.data.date_of_birth = undefined;
+          }
+          formData.set(f.data);
+        } else {
+          if (f.errors?._errors) {
+            toast.error("Something went wrong.");
+          } else {
+            toast.error("Some fields are invalid.");
+          }
+        }
+        dispath('updated', f.data);
+        submissionInProgress = false;
+      }
     });
     
     enhance = form.enhance;
@@ -68,7 +93,7 @@
       <Form.Field {form} name="name">
         <Form.Control let:attrs>
           <Form.Label>Name</Form.Label>
-          <Input {...attrs} bind:value={$formData.name}/>
+          <Input {...attrs} bind:value={$formData.name} disabled={submissionInProgress}/>
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>
@@ -77,7 +102,7 @@
       <Form.Field {form} name="email">
         <Form.Control let:attrs>
           <Form.Label>Email</Form.Label>
-          <Input {...attrs} bind:value={$formData.email} />
+          <Input {...attrs} bind:value={$formData.email} disabled={submissionInProgress}/>
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>
@@ -86,7 +111,7 @@
       <Form.Field {form} name="home_address">
         <Form.Control let:attrs>
           <Form.Label>Home address</Form.Label>
-          <Input {...attrs} bind:value={$formData.home_address} />
+          <Input {...attrs} bind:value={$formData.home_address} disabled={submissionInProgress}/>
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>
@@ -95,7 +120,7 @@
       <Form.Field {form} name="shipping_address">
         <Form.Control let:attrs>
           <Form.Label>Shipping address</Form.Label>
-          <Input {...attrs} bind:value={$formData.shipping_address} />
+          <Input {...attrs} bind:value={$formData.shipping_address} disabled={submissionInProgress}/>
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>
@@ -104,7 +129,7 @@
       <Form.Field {form} name="phone_number">
         <Form.Control let:attrs>
           <Form.Label>Phone number</Form.Label>
-          <Input {...attrs} bind:value={$formData.phone_number} />
+          <Input {...attrs} bind:value={$formData.phone_number} disabled={submissionInProgress}/>
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>
@@ -115,6 +140,7 @@
           <Form.Label>Date of birth <span class="text-sm text-muted-foreground">(Optional)</span></Form.Label>
           <Popover.Root>
             <Popover.Trigger
+              disabled={submissionInProgress}
               {...attrs}
               class={cn(
                 buttonVariants({ variant: "outline" }),
@@ -193,5 +219,12 @@
       </Form.Field>
     </div>
   </div>
-  <Form.Button>Submit</Form.Button>
+  <Form.Button disabled={submissionInProgress}>
+    <div class="flex flex-row gap-1 items-center">
+      {#if submissionInProgress}
+        <LoaderCircle class="animate-spin" size=16/>       
+      {/if}
+      <span>Submit</span>
+    </div>
+  </Form.Button>
 </form>
