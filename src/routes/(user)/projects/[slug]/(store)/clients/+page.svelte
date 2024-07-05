@@ -13,6 +13,7 @@
 	import { formSchema, type FormSchema } from "./schema";
 	import { superValidate, type Infer, type SuperValidated } from "sveltekit-superforms";
 	import { zod } from "sveltekit-superforms/adapters";
+	import { goto, pushState, replaceState } from "$app/navigation";
 
   let clients: StoreClient[] = [];
   let fetchingClients = false;
@@ -99,14 +100,15 @@
   }
 
   function onChat(client: StoreClient) {
-    // open whatsapp with client.pone_number
-    console.log(client);
+    let link = 'https://wa.me/972';
+    const phoneNumber = client.phone_number.split('-').join();
+    link+=phoneNumber;
+    window.open(link, '_blank');
   }
   
   function viewOrdersHistory(client: StoreClient) {
-    // Open a dialog with orders history?
-    // Redirect back to orders with filtering by client id?
-    console.log(client);
+    const url = `orders?clientId=${client.id}`; 
+    goto(url);
   }
 
   function copy(client: StoreClient) {
@@ -127,6 +129,13 @@
       clients = clients;
     }
     editClientOpened = false
+  }
+
+  function onClientCreated(event: CustomEvent) {
+    const createdClient = event.detail;
+    clients.unshift(createdClient);
+    clients = clients;
+    editClientOpened = false;
   }
 
   $: project = $page.data.project;
@@ -177,6 +186,7 @@
     <CreateEditClientForm 
       data={selectedClientForm} 
       action={selectedClient ? 'update' : 'create'}
-      on:updated={(event) => onClientUpdated(event)}/>
+      on:updated={(event) => onClientUpdated(event)}
+      on:created={(event) => onClientCreated(event)}/>
   </Dialog.Content>
 </Dialog.Root>

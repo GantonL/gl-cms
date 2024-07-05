@@ -24,7 +24,7 @@
   let enhance: SuperForm<Infer<FormSchema>>['enhance'];
   let form: SuperForm<Infer<FormSchema>>;
   let formData: SuperForm<Infer<FormSchema>>['form'];
-  const dispath = createEventDispatcher();
+  const dispatch = createEventDispatcher();
   let submissionInProgress = false;
 
   function updateFormData() {
@@ -41,6 +41,11 @@
             f.data.date_of_birth = undefined;
           }
           formData.set(f.data);
+          if (action === 'create') {
+            dispatch('created', f.data);
+          } else {
+            dispatch('updated', f.data);
+          }
         } else {
           if (f.errors?._errors) {
             toast.error("Something went wrong.");
@@ -48,7 +53,6 @@
             toast.error("Some fields are invalid.");
           }
         }
-        dispath('updated', f.data);
         submissionInProgress = false;
       }
     });
