@@ -1,8 +1,8 @@
 import type { Project } from "$lib/models/project";
-import { getFirestore } from "firebase-admin/firestore";
+import { CollectionReference, getFirestore } from "firebase-admin/firestore";
 import { getSecondaryApp } from "./secondary.db";
 import { StoreCollections } from "$lib/enums/collections";
-import { type StoreSettings, type StoreCategory, type StoreContact, type StoreClient } from "$lib/models/store";
+import { type StoreSettings, type StoreCategory, type StoreContact, type StoreClient as StoreORder, type StoreOrder, type StoreClient } from "$lib/models/store";
 import { error } from "@sveltejs/kit";
 import { getDownloadURL, getStorage } from "firebase-admin/storage";
 import { StoreStorageDirectories } from "$lib/enums/storage";
@@ -141,8 +141,8 @@ export const getClientsCount = async (project: Project): Promise<number | undefi
   return countQuery.data().count;
 }
 
-export const getClients = async (project: Project, limit: number, startAfter?: number | string | Document): Promise<StoreClient[]> => {
-  const clients: StoreClient[] = [];
+export const getClients = async (project: Project, limit: number, startAfter?: number | string | Document): Promise<StoreORder[]> => {
+  const clients: StoreORder[] = [];
   const app = getSecondaryApp(project);
   if (!app) { return clients };
   const clientsCollectionRef = getFirestore(app).collection(StoreCollections.Clients);
@@ -154,7 +154,7 @@ export const getClients = async (project: Project, limit: number, startAfter?: n
   if (!clientsRes || clientsRes.empty) {
     return clients;
   }
-  clients.push(...clientsRes.docs.map(doc => doc.data() as StoreClient))
+  clients.push(...clientsRes.docs.map(doc => doc.data() as StoreORder))
   return clients;
 }
 
@@ -169,11 +169,11 @@ export const deleteClient = async (project: Project, id: string): Promise<boolea
   return !!deleteRes;
 }
 
-export const createClient = async (project: Project, client: Pick<StoreClient, 'name' | 'email' | 'home_address' | 'shipping_address' | 'date_of_birth' | 'phone_number'>): Promise<StoreClient | undefined> => {
+export const createClient = async (project: Project, client: Pick<StoreORder, 'name' | 'email' | 'home_address' | 'shipping_address' | 'date_of_birth' | 'phone_number'>): Promise<StoreORder | undefined> => {
   const app = getSecondaryApp(project);
   if (!app) { return };
   const clientsCollectionRef = getFirestore(app).collection(StoreCollections.Clients);
-  const newClient: StoreClient = {
+  const newClient: StoreORder = {
     id: uuidv4(),
     created_at: new Date().getTime(),
     name: client.name,
@@ -195,5 +195,79 @@ export const updateClient = async (project: Project, id: StoreClient['id'], clie
     return false;
   }
   const setRes = await query.docs[0].ref.set(client, { merge: true });
+  return !!setRes;
+}
+
+export const getOrdersCount = async (project: Project): Promise<number | undefined> => {
+  const app = getSecondaryApp(project);
+  if (!app) { return };
+  const ordersCollectionRef = getFirestore(app).collection(StoreCollections.Orders);
+  const countQuery = await ordersCollectionRef.count().get();
+  return countQuery.data().count;
+}
+
+export const getOrders = async (project: Project, limit: number, startAfter?: number | string | Document): Promise<StoreOrder[]> => {
+  const orders: StoreOrder[] = [];
+  const app = getSecondaryApp(project);
+  if (!app) { return orders };
+  const ordersCollectionRef = getFirestore(app).collection(StoreCollections.Orders);
+  let ordersCursor = ordersCollectionRef.orderBy('created_at', 'desc');
+  if (startAfter !== undefined && (typeof startAfter === 'number' && startAfter > -1)) {
+    ordersCursor = ordersCursor.startAfter(startAfter);
+  }
+  const ordersRes = await ordersCursor.limit(limit).get();
+  if (!ordersRes || ordersRes.empty) {
+    return orders;
+  }
+  orders.push(...ordersRes.docs.map(doc => doc.data() as StoreOrder))
+  return orders;
+}
+
+export const deleteOrder = async (project: Project, id: string): Promise<boolean> => {
+  const app = getSecondaryApp(project);
+  if (!app) { return false };
+  const ordersCollectionRef = getFirestore(app).collection(StoreCollections.Orders);
+  const ordersRes = await ordersCollectionRef.where('id', '==', id).get();
+  const ordersDoc = ordersRes?.docs?.pop();
+  if (!ordersDoc?.exists) { return false; };
+  const deleteRes = await ordersDoc.ref.delete();
+  return !!deleteRes;
+}
+
+export const createOrder = async (project: Project, order: Pick<StoreOrder, 'client_id' | 'items' | 'total_price' | 'additional_discount' | 'shipping_option' | 'status'>): Promise<StoreOrder | undefined> => {
+  const app = getSecondaryApp(project);
+  if (!app) { return };
+  const ordersCollectionRef = getFirestore(app).collection(StoreCollections.Orders);
+  const newOrder: StoreOrder = {
+    id: uuidv4(),
+    created_at: new Date().getTime(),
+    client_id: order.client_id,
+    items: order.items,
+    total_price: order.total_price,
+    additional_discount: order.additional_discount,
+    shipping_option: order.shipping_option,
+    status: order.status,
+    serial_number: await getNextOrderSerialNumber(ordersCollectionRef),
+  };
+  const addRes = await ordersCollectionRef.add(newOrder);
+  return addRes?.id ? newOrder : undefined;
+}
+
+export const getNextOrderSerialNumber = async (ordersCollectionRef: CollectionReference<StoreOrder>): Promise<number> => {
+  const highest = (await ordersCollectionRef.orderBy('serial_number', 'desc').limit(1).get())?.docs?.pop()?.data()?.serial_number;
+  if (!highest) {
+    return 1;
+  } 
+  return highest + 1;
+}
+
+export const updateOrder = async (project: Project, id: StoreOrder['id'], order: Partial<Omit<StoreOrder, 'id' | 'created_at'>>): Promise<boolean> => {
+  const app = getSecondaryApp(project);
+  if (!app) { return false };
+  const query = await getFirestore(app).collection(StoreCollections.Orders).where('id', '==', id).get();
+  if (query.empty) {
+    return false;
+  }
+  const setRes = await query.docs[0].ref.set(order, { merge: true });
   return !!setRes;
 }

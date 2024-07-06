@@ -13,7 +13,7 @@
 	import { formSchema, type FormSchema } from "./schema";
 	import { superValidate, type Infer, type SuperValidated } from "sveltekit-superforms";
 	import { zod } from "sveltekit-superforms/adapters";
-	import { goto, pushState, replaceState } from "$app/navigation";
+	import { goto } from "$app/navigation";
 
   let clients: StoreClient[] = [];
   let fetchingClients = false;

@@ -38,7 +38,7 @@ export interface StoreClient {
   date_of_birth?: string;
 }
 
-export type StoreOrderStatus = 'pending_approval' | 'approved' | 'in_progress' | 'delivered';
+export type StoreOrderStatus = 'pending_approval' | 'approved' | 'in_progress' | 'delivered' | 'aborted';
 
 export interface StoreOrderItem {
   product_id: string;
@@ -54,5 +54,6 @@ export interface StoreOrder {
   status: StoreOrderStatus;
   total_price: number;
   items: StoreOrderItem[];
+  serial_number: number;
   additional_discount?: number;
 }
