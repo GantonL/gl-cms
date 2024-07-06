@@ -5,6 +5,9 @@
   export let status: StoreOrderStatus;
 
 </script>
-<div class="border px-2 py-1" style:background-color={StoreOrderStatusStyleConfiguration[status].bg}>
-  <span class="font-semibold" style:color={StoreOrderStatusStyleConfiguration[status].fg}>{status}</span>
+<div class="border rounded-lg px-2 py-1 {StoreOrderStatusStyleConfiguration[status].bg}">
+  <div class="w-full flex flex-row items-center justify-center gap-2 {StoreOrderStatusStyleConfiguration[status].fg}">
+    <svelte:component this={StoreOrderStatusStyleConfiguration[status].icon} size=14></svelte:component>
+    <span class="font-semibold">{status}</span>
+  </div>
 </div>

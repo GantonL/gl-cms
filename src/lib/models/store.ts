@@ -38,7 +38,7 @@ export interface StoreClient {
   date_of_birth?: string;
 }
 
-export type StoreOrderStatus = 'pending_approval' | 'approved' | 'in_progress' | 'delivered' | 'aborted';
+export type StoreOrderStatus = 'pending_approval' | 'approved' | 'in_progress' | 'delivered' | 'canceled';
 
 export interface StoreOrderItem {
   product_id: string;

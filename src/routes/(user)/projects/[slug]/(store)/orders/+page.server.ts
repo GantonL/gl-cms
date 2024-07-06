@@ -36,6 +36,7 @@ export const actions: Actions = {
     if (order === undefined) {
       return fail(400, {form});
     }
+    form.data.serial_number = String(order.serial_number);
     return { form };
   },
   update: async (event) => {
