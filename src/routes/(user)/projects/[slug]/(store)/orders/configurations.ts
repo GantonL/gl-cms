@@ -2,11 +2,24 @@ import ActionsMenu from "$lib/components/actions-menu/actions-menu.svelte";
 import OrderStatus from "$lib/components/store/order-status/order-status.svelte";
 import type { EmptyResultsConfiguration } from "$lib/models/common";
 import type { ActionMenuConfiguration } from "$lib/models/menu-item";
-import type { StoreOrder } from "$lib/models/store";
+import type { StoreOrder, StoreOrderShippingOption, StoreOrderStatus } from "$lib/models/store";
 import type { TableConfiguration } from "$lib/models/table";
 import { CircleOff, Copy, Edit, Ellipsis, Trash2 } from "lucide-svelte";
 import type { EventDispatcher } from "svelte";
 import { createRender } from "svelte-headless-table";
+
+export const shippingOptions: StoreOrderShippingOption[] = [
+  'delivery', 
+  'pickup',
+];
+
+export const statusOptions: StoreOrderStatus[] = [
+  'approved', 
+  'canceled', 
+  'delivered', 
+  'in_progress', 
+  'pending_approval',
+];
 
 export const emptyResultsConfiguration: EmptyResultsConfiguration = {
   icon: CircleOff,

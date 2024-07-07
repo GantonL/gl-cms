@@ -12,6 +12,9 @@
   import { LoaderCircle } from "lucide-svelte";
 	import { toast } from "svelte-sonner";
 	import { createEventDispatcher } from "svelte";
+	import * as Select from "$lib/components/ui/select";
+	import { shippingOptions, statusOptions } from "./configurations";
+	import OrderStatus from "$lib/components/store/order-status/order-status.svelte";
 
   export let data: SuperValidated<Infer<FormSchema>>;
   export let action: 'update' | 'create';
@@ -55,6 +58,16 @@
 
   updateFormData();
 
+  $: selectedShippingOption = $formData.shipping_option ? {
+    label: $formData.shipping_option,
+    value: $formData.shipping_option,
+  } : undefined;
+
+  $: selectedStatus = $formData.status ? {
+    label: $formData.status,
+    value: $formData.status,
+  } : undefined;
+
 </script>
 <form method="POST" action={`?/${action}`} enctype="multipart/form-data" use:enhance>
   <div class="grid gap-4 py-4">
@@ -71,7 +84,22 @@
       <Form.Field {form} name="shipping_option">
         <Form.Control let:attrs>
           <Form.Label>Shipping option</Form.Label>
-          <Input {...attrs} bind:value={$formData.shipping_option} disabled={submissionInProgress}/>
+          <Select.Root
+            selected={selectedShippingOption}
+            onSelectedChange={(v) => {
+              v && ($formData.shipping_option = v.value);
+            }}
+          >
+            <Select.Trigger {...attrs}>
+              <Select.Value placeholder="Select a shipping option" />
+            </Select.Trigger>
+            <Select.Content>
+              {#each shippingOptions as option}              
+                <Select.Item value={option} label={option} />        
+              {/each}
+            </Select.Content>
+          </Select.Root>
+          <input hidden bind:value={$formData.shipping_option} name={attrs.name} />
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>
@@ -80,7 +108,24 @@
       <Form.Field {form} name="status">
         <Form.Control let:attrs>
           <Form.Label>Status</Form.Label>
-          <Input {...attrs} bind:value={$formData.status} disabled={submissionInProgress}/>
+          <Select.Root
+            selected={selectedStatus}
+            onSelectedChange={(v) => {
+              v && ($formData.status = v.value);
+            }}
+          >
+            <Select.Trigger {...attrs}>
+              <Select.Value placeholder="Select a status" />
+            </Select.Trigger>
+            <Select.Content>
+              {#each statusOptions as option}              
+                <Select.Item value={option}>
+                  <OrderStatus status={option}/>
+                </Select.Item>
+              {/each}
+            </Select.Content>
+          </Select.Root>
+          <input hidden bind:value={$formData.shipping_option} name={attrs.name} />
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>

@@ -40,6 +40,8 @@ export interface StoreClient {
 
 export type StoreOrderStatus = 'pending_approval' | 'approved' | 'in_progress' | 'delivered' | 'canceled';
 
+export type StoreOrderShippingOption = 'pickup' | 'delivery';
+
 export interface StoreOrderItem {
   product_id: string;
   amount: number;
@@ -50,7 +52,7 @@ export interface StoreOrder {
   id: string;
   created_at: number;
   client_id: string;
-  shipping_option: 'delivery' | 'pickup',
+  shipping_option: StoreOrderShippingOption,
   status: StoreOrderStatus;
   total_price: number;
   items: StoreOrderItem[];
