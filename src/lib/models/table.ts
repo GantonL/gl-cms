@@ -11,6 +11,20 @@ export interface TableColumn<T> {
   class?: string;
 }
 
+interface TableQueryParams<T> {
+  paramName?: string;
+  paramValueDataPath?: keyof T | string;
+}
+
+export interface TableFilter<T> {
+  id: string;
+  type: string;
+  label?: string;
+  query?: TableQueryParams<T>;
+  options?: {label: string, value: string}[];
+  currentValue?: {label: string, value: string};
+}
+
 export interface TableConfiguration<T> {
   columns: (dispatch: EventDispatcher<Record<string, string>>) => TableColumn<T>[];
   pageSize: number;
@@ -23,13 +37,11 @@ export interface TableConfiguration<T> {
     placeholder?: string;
     debounceTime?: number;
   };
+  filters?: TableFilter<T>[];
   serverSide?: {
     totalItems: number;
     route: string;
-    paginationQuery?: {
-      paramName?: string;
-      paramValueDataPath?: keyof T | string;
-    };
+    paginationQuery?: TableQueryParams<T>;
     resultDataPath?: string;
   }
 }

@@ -9,12 +9,14 @@
   import { readable, writable, type Readable, type Writable } from "svelte/store";
   import * as TableComponent from "$lib/components/ui/table";
 	import { afterUpdate, createEventDispatcher, onMount } from "svelte";
-  import { type TableColumn, type TableConfiguration }from "$lib/models/table";
+  import { type TableColumn, type TableConfiguration, type TableFilter }from "$lib/models/table";
   import { addPagination, type NewTablePropSet, type PaginationConfig, type PaginationState, type PluginStates, type TablePlugin } from "svelte-headless-table/plugins";
   import { Button } from "$lib/components/ui/button";
 	import { Plus } from "lucide-svelte";
 	import Input from "$lib/components/ui/input/input.svelte";
 	import { toast } from "svelte-sonner";
+	import Label from "../ui/label/label.svelte";
+	import * as Select from "../ui/select";
 
   const dispatch = createEventDispatcher();
 
@@ -38,7 +40,8 @@
   let pageCount: Readable<number>;
   let pageSize: Writable<number>;
   let serverPaginationInprogress = false; 
-  let tableData: Writable<any[]>; 
+  let tableData: Writable<any[]>;
+  let filters: Record<string, TableFilter<any>>;
 
   afterUpdate(() => {
     if (tableData) {
@@ -134,8 +137,36 @@
     }
   }
 
+  function filterWith(filter: TableFilter<any>, value: any) {
+
+  }
+
 </script>
 
+{#if configuration?.filters}
+  <div class="flex flex-col gap-2 border rounded-md mb-2 p-2">
+    <Label>Filters</Label>
+    <div class="flex flex-row flex-wrap gap-2">
+      {#each configuration?.filters as filter}
+        {#if filter.type === 'select' && !!filter.options}
+          <Select.Root
+            selected={filters && filters[filter.id]?.currentValue}
+            onSelectedChange={(v) => filterWith(filter, v)}
+          >
+            <Select.Trigger>
+              <Select.Value placeholder={filter.label} />
+            </Select.Trigger>
+            <Select.Content>
+              {#each filter.options as option}              
+                <Select.Item value={option.value} label={option.label} />
+              {/each}
+            </Select.Content>
+          </Select.Root>
+        {/if}
+      {/each}
+    </div>
+  </div>
+{/if}
 <div class="flex flex-row items-center gap-2 mb-2 w-full">
   {#if configuration?.search}
     <Input placeholder={configuration?.search?.placeholder ?? ''}

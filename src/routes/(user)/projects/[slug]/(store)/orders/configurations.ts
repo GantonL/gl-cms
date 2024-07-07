@@ -79,6 +79,17 @@ export const tableConfiguration: TableConfiguration<StoreOrder> = {
       }
     },
     {
+      header: 'Created',
+      dataPath: 'created_at',
+      cell: ({ value }) => {
+        const formatted = new Intl.DateTimeFormat("en-GB", {
+          dateStyle: 'full',
+          timeStyle: 'short',
+        }).format(value);
+        return formatted;
+      },
+    },
+    {
       header: 'Actions',
       dataPath: (client) => client,
       cell: (c) => {
@@ -101,4 +112,20 @@ export const tableConfiguration: TableConfiguration<StoreOrder> = {
   search: {
     placeholder: 'Serial number...'
   },
+  filters: [
+    {
+      id: 'status',
+      type: 'select',
+      label: 'Status',
+      options: [...statusOptions.map((o) => {
+        return {
+          label: o,
+          value: o,
+        }
+      }), {
+        label: 'All',
+        value: 'all'
+      }]
+    }
+  ]
 };
