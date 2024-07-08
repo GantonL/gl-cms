@@ -119,7 +119,7 @@ export const tableConfiguration: TableConfiguration<StoreOrder> = {
       label: 'Status',
       options: [
         {
-          label: 'All',
+          label: 'All statuses',
           value: 'all'
         },
         ...statusOptions.map((o) => {

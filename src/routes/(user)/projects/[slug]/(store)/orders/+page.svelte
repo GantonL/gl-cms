@@ -39,8 +39,12 @@
   function getFirstPageOrders() {
     fetchingOrders = true;
     const failureMessage = 'Failed to fetch orders:';
-    const failure = (error: any) => toast.error(`${failureMessage} ${error?.message || ''}`) 
-    fetch(`${getDataRoute}?pageSize=${tableConfiguration?.pageSize}`, { method: 'GET' })
+    const failure = (error: any) => toast.error(`${failureMessage} ${error?.message || ''}`);
+    let additionalSearchParams = '';
+    if ($page.url.searchParams.size > 0) {
+      additionalSearchParams = `&${$page.url.searchParams.toString()}`;
+    }
+    fetch(`${getDataRoute}?pageSize=${tableConfiguration?.pageSize}${additionalSearchParams}`, { method: 'GET' })
       .then((res) => res.json().then((res) => {
           orders = res?.orders ?? [];
           fetchingOrders = false;

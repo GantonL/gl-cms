@@ -17,6 +17,8 @@
 	import { toast } from "svelte-sonner";
 	import Label from "../ui/label/label.svelte";
 	import * as Select from "../ui/select";
+	import { page } from "$app/stores";
+	import { addSearchParamToUrl } from "$lib/client/utils";
 
   const dispatch = createEventDispatcher();
 
@@ -124,7 +126,11 @@
       const queryParamName = configuration.serverSide.paginationQuery?.paramName; 
       const queryParamValueDataPath = configuration.serverSide.paginationQuery?.paramValueDataPath; 
       const queryParamValue = queryParamValueDataPath ? data[lastItemIndex - 1][queryParamValueDataPath] : index;
-      fetch(`${route}?${queryParamName ?? 'pageIndex'}=${queryParamValue}&pageSize=${pageSize}`, {method: 'GET'})
+      let additionalSearchParams = '';
+      if ($page.url.searchParams.size > 0) {
+        additionalSearchParams = `&${$page.url.searchParams.toString()}`;
+      }
+      fetch(`${route}?${queryParamName ?? 'pageIndex'}=${queryParamValue}&pageSize=${pageSize}${additionalSearchParams}`, {method: 'GET'})
         .then((res) => {
           res.json().then((res) => {
             const resultDataPath = configuration.serverSide?.resultDataPath;
@@ -150,7 +156,7 @@
       const route = configuration.serverSide!.route;
       serverFetchInprogress = true;
       filterInProgress = true;
-      const url = `${route}?pageSize=${$pageSize}&${filter.query?.paramName}=${value}`;
+      const url = `${route}?pageSize=${$pageSize}&${filter.query!.paramName!}=${value}`;
       fetch(url, {method: 'GET'})
           .then((res) => {
             res.json().then((res) => {
@@ -160,6 +166,7 @@
               tableData.update(() => incoming);
               serverFetchInprogress = false;
               filterInProgress = false;
+              addSearchParamToUrl($page.url.searchParams, filter.query!.paramName!, value);
             }, failure);
           }, failure);
     }
