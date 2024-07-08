@@ -78,6 +78,20 @@
     pageCount = pluginStates.page.pageCount;
     pageSize = pluginStates.page.pageSize;
     pageSize.set(configuration.pageSize);
+    configuration.filters?.forEach(filter => {
+      const currentValue = filter.query?.paramName ? $page.url.searchParams.get(filter.query.paramName) : undefined;
+      const label = filter.options?.find(option => option.value === currentValue)?.label; 
+      if (currentValue && label) {
+        filter.currentValue = {
+          label,
+          value: currentValue, 
+        }
+      }
+      if (filters === undefined) {
+        filters = {};
+      }
+      filters[filter.id] = filter;
+    });
   });
   
   function getColumns(config: TableColumn<any>[], table: Table<any, any>): Column<any>[] {
@@ -145,6 +159,7 @@
   }
 
   function filterWith(filter: TableFilter<any>, value: any) {
+    filters[filter.id].currentValue = value;
     if (!configuration?.serverSide && (filter.query && filter.query.paramValueDataPath)) {
       tableData.update((items => items.filter(i => i[filter.query!.paramValueDataPath!] === value)));
     } else {
