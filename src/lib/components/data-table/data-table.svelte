@@ -12,7 +12,7 @@
   import { type TableColumn, type TableConfiguration, type TableFilter }from "$lib/models/table";
   import { addPagination, type NewTablePropSet, type PaginationConfig, type PaginationState, type PluginStates, type TablePlugin } from "svelte-headless-table/plugins";
   import { Button } from "$lib/components/ui/button";
-	import { Plus } from "lucide-svelte";
+	import { LoaderCircle, Plus } from "lucide-svelte";
 	import Input from "$lib/components/ui/input/input.svelte";
 	import { toast } from "svelte-sonner";
 	import Label from "../ui/label/label.svelte";
@@ -39,7 +39,8 @@
   let pageIndex: Writable<number>;
   let pageCount: Readable<number>;
   let pageSize: Writable<number>;
-  let serverFetchInprogress = false; 
+  let serverFetchInprogress = false;
+  let filterInProgress = false; 
   let tableData: Writable<any[]>;
   let filters: Record<string, TableFilter<any>>;
 
@@ -144,9 +145,11 @@
       const failure = () => {
         toast.error('Failed to filter page data');
         serverFetchInprogress = false;
+        filterInProgress = false;
       };
       const route = configuration.serverSide!.route;
       serverFetchInprogress = true;
+      filterInProgress = true;
       const url = `${route}?pageSize=${$pageSize}&${filter.query?.paramName}=${value}`;
       fetch(url, {method: 'GET'})
           .then((res) => {
@@ -156,6 +159,7 @@
               data = incoming;
               tableData.update(() => incoming);
               serverFetchInprogress = false;
+              filterInProgress = false;
             }, failure);
           }, failure);
     }
@@ -175,7 +179,12 @@
             onSelectedChange={(v) => filterWith(filter, v?.value)}
           >
             <Select.Trigger>
-              <Select.Value placeholder={filter.label} />
+              <div class="flex flex-row items-center gap-2">
+                {#if serverFetchInprogress && filterInProgress}
+                  <LoaderCircle class="animate-spin" size=14 />
+                {/if}
+                <Select.Value placeholder={filter.label} />
+              </div>
             </Select.Trigger>
             <Select.Content>
               {#each filter.options as option}              
