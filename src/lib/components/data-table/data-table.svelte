@@ -39,7 +39,7 @@
   let pageIndex: Writable<number>;
   let pageCount: Readable<number>;
   let pageSize: Writable<number>;
-  let serverPaginationInprogress = false; 
+  let serverFetchInprogress = false; 
   let tableData: Writable<any[]>;
   let filters: Record<string, TableFilter<any>>;
 
@@ -100,26 +100,26 @@
       $pageIndex = index;
     } else {
       const route = configuration.serverSide.route;
-      serverPaginationInprogress = true;
-      const failure = () => {
-        toast.error('Failed to fetch page data');
-        serverPaginationInprogress = false;
-      };
+      serverFetchInprogress = true;
       const pageSize = configuration.pageSize;
       const lastItemIndex = index * pageSize;
       if (index < $pageIndex) {
         tableData.update(() => data.slice(lastItemIndex, lastItemIndex + pageSize));
-        serverPaginationInprogress = false;
+        serverFetchInprogress = false;
         $pageIndex = index;
         return;
       }
       const isDataInIndexExistsInMemory = data[lastItemIndex];
       if (isDataInIndexExistsInMemory) {
         tableData.update(() => data.slice(lastItemIndex, lastItemIndex + pageSize));
-        serverPaginationInprogress = false;
+        serverFetchInprogress = false;
         $pageIndex = index;
         return;
       }
+      const failure = () => {
+        toast.error('Failed to fetch page data');
+        serverFetchInprogress = false;
+      };
       const queryParamName = configuration.serverSide.paginationQuery?.paramName; 
       const queryParamValueDataPath = configuration.serverSide.paginationQuery?.paramValueDataPath; 
       const queryParamValue = queryParamValueDataPath ? data[lastItemIndex - 1][queryParamValueDataPath] : index;
@@ -130,7 +130,7 @@
             const incoming = resultDataPath ? res[resultDataPath] : res;
             data.push(...incoming);
             tableData.update(() => incoming);
-            serverPaginationInprogress = false;
+            serverFetchInprogress = false;
             $pageIndex = index;
           }, failure);
         }, failure);      
@@ -138,7 +138,27 @@
   }
 
   function filterWith(filter: TableFilter<any>, value: any) {
-
+    if (!configuration?.serverSide && (filter.query && filter.query.paramValueDataPath)) {
+      tableData.update((items => items.filter(i => i[filter.query!.paramValueDataPath!] === value)));
+    } else {
+      const failure = () => {
+        toast.error('Failed to filter page data');
+        serverFetchInprogress = false;
+      };
+      const route = configuration.serverSide!.route;
+      serverFetchInprogress = true;
+      const url = `${route}?pageSize=${$pageSize}&${filter.query?.paramName}=${value}`;
+      fetch(url, {method: 'GET'})
+          .then((res) => {
+            res.json().then((res) => {
+              const resultDataPath = configuration.serverSide?.resultDataPath;
+              const incoming = resultDataPath ? res[resultDataPath] : res;
+              data = incoming;
+              tableData.update(() => incoming);
+              serverFetchInprogress = false;
+            }, failure);
+          }, failure);
+    }
   }
 
 </script>
@@ -151,7 +171,8 @@
         {#if filter.type === 'select' && !!filter.options}
           <Select.Root
             selected={filters && filters[filter.id]?.currentValue}
-            onSelectedChange={(v) => filterWith(filter, v)}
+            disabled={serverFetchInprogress}
+            onSelectedChange={(v) => filterWith(filter, v?.value)}
           >
             <Select.Trigger>
               <Select.Value placeholder={filter.label} />
@@ -170,12 +191,12 @@
 <div class="flex flex-row items-center gap-2 mb-2 w-full">
   {#if configuration?.search}
     <Input placeholder={configuration?.search?.placeholder ?? ''}
-      disabled={serverPaginationInprogress}
+      disabled={serverFetchInprogress}
       on:input={debounceSearchPhrase}/>
   {/if}
   {#if configuration?.createItemButton}
     <Button variant="outline" class="flex flex-row items-center gap-2 w-fit {configuration.createItemButton.class ?? ''}"
-      disabled={serverPaginationInprogress}
+      disabled={serverFetchInprogress}
       on:click={() => dispatch('create')}>
       {#if configuration.createItemButton.icon}
         <svelte:component this={configuration.createItemButton.icon} size=16></svelte:component>
@@ -229,12 +250,12 @@
       variant="outline"
       size="sm"
       on:click={() => paginateNextOrPrevious($pageIndex - 1)}
-      disabled={!$hasPreviousPage || serverPaginationInprogress}>Previous</Button
+      disabled={!$hasPreviousPage || serverFetchInprogress}>Previous</Button
     >
     <Button
       variant="outline"
       size="sm"
-      disabled={!$hasNextPage || serverPaginationInprogress}
+      disabled={!$hasNextPage || serverFetchInprogress}
       on:click={() => paginateNextOrPrevious($pageIndex + 1)}>Next</Button
     >
   </div>

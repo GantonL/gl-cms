@@ -117,15 +117,21 @@ export const tableConfiguration: TableConfiguration<StoreOrder> = {
       id: 'status',
       type: 'select',
       label: 'Status',
-      options: [...statusOptions.map((o) => {
+      options: [
+        {
+          label: 'All',
+          value: 'all'
+        },
+        ...statusOptions.map((o) => {
         return {
           label: o,
           value: o,
         }
-      }), {
-        label: 'All',
-        value: 'all'
-      }]
+      })],
+      query: {
+        paramName: 'status',
+        paramValueDataPath: 'status'
+      }
     }
   ]
 };

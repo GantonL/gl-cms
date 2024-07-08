@@ -141,7 +141,7 @@ export const getClientsCount = async (project: Project): Promise<number | undefi
   return countQuery.data().count;
 }
 
-export const getClients = async (project: Project, limit: number, startAfter?: number | string | Document): Promise<StoreORder[]> => {
+export const getClients = async (project: Project, limit: number, startAfter?: number | string | Document): Promise<StoreClient[]> => {
   const clients: StoreORder[] = [];
   const app = getSecondaryApp(project);
   if (!app) { return clients };
@@ -206,21 +206,25 @@ export const getOrdersCount = async (project: Project): Promise<number | undefin
   return countQuery.data().count;
 }
 
-export const getOrders = async (project: Project, limit: number, startAfter?: number | string | Document): Promise<StoreOrder[]> => {
+export const getOrders = async (project: Project, limit: number, startAfter?: number | string | Document, filter?: {path: keyof StoreOrder, value: string}): Promise<StoreOrder[]> => {
   const orders: StoreOrder[] = [];
   const app = getSecondaryApp(project);
   if (!app) { return orders };
   const ordersCollectionRef = getFirestore(app).collection(StoreCollections.Orders);
-  let ordersCursor = ordersCollectionRef.orderBy('created_at', 'desc');
-  if (startAfter !== undefined && (typeof startAfter === 'number' && startAfter > -1)) {
-    ordersCursor = ordersCursor.startAfter(startAfter);
+  let cursor;
+  if (filter && (filter.value && filter.value !== 'all')) {
+    cursor = ordersCollectionRef.where(filter.path, '==', filter.value);
   }
-  const ordersRes = await ordersCursor.limit(limit).get();
+  cursor = (cursor ?? ordersCollectionRef).orderBy('created_at', 'desc');
+  if (startAfter !== undefined && (typeof startAfter === 'number' && startAfter > -1)) {
+    cursor = cursor.startAfter(startAfter);
+  }
+  const ordersRes = await cursor.limit(limit).get();
   if (!ordersRes || ordersRes.empty) {
     return orders;
   }
   orders.push(...ordersRes.docs.map(doc => doc.data() as StoreOrder))
-  return orders;
+   return orders;
 }
 
 export const deleteOrder = async (project: Project, id: string): Promise<boolean> => {

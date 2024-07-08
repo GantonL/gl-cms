@@ -22,7 +22,8 @@ export async function GET(event: RequestEvent) {
   }
   const pageAfterIndex = Number(event.url.searchParams.get('pageAfterIndex') ?? -1);
   const pageSize = Number(event.url.searchParams.get('pageSize') ?? 10);
-  const orders = await getOrders(project, pageSize, pageAfterIndex);
+  const statusFilter = String(event.url.searchParams.get('status') ?? '');
+  const orders = await getOrders(project, pageSize, pageAfterIndex, {path: 'status', value: statusFilter});
   return json({
     orders
   })
