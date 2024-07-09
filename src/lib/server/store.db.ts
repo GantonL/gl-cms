@@ -2,7 +2,7 @@ import type { Project } from "$lib/models/project";
 import { CollectionReference, getFirestore } from "firebase-admin/firestore";
 import { getSecondaryApp } from "./secondary.db";
 import { StoreCollections } from "$lib/enums/collections";
-import { type StoreSettings, type StoreCategory, type StoreContact, type StoreClient as StoreORder, type StoreOrder, type StoreClient } from "$lib/models/store";
+import { type StoreSettings, type StoreCategory, type StoreContact, type StoreOrder, type StoreClient } from "$lib/models/store";
 import { error } from "@sveltejs/kit";
 import { getDownloadURL, getStorage } from "firebase-admin/storage";
 import { StoreStorageDirectories } from "$lib/enums/storage";
@@ -142,7 +142,7 @@ export const getClientsCount = async (project: Project): Promise<number | undefi
 }
 
 export const getClients = async (project: Project, limit: number, startAfter?: number | string | Document): Promise<StoreClient[]> => {
-  const clients: StoreORder[] = [];
+  const clients: StoreClient[] = [];
   const app = getSecondaryApp(project);
   if (!app) { return clients };
   const clientsCollectionRef = getFirestore(app).collection(StoreCollections.Clients);
@@ -154,7 +154,7 @@ export const getClients = async (project: Project, limit: number, startAfter?: n
   if (!clientsRes || clientsRes.empty) {
     return clients;
   }
-  clients.push(...clientsRes.docs.map(doc => doc.data() as StoreORder))
+  clients.push(...clientsRes.docs.map(doc => doc.data() as StoreClient))
   return clients;
 }
 
@@ -169,11 +169,11 @@ export const deleteClient = async (project: Project, id: string): Promise<boolea
   return !!deleteRes;
 }
 
-export const createClient = async (project: Project, client: Pick<StoreORder, 'name' | 'email' | 'home_address' | 'shipping_address' | 'date_of_birth' | 'phone_number'>): Promise<StoreORder | undefined> => {
+export const createClient = async (project: Project, client: Pick<StoreClient, 'name' | 'email' | 'home_address' | 'shipping_address' | 'date_of_birth' | 'phone_number'>): Promise<StoreClient | undefined> => {
   const app = getSecondaryApp(project);
   if (!app) { return };
   const clientsCollectionRef = getFirestore(app).collection(StoreCollections.Clients);
-  const newClient: StoreORder = {
+  const newClient: StoreClient = {
     id: uuidv4(),
     created_at: new Date().getTime(),
     name: client.name,
@@ -274,4 +274,14 @@ export const updateOrder = async (project: Project, id: StoreOrder['id'], order:
   }
   const setRes = await query.docs[0].ref.set(order, { merge: true });
   return !!setRes;
+}
+
+export const getOrder = async (project: Project, serial_number: StoreOrder['serial_number']): Promise<StoreOrder | undefined> => {
+  const app = getSecondaryApp(project);
+  if (!app) { return; };
+  const query = await getFirestore(app).collection(StoreCollections.Orders).where('serial_number', '==', serial_number).get();
+  if (query.empty) {
+    return;
+  }
+  return query.docs.pop()?.data() as StoreOrder;
 }
