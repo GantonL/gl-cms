@@ -13,11 +13,12 @@
 	import { toast } from "svelte-sonner";
 	import { createEventDispatcher } from "svelte";
 	import * as Select from "$lib/components/ui/select";
-	import { shippingOptions, statusOptions } from "./configurations";
+	import { shippingOptions, statusOptions } from "../configurations";
 	import OrderStatus from "$lib/components/store/order-status/order-status.svelte";
 
   export let data: SuperValidated<Infer<FormSchema>>;
   export let action: 'update' | 'create';
+  export let disabled = false;
   let enhance: SuperForm<Infer<FormSchema>>['enhance'];
   let form: SuperForm<Infer<FormSchema>>;
   let formData: SuperForm<Infer<FormSchema>>['form'];
@@ -70,12 +71,12 @@
 
 </script>
 <form method="POST" action={`?/${action}`} enctype="multipart/form-data" use:enhance>
-  <div class="grid gap-4 py-4">
+  <div class="grid gap-4">
     <div class="grid items-center gap-4">
       <Form.Field {form} name="client_id">
         <Form.Control let:attrs>
           <Form.Label>Client ID</Form.Label>
-          <Input {...attrs} bind:value={$formData.client_id} disabled={submissionInProgress}/>
+          <Input {...attrs} bind:value={$formData.client_id} disabled={submissionInProgress || disabled}/>
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>
@@ -86,6 +87,7 @@
           <Form.Label>Shipping option</Form.Label>
           <Select.Root
             selected={selectedShippingOption}
+            disabled={submissionInProgress || disabled}
             onSelectedChange={(v) => {
               v && ($formData.shipping_option = v.value);
             }}
@@ -110,6 +112,7 @@
           <Form.Label>Status</Form.Label>
           <Select.Root
             selected={selectedStatus}
+            disabled={submissionInProgress || disabled}
             onSelectedChange={(v) => {
               v && ($formData.status = v.value);
             }}
@@ -131,34 +134,16 @@
       </Form.Field>
     </div>
     <div class="grid items-center gap-4">
-      <Form.Field {form} name="items">
-        <Form.Control let:attrs>
-          <Form.Label>Products</Form.Label>
-          <Input {...attrs} bind:value={$formData.items} disabled={submissionInProgress}/>
-        </Form.Control>
-        <Form.FieldErrors />
-      </Form.Field>
-    </div>
-    <div class="grid items-center gap-4">
-      <Form.Field {form} name="total_price">
-        <Form.Control let:attrs>
-          <Form.Label>Total price</Form.Label>
-          <Input type="number" {...attrs} bind:value={$formData.total_price} disabled={submissionInProgress}/>
-        </Form.Control>
-        <Form.FieldErrors />
-      </Form.Field>
-    </div>
-    <div class="grid items-center gap-4">
       <Form.Field {form} name="additional_discount">
         <Form.Control let:attrs>
           <Form.Label>Additional discount <span class="text-sm text-muted-foreground">(Optional)</span></Form.Label>
-          <Input type="number" {...attrs} bind:value={$formData.additional_discount} disabled={submissionInProgress}/>
+          <Input type="number" {...attrs} bind:value={$formData.additional_discount} disabled={submissionInProgress || disabled}/>
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>
     </div>
   </div>
-  <Form.Button disabled={submissionInProgress}>
+  <Form.Button disabled={submissionInProgress || disabled}>
     <div class="flex flex-row gap-1 items-center">
       {#if submissionInProgress}
         <LoaderCircle class="animate-spin" size=16/>       

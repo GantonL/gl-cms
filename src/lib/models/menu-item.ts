@@ -16,6 +16,7 @@ export interface ActionItem<T> {
   icon?: ComponentType<Icon>;
   event?: string;
   class?: string;
+  link?: string;
 }
 
 export interface ActionMenuConfiguration<T> {

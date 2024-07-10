@@ -35,12 +35,12 @@
           <DropdownMenu.Group>
             {#each menuItem.group as groupItem}
               <DropdownMenu.Item class={groupItem.class}>
-                <a href={''} class="flex flex-row gap-2 items-center w-full" on:click={() => onGroupItemClick(groupItem)}>
+                <button class="flex flex-row gap-2 items-center w-full" on:click={() => onGroupItemClick(groupItem)}>
                   {#if groupItem.icon}
                     <svelte:component this={groupItem.icon} size=16/>
                   {/if}
                   {groupItem.label}
-                </a>
+                </button>
               </DropdownMenu.Item>
             {/each}
           </DropdownMenu.Group>

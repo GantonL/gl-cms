@@ -4,7 +4,7 @@ import type { EmptyResultsConfiguration } from "$lib/models/common";
 import type { ActionMenuConfiguration } from "$lib/models/menu-item";
 import type { StoreOrder, StoreOrderShippingOption, StoreOrderStatus } from "$lib/models/store";
 import type { TableConfiguration } from "$lib/models/table";
-import { CircleOff, Copy, Edit, Ellipsis, Trash2 } from "lucide-svelte";
+import { CircleOff, Copy, Edit, Ellipsis } from "lucide-svelte";
 import type { EventDispatcher } from "svelte";
 import { createRender } from "svelte-headless-table";
 
@@ -47,12 +47,6 @@ const rowActions: ActionMenuConfiguration<StoreOrder> = {
           label: 'Edit',
           icon: Edit,
           event: 'edit',
-        },
-        {
-          label: 'Delete',
-          icon: Trash2,
-          event: 'delete',
-          class: 'bg-destructive/10 text-destructive'
         }
       ]
     }
@@ -94,7 +88,7 @@ export const tableConfiguration: TableConfiguration<StoreOrder> = {
       dataPath: (client) => client,
       cell: (c) => {
         const render = createRender(ActionsMenu, { configuration: { ...rowActions, data: c.value } });
-        ['copy', 'edit', 'delete'].forEach(eventType => {
+        ['copy', 'edit'].forEach(eventType => {
           render.on(eventType, (event) => {
             dispatch(event.type, event.detail);
           })
