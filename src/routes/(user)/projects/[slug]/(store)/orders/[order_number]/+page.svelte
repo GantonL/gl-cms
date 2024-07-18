@@ -13,6 +13,7 @@
 	import * as AlertDialog from "$lib/components/ui/alert-dialog";
 	import { Button } from "$lib/components/ui/button";
 	import { LoaderCircle } from "lucide-svelte";
+	import { goto } from "$app/navigation";
   
   let createEditForm: SuperValidated<Infer<FormSchema>>;
   let deleteOrderOpened = false;
@@ -52,6 +53,7 @@
         res?.json().then((res) => {
           if (res?.success) {
             toast.success(`Successfuly deleted order`);
+            goto(`../orders`);
           } else {
             toast.error(errMsg);
           }
@@ -121,7 +123,7 @@
       <Card.Title class="text-destructive">Danger Zone</Card.Title>
     </Card.Header>
     <Card.Footer>
-      <Button class="w-full flex flex-row gap-2 items-center" disabled={saveInProgress} variant='destructive'
+      <Button class="w-full flex flex-row gap-2 items-center" disabled={saveInProgress || deletionInProgress} variant='destructive'
         on:click={() => deleteOrderOpened = true}>
         {#if deletionInProgress}
           <LoaderCircle class="animate-spin"></LoaderCircle>
