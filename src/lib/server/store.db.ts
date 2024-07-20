@@ -133,11 +133,20 @@ export const updateContactDetails = async (project: Project, contact: Pick<Store
   return !!updateRes;
 }
 
-export const getClientsCount = async (project: Project): Promise<number | undefined> => {
+export const getClientsCount = async (project: Project, queries?: Partial<Record<keyof StoreClient, string | number>>): Promise<number | undefined> => {
   const app = getSecondaryApp(project);
   if (!app) { return };
   const clientsCollectionRef = getFirestore(app).collection(StoreCollections.Clients);
-  const countQuery = await clientsCollectionRef.count().get();
+  let clientsCursor = clientsCollectionRef.orderBy('created_at', 'desc');;
+  if (queries && (('name' in queries) || ('email' in queries))) {
+    if (queries.name) {
+      clientsCursor = clientsCursor.where('name', '==', queries.name);
+    }
+    if (queries.email) {
+      clientsCursor = clientsCursor.where('email', '==', queries.email);
+    }
+  }
+  const countQuery = await clientsCursor.count().get();
   return countQuery.data().count;
 }
 

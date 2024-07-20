@@ -94,9 +94,18 @@
   }
 
   function onSearch(searchPhrase: string) {
-    console.log(searchPhrase);
-    // update total items
-    // filter data by search phrase
+    const failureMessage = 'Clients search failed:';
+    const failure = (error: any) => toast.error(`${failureMessage} ${error?.message || ''}`) 
+    fetch(`${getDataRoute}?pageSize=${tableConfiguration?.pageSize}&q=${searchPhrase}&count=true`, { method: 'GET' })
+      .then((res) => res.json().then((res) => {
+          clients = res?.clients ?? [];
+          if (tableConfiguration.serverSide) {
+            tableConfiguration.serverSide.totalItems = res.totalClients;
+          }
+        }, failure
+      ),
+      failure
+    );
   }
 
   function onChat(client: StoreClient) {

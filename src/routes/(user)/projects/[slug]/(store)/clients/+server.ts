@@ -1,6 +1,6 @@
 import { getAuthenticatedUser, isAdminUser } from "$lib/server/auth";
 import { getProject } from "$lib/server/projects.db";
-import { deleteClient, getClients } from "$lib/server/store.db";
+import { deleteClient, getClients, getClientsCount } from "$lib/server/store.db";
 import { getUser } from "$lib/server/users.db";
 import { error, json } from "@sveltejs/kit";
 import type { RequestEvent } from "../../$types";
@@ -32,9 +32,15 @@ export async function GET(event: RequestEvent) {
       queries.name = nameOrEmailQuery;
     }
   }
+  const shouldCount = event.url.searchParams.get('count');
+  let totalCount;
+  if (shouldCount) {
+    totalCount = await getClientsCount(project, queries); 
+  }
   const clients = await getClients(project, pageSize, pageAfterIndex, queries);
   return json({
-    clients
+    clients,
+    totalCount,
   })
 }
 
