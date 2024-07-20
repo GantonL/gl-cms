@@ -1,9 +1,10 @@
 import { getAuthenticatedUser, isAdminUser } from "$lib/server/auth";
 import { getProject } from "$lib/server/projects.db";
-import { getOrders } from "$lib/server/store.db";
+import { getOrders, getOrdersCount } from "$lib/server/store.db";
 import { getUser } from "$lib/server/users.db";
 import { error, json } from "@sveltejs/kit";
 import type { RequestEvent } from "../../$types";
+import type { StoreOrder } from "$lib/models/store";
 
 export async function GET(event: RequestEvent) {
   const autheticatedUser = await getAuthenticatedUser(event);
@@ -22,9 +23,31 @@ export async function GET(event: RequestEvent) {
   }
   const pageAfterIndex = Number(event.url.searchParams.get('pageAfterIndex') ?? -1);
   const pageSize = Number(event.url.searchParams.get('pageSize') ?? 10);
+  let filter: {path: keyof StoreOrder, value: string | number} | undefined;
   const statusFilter = String(event.url.searchParams.get('status') ?? '');
-  const orders = await getOrders(project, pageSize, pageAfterIndex, {path: 'status', value: statusFilter});
+  const orderSerialNumberQuery = String(event.url.searchParams.get('q') ?? '');
+  if (orderSerialNumberQuery.length > 0) {
+    filter = {
+      path: 'serial_number',
+      value: Number(orderSerialNumberQuery)
+    };
+  }
+  if (statusFilter.length > 0) {
+    filter = {
+      path: 'status',
+      value: statusFilter
+    }
+  }
+
+  const shouldCount = event.url.searchParams.get('count');
+  let totalCount;
+  if (shouldCount) {
+    totalCount = await getOrdersCount(project, filter); 
+  }
+
+  const orders = await getOrders(project, pageSize, pageAfterIndex, filter);
   return json({
-    orders
+    orders,
+    totalCount
   })
 }

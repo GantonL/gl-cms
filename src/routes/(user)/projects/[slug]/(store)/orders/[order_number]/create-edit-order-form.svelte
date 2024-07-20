@@ -128,7 +128,9 @@
                 !$formData.client_id && "text-muted-foreground"
               )}
               disabled={submissionInProgress || disabled}>
-              {$formData.client_id || 'Select a client'}
+              <span class="truncate w-5/6">
+                {$formData.client_id || 'Select a client'}
+              </span>
               <UserRoundSearch size=14 class="ml-auto h-4 w-4 opacity-50"/>
             </Popover.Trigger>
             <Popover.Content>

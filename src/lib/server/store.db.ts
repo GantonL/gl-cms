@@ -215,15 +215,19 @@ export const updateClient = async (project: Project, id: StoreClient['id'], clie
   return !!setRes;
 }
 
-export const getOrdersCount = async (project: Project): Promise<number | undefined> => {
+export const getOrdersCount = async (project: Project, filter?: {path: keyof StoreOrder, value: string | number}): Promise<number | undefined> => {
   const app = getSecondaryApp(project);
   if (!app) { return };
   const ordersCollectionRef = getFirestore(app).collection(StoreCollections.Orders);
-  const countQuery = await ordersCollectionRef.count().get();
+  let cursor;
+  if (filter && (filter.value && filter.value !== 'all')) {
+    cursor = ordersCollectionRef.where(filter.path, '==', filter.value);
+  }
+  const countQuery = await (cursor ?? ordersCollectionRef).count().get();
   return countQuery.data().count;
 }
 
-export const getOrders = async (project: Project, limit: number, startAfter?: number | string | Document, filter?: {path: keyof StoreOrder, value: string}): Promise<StoreOrder[]> => {
+export const getOrders = async (project: Project, limit: number, startAfter?: number | string | Document, filter?: {path: keyof StoreOrder, value: string | number}): Promise<StoreOrder[]> => {
   const orders: StoreOrder[] = [];
   const app = getSecondaryApp(project);
   if (!app) { return orders };
