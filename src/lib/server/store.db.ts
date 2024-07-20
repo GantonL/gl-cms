@@ -133,24 +133,19 @@ export const updateContactDetails = async (project: Project, contact: Pick<Store
   return !!updateRes;
 }
 
-export const getClientsCount = async (project: Project, queries?: Partial<Record<keyof StoreClient, string | number>>): Promise<number | undefined> => {
+export const getClientsCount = async (project: Project, filter?: {path: keyof StoreClient, value: string | number}): Promise<number | undefined> => {
   const app = getSecondaryApp(project);
   if (!app) { return };
   const clientsCollectionRef = getFirestore(app).collection(StoreCollections.Clients);
-  let clientsCursor = clientsCollectionRef.orderBy('created_at', 'desc');;
-  if (queries && (('name' in queries) || ('email' in queries))) {
-    if (queries.name) {
-      clientsCursor = clientsCursor.where('name', '==', queries.name);
-    }
-    if (queries.email) {
-      clientsCursor = clientsCursor.where('email', '==', queries.email);
-    }
+  let cursor;
+  if (filter && (filter.value)) {
+    cursor = clientsCollectionRef.where(filter.path, '==', filter.value);
   }
-  const countQuery = await clientsCursor.count().get();
+  const countQuery = await (cursor ?? clientsCollectionRef).count().get();
   return countQuery.data().count;
 }
 
-export const getClients = async (project: Project, limit: number, startAfter?: number | string | Document, queries?: Partial<Record<keyof StoreClient, string | number>>): Promise<StoreClient[]> => {
+export const getClients = async (project: Project, limit: number, startAfter?: number | string | Document, filter?: {path: keyof StoreClient, value: string | number}): Promise<StoreClient[]> => {
   const clients: StoreClient[] = [];
   const app = getSecondaryApp(project);
   if (!app) { return clients };
@@ -159,13 +154,8 @@ export const getClients = async (project: Project, limit: number, startAfter?: n
   if (startAfter !== undefined && (typeof startAfter === 'number' && startAfter > -1)) {
     clientsCursor = clientsCursor.startAfter(startAfter);
   }
-  if (queries && (('name' in queries) || ('email' in queries))) {
-    if (queries.name) {
-      clientsCursor = clientsCursor.where('name', '==', queries.name);
-    }
-    if (queries.email) {
-      clientsCursor = clientsCursor.where('email', '==', queries.email);
-    }
+  if (filter && (filter.value)) {
+    clientsCursor = clientsCollectionRef.where(filter.path, '==', filter.value);
   }
   const clientsRes = await clientsCursor.limit(limit).get();
   if (!clientsRes || clientsRes.empty) {

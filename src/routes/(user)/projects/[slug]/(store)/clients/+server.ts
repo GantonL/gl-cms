@@ -24,20 +24,19 @@ export async function GET(event: RequestEvent) {
   const pageAfterIndex = Number(event.url.searchParams.get('pageAfterIndex') ?? -1);
   const pageSize = Number(event.url.searchParams.get('pageSize') ?? 10);
   const nameOrEmailQuery = String(event.url.searchParams.get('q') ?? '');
-  const queries: Partial<Record<keyof StoreClient, string | number>> = {};
+  let filter: {path: keyof StoreClient, value: string | number} | undefined;
   if (nameOrEmailQuery.length > 0) {
-    if (nameOrEmailQuery.includes('@')) {
-      queries.email = nameOrEmailQuery;
-    } else {
-      queries.name = nameOrEmailQuery;
+    filter = {
+      path: nameOrEmailQuery.includes('@') ? 'email' : 'name',
+      value: nameOrEmailQuery,
     }
   }
   const shouldCount = event.url.searchParams.get('count');
   let totalCount;
   if (shouldCount) {
-    totalCount = await getClientsCount(project, queries); 
+    totalCount = await getClientsCount(project, filter); 
   }
-  const clients = await getClients(project, pageSize, pageAfterIndex, queries);
+  const clients = await getClients(project, pageSize, pageAfterIndex, filter);
   return json({
     clients,
     totalCount,
