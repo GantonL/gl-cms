@@ -7,5 +7,6 @@ export interface EmptyResultsConfiguration {
   action?: {
     label: string;
     event: string;
-  }
+  },
+  class?: string;
 }

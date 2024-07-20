@@ -12,7 +12,10 @@ export const load: PageServerLoad = async ({parent, params}) => {
   const parentData = await parent();
   const project = parentData.project;
   currentProject = project;
-  const order = await getOrder(project, Number(params.order_number));
+  let order: Partial<StoreOrder> | undefined = {};
+  if (params.order_number !== 'new') {
+    order = await getOrder(project, Number(params.order_number));
+  }
   return {
     project,
     order,

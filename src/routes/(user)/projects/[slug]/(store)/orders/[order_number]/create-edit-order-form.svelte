@@ -9,12 +9,20 @@
 	type SuperForm,
   } from "sveltekit-superforms";
   import { zodClient } from "sveltekit-superforms/adapters";
-  import { LoaderCircle } from "lucide-svelte";
+  import { LoaderCircle, UserRoundSearch } from "lucide-svelte";
 	import { toast } from "svelte-sonner";
-	import { createEventDispatcher } from "svelte";
+	import { createEventDispatcher, onMount } from "svelte";
 	import * as Select from "$lib/components/ui/select";
 	import { shippingOptions, statusOptions } from "../configurations";
 	import OrderStatus from "$lib/components/store/order-status/order-status.svelte";
+  import * as Popover from "$lib/components/ui/popover";
+	import { cn } from "$lib/utils";
+	import { Button, buttonVariants } from "$lib/components/ui/button";
+	import type { StoreClient } from "$lib/models/store";
+  import EmptyResults from "$lib/components/empty-results/empty-results.svelte";
+  import { emptyClientsResultsConfiguration } from "./configuration";
+	import { Separator } from "$lib/components/ui/separator";
+	import { ScrollArea } from "$lib/components/ui/scroll-area";
 
   export let data: SuperValidated<Infer<FormSchema>>;
   export let action: 'update' | 'create';
@@ -24,6 +32,32 @@
   let formData: SuperForm<Infer<FormSchema>>['form'];
   const dispatch = createEventDispatcher();
   let submissionInProgress = false;
+  let clients: StoreClient[] = [];
+  let clientSearchInProgress = false;
+
+  onMount(() => {
+    if (!$formData.client_id) {
+      initializeClientsOptions();
+    }
+  });
+
+  function initializeClientsOptions() {
+    fetchClients(5);
+  }
+  
+  function fetchClients(limit?: number, query?: string) {
+    let path = `../clients?pageSize=${limit}`;
+    if (query) {
+      path+=`&q=${query}`;
+    } 
+    fetch(path, { method: 'GET' })
+      .then((res) => res.json().then((res) => {
+          clients = res?.clients ?? [];
+          clientSearchInProgress = false;
+        }
+      )
+    );
+  }
 
   function updateFormData() {
     form = superForm(data.data, {
@@ -69,6 +103,15 @@
     value: $formData.status,
   } : undefined;
 
+  let debounceSearchPhraseTimer: string | number | NodeJS.Timeout | undefined;
+  function debounceSearchClientsPhrase(event: InputEvent) {
+    clientSearchInProgress = true;
+    clearTimeout(debounceSearchPhraseTimer);
+    debounceSearchPhraseTimer = setTimeout(() => {
+      fetchClients(50, event.target?.value);
+    }, 250);
+  }
+
 </script>
 <form method="POST" action={`?/${action}`} enctype="multipart/form-data" use:enhance>
   <div class="grid gap-4">
@@ -76,7 +119,48 @@
       <Form.Field {form} name="client_id">
         <Form.Control let:attrs>
           <Form.Label>Client ID</Form.Label>
-          <Input {...attrs} bind:value={$formData.client_id} disabled={submissionInProgress || disabled}/>
+          <Popover.Root>
+            <Popover.Trigger
+              {...attrs}
+              class={cn(
+                buttonVariants({ variant: "outline" }),
+                "w-full justify-start pl-4 text-left font-normal",
+                !$formData.client_id && "text-muted-foreground"
+              )}
+              disabled={submissionInProgress || disabled}>
+              {$formData.client_id || 'Select a client'}
+              <UserRoundSearch size=14 class="ml-auto h-4 w-4 opacity-50"/>
+            </Popover.Trigger>
+            <Popover.Content>
+              <div class="flex flex-col gap-2 w-full min-h-44">
+                <Input placeholder="Search name or email" 
+                  on:input={debounceSearchClientsPhrase}/>
+                {#if clientSearchInProgress}
+                  <LoaderCircle class="animate-spin flex-grow m-auto"/>
+                {:else}
+                  {#if clients.length === 0}
+                    <EmptyResults configuration={emptyClientsResultsConfiguration}/>
+                  {:else}
+                    <ScrollArea class="h-64 rounded-md border">
+                      <div class="p-4">
+                        <h4 class="mb-4 text-sm font-medium leading-none">Clients</h4>
+                        {#each clients as client}
+                          <Separator class="my-2" />
+                          <Button variant="ghost" size="sm" class="w-full"
+                            on:click={() => $formData.client_id = client.id}>
+                            <div class="flex flex-row gap-2 items-center text-sm truncate">
+                              <span>{client.name}</span>
+                              <span>{client.email}</span>
+                            </div>
+                          </Button>
+                        {/each}
+                      </div>
+                    </ScrollArea>
+                  {/if}
+                {/if}
+              </div>
+            </Popover.Content>
+          </Popover.Root>
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>

@@ -141,7 +141,7 @@ export const getClientsCount = async (project: Project): Promise<number | undefi
   return countQuery.data().count;
 }
 
-export const getClients = async (project: Project, limit: number, startAfter?: number | string | Document): Promise<StoreClient[]> => {
+export const getClients = async (project: Project, limit: number, startAfter?: number | string | Document, queries?: Partial<Record<keyof StoreClient, string | number>>): Promise<StoreClient[]> => {
   const clients: StoreClient[] = [];
   const app = getSecondaryApp(project);
   if (!app) { return clients };
@@ -149,6 +149,14 @@ export const getClients = async (project: Project, limit: number, startAfter?: n
   let clientsCursor = clientsCollectionRef.orderBy('created_at', 'desc');
   if (startAfter !== undefined && (typeof startAfter === 'number' && startAfter > -1)) {
     clientsCursor = clientsCursor.startAfter(startAfter);
+  }
+  if (queries && (('name' in queries) || ('email' in queries))) {
+    if (queries.name) {
+      clientsCursor = clientsCursor.where('name', '==', queries.name);
+    }
+    if (queries.email) {
+      clientsCursor = clientsCursor.where('email', '==', queries.email);
+    }
   }
   const clientsRes = await clientsCursor.limit(limit).get();
   if (!clientsRes || clientsRes.empty) {

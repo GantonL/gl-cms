@@ -1,5 +1,5 @@
 import type { EmptyResultsConfiguration } from "$lib/models/common";
-import { ShoppingCart } from "lucide-svelte";
+import { ShoppingCart, UserRoundX } from "lucide-svelte";
 
 export const emptyProductsResultsConfiguration: EmptyResultsConfiguration = {
   icon: ShoppingCart,
@@ -9,3 +9,9 @@ export const emptyProductsResultsConfiguration: EmptyResultsConfiguration = {
     event: 'create',
   }
 };
+
+export const emptyClientsResultsConfiguration: EmptyResultsConfiguration = {
+  icon: UserRoundX,
+  label: 'No clients found',
+  class: 'flex-grow',
+}

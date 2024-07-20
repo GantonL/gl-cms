@@ -4,6 +4,7 @@ import { deleteClient, getClients } from "$lib/server/store.db";
 import { getUser } from "$lib/server/users.db";
 import { error, json } from "@sveltejs/kit";
 import type { RequestEvent } from "../../$types";
+import type { StoreClient } from "$lib/models/store";
 
 export async function GET(event: RequestEvent) {
   const autheticatedUser = await getAuthenticatedUser(event);
@@ -22,7 +23,16 @@ export async function GET(event: RequestEvent) {
   }
   const pageAfterIndex = Number(event.url.searchParams.get('pageAfterIndex') ?? -1);
   const pageSize = Number(event.url.searchParams.get('pageSize') ?? 10);
-  const clients = await getClients(project, pageSize, pageAfterIndex);
+  const nameOrEmailQuery = String(event.url.searchParams.get('q') ?? '');
+  const queries: Partial<Record<keyof StoreClient, string | number>> = {};
+  if (nameOrEmailQuery.length > 0) {
+    if (nameOrEmailQuery.includes('@')) {
+      queries.email = nameOrEmailQuery;
+    } else {
+      queries.name = nameOrEmailQuery;
+    }
+  }
+  const clients = await getClients(project, pageSize, pageAfterIndex, queries);
   return json({
     clients
   })

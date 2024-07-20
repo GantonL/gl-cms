@@ -8,7 +8,7 @@
   const dispatch = createEventDispatcher();
 </script>
 
-<div class="border rounded-md p-4 flex flex-col gap-2 items-center justify-center">
+<div class="border rounded-md p-4 flex flex-col gap-2 items-center justify-center {configuration.class ?? ''}">
   <div class="flex flex-col gap-2 items-center justify-center text-muted-foreground">
     <svelte:component this={configuration?.icon ?? CircleOff} />
     <span>{configuration.label}</span>
