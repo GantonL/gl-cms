@@ -2,7 +2,7 @@
 	import { page } from "$app/stores";
 	import * as Card from "$lib/components/ui/card";
   import EmptyResults from "$lib/components/empty-results/empty-results.svelte";
-	import { emptyProductsResultsConfiguration } from "./configuration";
+	import { emptyProductsResultsConfiguration, emptyProductsSearchResultsConfiguration } from "./configuration";
 	import CreateEditOrderForm from "./create-edit-order-form.svelte";
 	import { superValidate, type Infer, type SuperValidated } from "sveltekit-superforms";
 	import { formSchema, type FormSchema } from "./schema";
@@ -12,13 +12,20 @@
 	import { toast } from "svelte-sonner";
 	import * as AlertDialog from "$lib/components/ui/alert-dialog";
 	import { Button } from "$lib/components/ui/button";
-	import { LoaderCircle } from "lucide-svelte";
+	import { LoaderCircle, MinusCircle, PlusCircle } from "lucide-svelte";
 	import { goto } from "$app/navigation";
+	import * as Dialog from "$lib/components/ui/dialog";
+	import { Input } from "$lib/components/ui/input";
+	import { ScrollArea } from "$lib/components/ui/scroll-area";
+	import { Separator } from "$lib/components/ui/separator";
   
   let createEditForm: SuperValidated<Infer<FormSchema>>;
   let deleteOrderOpened = false;
   let deletionInProgress = false;
   let saveInProgress = false;
+  let addProductsDalogOpened = false;
+  let fetchProductsInProgress = false;
+  let products: Record<string, any>[] = [];
 
   onMount(() => {
     initializeForm();
@@ -31,7 +38,7 @@
   }
 
   function onAddProduct() {
-
+    addProductsDalogOpened = true;
   }
 
   function onOrderUpdated(event: CustomEvent) {
@@ -67,8 +74,28 @@
         deletionInProgress = false;
       });
   }
+  let debounceSearchPhraseTimer: string | number | NodeJS.Timeout | undefined;
+  function debounceSearchProductsPhrase(event: InputEvent) {
+    fetchProductsInProgress = true;
+    clearTimeout(debounceSearchPhraseTimer);
+    debounceSearchPhraseTimer = setTimeout(() => {
+      fetchProducts(10, event?.target?.value);
+    }, 250);
+  }
 
-  $: order = $page.data.order;
+  function fetchProducts(limit?: number, query?: string) {
+    fetchProductsInProgress = false;
+  }
+
+  function addProductToOrder(product: Record<string, any>) {
+
+  }
+
+  function removeProductFromOrder(product: Record<string, any>) {
+
+  }
+
+  $: order = $page.data.order as StoreOrder;
   $: project = $page.data.project;
 </script>
 <Card.Root>
@@ -148,3 +175,43 @@
     </AlertDialog.Footer>
   </AlertDialog.Content>
 </AlertDialog.Root>
+
+<Dialog.Root bind:open={addProductsDalogOpened}>
+  <Dialog.Content class="sm:max-w-[425px]">
+    <Dialog.Header>
+      <Dialog.Title>Add products</Dialog.Title>
+    </Dialog.Header>
+    <Input placeholder="Search name or serial number" 
+      on:input={debounceSearchProductsPhrase}/>
+    {#if fetchProductsInProgress}
+      <LoaderCircle class="animate-spin flex-grow m-auto"/>
+    {:else}
+      {#if products.length === 0}
+        <EmptyResults configuration={emptyProductsSearchResultsConfiguration}/>
+      {:else}
+      <ScrollArea class="h-64 rounded-md border">
+        <div class="p-4">
+          <h4 class="mb-4 text-sm font-medium leading-none">Products</h4>
+          {#each products as product}
+            <Separator class="my-2" />
+            <div class="flex flex-row items-center justify-between gap-2 w-full">
+              <span class="truncate w-5/6">{product.name} | {product.serial_number}</span>
+              <div class="flex flex-row gap-2 items-center">
+                <Button variant="ghost" size="icon"
+                  on:click={(event) => addProductToOrder(product)}>
+                  <PlusCircle size=14/>
+                </Button>
+                <Button variant="ghost" size="icon"
+                  disabled={!order.items?.find(item => item.product_id === product.id)}
+                  on:click={(event) => removeProductFromOrder(product)}>
+                  <MinusCircle size=14/>
+                </Button>
+              </div>
+            </div>
+          {/each}
+        </div>
+      </ScrollArea>
+      {/if}
+    {/if}
+  </Dialog.Content>
+</Dialog.Root>

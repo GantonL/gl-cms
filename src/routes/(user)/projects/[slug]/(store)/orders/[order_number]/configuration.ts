@@ -10,6 +10,11 @@ export const emptyProductsResultsConfiguration: EmptyResultsConfiguration = {
   }
 };
 
+export const emptyProductsSearchResultsConfiguration: EmptyResultsConfiguration = {
+  icon: ShoppingCart,
+  label: 'No products found',
+}
+
 export const emptyClientsResultsConfiguration: EmptyResultsConfiguration = {
   icon: UserRoundX,
   label: 'No clients found',
