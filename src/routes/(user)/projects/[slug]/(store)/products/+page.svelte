@@ -33,7 +33,7 @@
     const failure = (error: any) => toast.error(`${failureMessage} ${error?.message || ''}`) 
     fetch(`${getDataRoute}?pageSize=${tableConfiguration?.pageSize}`, { method: 'GET' })
       .then((res) => res.json().then((res) => {
-          products = res?.clients ?? [];
+          products = res?.products ?? [];
           fetchingProducts = false;
         }, failure
       ),

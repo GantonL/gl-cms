@@ -327,7 +327,7 @@ export const getProducts = async (project: Project, limit: number, startAfter?: 
     return products;
   }
   products.push(...ordersRes.docs.map(doc => doc.data() as StoreProduct))
-   return products;
+  return products;
 }
 
 export const deleteProduct = async (project: Project, id: string): Promise<boolean> => {

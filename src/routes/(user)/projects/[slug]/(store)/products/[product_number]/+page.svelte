@@ -44,7 +44,7 @@
   }
 
 
-  $: product = $page.data.order as StoreProduct;
+  $: product = $page.data.product as StoreProduct;
   $: project = $page.data.project;
 </script>
 <Card.Root>
@@ -85,7 +85,7 @@
     <AlertDialog.Header>
       <AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
       <AlertDialog.Description>
-        This action cannot be undone. This will permanently delete order {product.serial_number} and all its related data.
+        This action cannot be undone. This will permanently delete product {product.serial_number} and all of its related data.
       </AlertDialog.Description>
     </AlertDialog.Header>
     <AlertDialog.Footer>

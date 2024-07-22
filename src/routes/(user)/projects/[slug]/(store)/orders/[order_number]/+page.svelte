@@ -166,7 +166,7 @@
     <AlertDialog.Header>
       <AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
       <AlertDialog.Description>
-        This action cannot be undone. This will permanently delete order {order.serial_number} and all its related data.
+        This action cannot be undone. This will permanently delete order {order.serial_number} and all of its related data.
       </AlertDialog.Description>
     </AlertDialog.Header>
     <AlertDialog.Footer>

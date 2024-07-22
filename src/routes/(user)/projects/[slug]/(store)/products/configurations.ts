@@ -1,14 +1,11 @@
-import DiceBearAvatar from "$lib/components/dice-bear-avatar/dice-bear-avatar.svelte";
 import type { EmptyResultsConfiguration } from "$lib/models/common";
 import type { StoreProduct } from "$lib/models/store";
 import type { TableConfiguration } from "$lib/models/table";
 import { CircleOff, Copy, Edit, Ellipsis } from "lucide-svelte";
 import { createRender } from "svelte-headless-table";
-import * as dicebearCollections from '@dicebear/collection'; 
 import ActionsMenu from "$lib/components/actions-menu/actions-menu.svelte";
 import type { ActionMenuConfiguration } from "$lib/models/menu-item";
 import { type EventDispatcher } from "svelte";
-import { Avatar } from "$lib/components/ui/avatar";
 
 const rowActions: ActionMenuConfiguration<StoreProduct> = {
   items: [
@@ -42,10 +39,8 @@ const rowActions: ActionMenuConfiguration<StoreProduct> = {
 export const tableConfiguration: TableConfiguration<StoreProduct> = {
   columns: (dispatch: EventDispatcher<Record<string, string>>) => [
     {
-      dataPath: 'images',
-      cell: (item) => {
-        return createRender(Avatar, {})
-      }
+      header: '#',
+      dataPath: 'serial_number'
     },
     {
       header: 'Name',
