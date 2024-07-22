@@ -2,7 +2,7 @@ import type { Project } from "$lib/models/project";
 import { CollectionReference, getFirestore } from "firebase-admin/firestore";
 import { getSecondaryApp } from "./secondary.db";
 import { StoreCollections } from "$lib/enums/collections";
-import { type StoreSettings, type StoreCategory, type StoreContact, type StoreOrder, type StoreClient } from "$lib/models/store";
+import { type StoreSettings, type StoreCategory, type StoreContact, type StoreOrder, type StoreClient, type StoreProduct } from "$lib/models/store";
 import { error } from "@sveltejs/kit";
 import { getDownloadURL, getStorage } from "firebase-admin/storage";
 import { StoreStorageDirectories } from "$lib/enums/storage";
@@ -295,4 +295,74 @@ export const getOrder = async (project: Project, serial_number: StoreOrder['seri
     return;
   }
   return query.docs.pop()?.data() as StoreOrder;
+}
+
+export const getProductsCount = async (project: Project, filter?: {path: keyof StoreProduct, value: string | number}): Promise<number | undefined> => {
+  const app = getSecondaryApp(project);
+  if (!app) { return };
+  const productsCollectionRef = getFirestore(app).collection(StoreCollections.Products);
+  let cursor;
+  if (filter && (filter.value && filter.value !== 'all')) {
+    cursor = productsCollectionRef.where(filter.path, '==', filter.value);
+  }
+  const countQuery = await (cursor ?? productsCollectionRef).count().get();
+  return countQuery.data().count;
+}
+
+export const getProducts = async (project: Project, limit: number, startAfter?: number | string | Document, filter?: {path: keyof StoreProduct, value: string | number}): Promise<StoreProduct[]> => {
+  const products: StoreProduct[] = [];
+  const app = getSecondaryApp(project);
+  if (!app) { return products };
+  const productsCollectionRef = getFirestore(app).collection(StoreCollections.Products);
+  let cursor;
+  if (filter && (filter.value && filter.value !== 'all')) {
+    cursor = productsCollectionRef.where(filter.path, '==', filter.value);
+  }
+  cursor = (cursor ?? productsCollectionRef).orderBy('created_at', 'desc');
+  if (startAfter !== undefined && (typeof startAfter === 'number' && startAfter > -1)) {
+    cursor = cursor.startAfter(startAfter);
+  }
+  const ordersRes = await cursor.limit(limit).get();
+  if (!ordersRes || ordersRes.empty) {
+    return products;
+  }
+  products.push(...ordersRes.docs.map(doc => doc.data() as StoreProduct))
+   return products;
+}
+
+export const deleteProduct = async (project: Project, id: string): Promise<boolean> => {
+  const app = getSecondaryApp(project);
+  if (!app) { return false };
+  const productssCollectionRef = getFirestore(app).collection(StoreCollections.Products);
+  const productsRes = await productssCollectionRef.where('id', '==', id).get();
+  const productsDoc = productsRes?.docs?.pop();
+  if (!productsDoc?.exists) { return false; };
+  const deleteRes = await productsDoc.ref.delete();
+  return !!deleteRes;
+}
+
+export const uploadProductImage = async (project: Project, id: string, image: File): Promise<Image | undefined> => {
+  let uploadedImage: Image | undefined = {path: '', url: ''};
+  const app = getSecondaryApp(project);
+  if (!app) { return uploadedImage };
+  const bucket = getStorage(app).bucket();
+  const buffer = Buffer.from(await image.arrayBuffer());
+  try {
+    uploadedImage.path = `${StoreStorageDirectories.Products}/${id}`;
+    const fileRef = bucket.file(uploadedImage.path);
+    await fileRef.save(buffer);
+    uploadedImage.url = await getDownloadURL(fileRef);
+  } catch {
+    uploadedImage = undefined;
+  }
+  return uploadedImage;
+}
+
+export const deleteProductImage = async (project: Project, id: string): Promise<boolean> => {
+  const app = getSecondaryApp(project);
+  if (!app) { return false };
+  const bucket = getStorage(app).bucket();
+  const fileRef = bucket.file(`${StoreStorageDirectories.Products}/${id}`);
+  const deleteRes = await fileRef.delete();
+  return !!deleteRes?.at(0);
 }

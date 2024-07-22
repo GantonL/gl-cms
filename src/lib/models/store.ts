@@ -59,3 +59,18 @@ export interface StoreOrder {
   serial_number: number;
   additional_discount?: number;
 }
+
+export type StoreProductSize = 'xs' | 's' | 'm' | 'l' | 'xl' | '2xl' | '3xl';
+
+export interface StoreProduct {
+  id: string;
+  serial_number: number;
+  create_at: number;
+  images: Image[];
+  name: string;
+  description?: string;
+  stock?: number;
+  discount?: number;
+  color?: string;
+  size?: StoreProductSize;
+}

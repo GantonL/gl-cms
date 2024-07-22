@@ -9,5 +9,5 @@ export enum StoreCollections {
   Contact = 'contact',
   Clients = 'clients',
   Orders = 'orders',
-  
+  Products = 'products'
 }

@@ -37,9 +37,7 @@ export const initializeAuthentication = (currentNavigationPath?: string) => {
           authRes.json().then((res) => {
             if (res?.success) {
               user.set(res.user);
-              if (currentNavigationPath) {
-                goto(currentNavigationPath);
-              }
+              goto(currentNavigationPath || '/');
             } else {
               user.set(undefined);
             }
