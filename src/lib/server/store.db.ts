@@ -262,13 +262,13 @@ export const createOrder = async (project: Project, order: Pick<StoreOrder, 'cli
     additional_discount: order.additional_discount,
     shipping_option: order.shipping_option,
     status: order.status,
-    serial_number: await getNextOrderSerialNumber(ordersCollectionRef),
+    serial_number: await getNextOrderSerialNumber<StoreOrder>(ordersCollectionRef),
   };
   const addRes = await ordersCollectionRef.add(newOrder);
   return addRes?.id ? newOrder : undefined;
 }
 
-export const getNextOrderSerialNumber = async (ordersCollectionRef: CollectionReference<StoreOrder>): Promise<number> => {
+export const getNextOrderSerialNumber = async <T extends { serial_number: number }>(ordersCollectionRef: CollectionReference<T>): Promise<number> => {
   const highest = (await ordersCollectionRef.orderBy('serial_number', 'desc').limit(1).get())?.docs?.pop()?.data()?.serial_number;
   if (!highest) {
     return 1;
@@ -365,4 +365,45 @@ export const deleteProductImage = async (project: Project, id: string): Promise<
   const fileRef = bucket.file(`${StoreStorageDirectories.Products}/${id}`);
   const deleteRes = await fileRef.delete();
   return !!deleteRes?.at(0);
+}
+
+
+export const getProduct = async (project: Project, serial_number: StoreProduct['serial_number']): Promise<StoreProduct | undefined> => {
+  const app = getSecondaryApp(project);
+  if (!app) { return; };
+  const query = await getFirestore(app).collection(StoreCollections.Products).where('serial_number', '==', serial_number).get();
+  if (query.empty) {
+    return;
+  }
+  return query.docs.pop()?.data() as StoreProduct;
+}
+
+export const createProduct = async (project: Project, product: Pick<StoreProduct, 'name' | 'description' | 'color' | 'discount' | 'size' | 'stock'>): Promise<StoreProduct | undefined> => {
+  const app = getSecondaryApp(project);
+  if (!app) { return };
+  const productsCollectionRef = getFirestore(app).collection(StoreCollections.Products);
+  const newProduct: StoreProduct = {
+    id: uuidv4(),
+    created_at: new Date().getTime(),
+    serial_number: await getNextOrderSerialNumber<StoreProduct>(productsCollectionRef),
+    name: product.name,
+    description: product.description,
+    color: product.color,
+    discount: product.discount,
+    size: product.size,
+    stock: product.stock,
+  };
+  const addRes = await productsCollectionRef.add(newProduct);
+  return addRes?.id ? newProduct : undefined;
+}
+
+export const updateProduct = async (project: Project, id: StoreProduct['id'], order: Partial<Omit<StoreProduct, 'id' | 'created_at' | 'serial_number'>>): Promise<boolean> => {
+  const app = getSecondaryApp(project);
+  if (!app) { return false };
+  const query = await getFirestore(app).collection(StoreCollections.Products).where('id', '==', id).get();
+  if (query.empty) {
+    return false;
+  }
+  const setRes = await query.docs[0].ref.set(order, { merge: true });
+  return !!setRes;
 }

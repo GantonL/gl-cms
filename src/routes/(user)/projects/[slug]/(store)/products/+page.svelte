@@ -7,6 +7,7 @@
 	import { LoaderCircle } from "lucide-svelte";
   import EmptyResults from "$lib/components/empty-results/empty-results.svelte";
 	import { page } from "$app/stores";
+	import { goto } from "$app/navigation";
 
   let products: StoreProduct[] = [];
   let fetchingProducts = false;
@@ -56,11 +57,10 @@
   }
 
   function onCreateProduct() {
-
+    goto(`products/new`);
   }
-
-  function onEditProduct(id: string) {
-
+  function onEditProduct(product: StoreProduct) {
+    goto(`products/${product.serial_number}`);
   }
 
   function copy(product: StoreProduct) {
@@ -72,14 +72,13 @@
         toast.error('Failed to copy: ', error)
       })
   }
-
-  $: project = $page.data.project;
 </script>
 <div class="py-5">
   {#if !fetchingProducts}
     {#if products?.length > 0}
       <DataTable data={products} configuration={tableConfiguration} 
         on:edit={(event)=> onEditProduct(event.detail)}
+        on:create={(_) => onCreateProduct()}
         on:search={(event) => onSearch(event.detail)}
         on:copy={(event) => copy(event.detail)}/>
     {:else}

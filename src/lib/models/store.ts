@@ -65,10 +65,10 @@ export type StoreProductSize = 'xs' | 's' | 'm' | 'l' | 'xl' | '2xl' | '3xl';
 export interface StoreProduct {
   id: string;
   serial_number: number;
-  create_at: number;
-  images: Image[];
+  created_at: number;
   name: string;
   description?: string;
+  images?: Image[];
   stock?: number;
   discount?: number;
   color?: string;

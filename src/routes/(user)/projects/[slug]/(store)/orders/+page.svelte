@@ -11,8 +11,6 @@
 
   let orders: StoreOrder[] = [];
   let fetchingOrders = false;
-  let deleteOrderOpened = false;
-  let selectedOrder: StoreOrder | undefined;
   
   const getDataRoute = 'orders';
   
@@ -64,10 +62,6 @@
         toast.error('Failed to copy: ', error)
       })
   }
-  function onDeleteOrder(order: StoreOrder) {
-    selectedOrder = order;
-    deleteOrderOpened = true;
-  }
   function onSearch(searchPhrase: string) {
     const failureMessage = 'Clients search failed:';
     const failure = (error: any) => toast.error(`${failureMessage} ${error?.message || ''}`) 
@@ -88,7 +82,6 @@
   {#if !fetchingOrders}
     {#if orders?.length > 0}
       <DataTable data={orders} configuration={tableConfiguration} 
-        on:delete={(event)=> onDeleteOrder(event.detail)} 
         on:edit={(event)=> onEditOrder(event.detail)}
         on:create={(_) => onCreateOrder()}
         on:search={(event) => onSearch(event.detail)}
