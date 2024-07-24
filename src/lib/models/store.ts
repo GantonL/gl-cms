@@ -62,6 +62,12 @@ export interface StoreOrder {
 
 export type StoreProductSize = 'xs' | 's' | 'm' | 'l' | 'xl' | '2xl' | '3xl';
 
+export interface StoreProductVariant {
+  size?: StoreProductSize;
+  color?: string;
+  images?: Image[];
+}
+
 export interface StoreProduct {
   id: string;
   serial_number: number;
@@ -71,6 +77,5 @@ export interface StoreProduct {
   images?: Image[];
   stock?: number;
   discount?: number;
-  color?: string;
-  size?: StoreProductSize;
+  variants?: StoreProductVariant[];
 }

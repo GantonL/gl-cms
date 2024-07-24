@@ -4,7 +4,7 @@ import { fail, superValidate } from "sveltekit-superforms";
 import type { Actions, PageServerLoad } from "./$types";
 import { zod } from "sveltekit-superforms/adapters";
 import { formSchema } from "./schema";
-import type { StoreProduct, StoreProductSize } from "$lib/models/store";
+import type { StoreProduct } from "$lib/models/store";
 
 let currentProject: Project;
 
@@ -31,10 +31,8 @@ export const actions: Actions = {
     const product: StoreProduct | undefined = await createProduct(currentProject!, {
       name: form.data.name,
       description: form.data.description,
-      color: form.data.color,
       discount: form.data.discount,
       stock: form.data.stock,
-      size: form.data.size as StoreProductSize,
     });
     if (product === undefined) {
       return fail(400, {form});
@@ -50,10 +48,9 @@ export const actions: Actions = {
     const productUpdateObject: Partial<Omit<StoreProduct, 'id' | 'created_at' | 'serial_number'>> = {
       name: form.data.name,
       description: form.data.description,
-      color: form.data.color,
       discount: form.data.discount,
       stock: form.data.stock,
-      size: form.data.size as StoreProductSize,
+      // vairants...
     };
     const updateRes = await updateProduct(currentProject, form.data.id!, productUpdateObject);
     if (!updateRes) {

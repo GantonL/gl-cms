@@ -22,13 +22,13 @@
     deletionInProgress = true;
     const body = new FormData();
     body.append('id', product.id);
-    const errMsg = `failed to delete order`;
-    fetch(`/projects/${project.id}/orders/${product.serial_number}`, { method: 'DELETE', body })
+    const errMsg = `failed to delete product`;
+    fetch(`/projects/${project.id}/products/${product.serial_number}`, { method: 'DELETE', body })
       .then((res) => {
         res?.json().then((res) => {
           if (res?.success) {
-            toast.success(`Successfuly deleted order`);
-            goto(`../orders`);
+            toast.success(`Successfuly deleted product`);
+            goto(`../products`);
           } else {
             toast.error(errMsg);
           }
