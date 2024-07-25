@@ -51,8 +51,22 @@ export const tableConfiguration: TableConfiguration<StoreProduct> = {
       dataPath: 'stock'
     },
     {
+      header: 'Variants',
+      dataPath: (product) => product.variants,
+      cell: (v) => {
+        return v.value?.length ?? 0;
+      }
+    },
+    {
+      header: 'Images',
+      dataPath: (product) => product.images,
+      cell: (v) => {
+        return v.value?.length ?? 0;
+      }
+    },
+    {
       header: 'Actions',
-      dataPath: (client) => client,
+      dataPath: (product) => product,
       cell: (c) => {
         const render = createRender(ActionsMenu, { configuration: { ...rowActions, data: c.value } });
         ['copy', 'edit'].forEach(eventType => {
