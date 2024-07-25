@@ -45,7 +45,6 @@ export type StoreOrderShippingOption = 'pickup' | 'delivery';
 export interface StoreOrderItem {
   product_id: string;
   amount: number;
-  price: number;
 }
 
 export interface StoreOrder {
@@ -75,6 +74,8 @@ export interface StoreProduct {
   created_at: number;
   name: string;
   stock: number;
+  price: number;
+  currency: string;
   description?: string;
   images?: Image[];
   discount?: number;

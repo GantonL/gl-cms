@@ -294,7 +294,12 @@ export const getOrder = async (project: Project, serial_number: StoreOrder['seri
   if (query.empty) {
     return;
   }
-  return query.docs.pop()?.data() as StoreOrder;
+  const order = query.docs.pop()?.data() as StoreOrder & { products: StoreProduct[] };
+  const productsIds = order.items?.map(item => item.product_id);
+  if (productsIds?.length) {
+    order.products = await getProducts(project, productsIds.length, undefined, {path: 'id', value: productsIds})
+  } 
+  return order;
 }
 
 export const getProductsCount = async (project: Project, filter?: {path: keyof StoreProduct, value: string | number}): Promise<number | undefined> => {
@@ -309,14 +314,15 @@ export const getProductsCount = async (project: Project, filter?: {path: keyof S
   return countQuery.data().count;
 }
 
-export const getProducts = async (project: Project, limit: number, startAfter?: number | string | Document, filter?: {path: keyof StoreProduct, value: string | number}): Promise<StoreProduct[]> => {
+export const getProducts = async (project: Project, limit: number, startAfter?: number | string | Document, filter?: {path: keyof StoreProduct, value: string | number | string[] | number[]}): Promise<StoreProduct[]> => {
   const products: StoreProduct[] = [];
   const app = getSecondaryApp(project);
   if (!app) { return products };
   const productsCollectionRef = getFirestore(app).collection(StoreCollections.Products);
   let cursor;
   if (filter && (filter.value && filter.value !== 'all')) {
-    cursor = productsCollectionRef.where(filter.path, '==', filter.value);
+    const operator = (typeof filter.value === 'string' || typeof filter.value === 'number') ? '==' : 'in'; 
+    cursor = productsCollectionRef.where(filter.path, operator, filter.value);
   }
   cursor = (cursor ?? productsCollectionRef).orderBy('created_at', 'desc');
   if (startAfter !== undefined && (typeof startAfter === 'number' && startAfter > -1)) {

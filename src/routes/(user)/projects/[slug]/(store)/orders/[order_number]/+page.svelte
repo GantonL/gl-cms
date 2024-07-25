@@ -2,22 +2,23 @@
 	import { page } from "$app/stores";
 	import * as Card from "$lib/components/ui/card";
   import EmptyResults from "$lib/components/empty-results/empty-results.svelte";
-	import { emptyProductsResultsConfiguration, emptyProductsSearchResultsConfiguration } from "./configuration";
+	import { emptyProductsResultsConfiguration, emptyProductsSearchResultsConfiguration, productTableConfiguration } from "./configuration";
 	import CreateEditOrderForm from "./create-edit-order-form.svelte";
 	import { superValidate, type Infer, type SuperValidated } from "sveltekit-superforms";
 	import { formSchema, type FormSchema } from "./schema";
 	import { onMount } from "svelte";
 	import { zod } from "sveltekit-superforms/adapters";
-	import type { StoreOrder } from "$lib/models/store";
+	import type { StoreOrder, StoreProduct } from "$lib/models/store";
 	import { toast } from "svelte-sonner";
 	import * as AlertDialog from "$lib/components/ui/alert-dialog";
 	import { Button } from "$lib/components/ui/button";
-	import { LoaderCircle, MinusCircle, PlusCircle } from "lucide-svelte";
+	import { Currency, LoaderCircle, MinusCircle, PlusCircle } from "lucide-svelte";
 	import { goto } from "$app/navigation";
 	import * as Dialog from "$lib/components/ui/dialog";
 	import { Input } from "$lib/components/ui/input";
 	import { ScrollArea } from "$lib/components/ui/scroll-area";
 	import { Separator } from "$lib/components/ui/separator";
+	import DataTable from "$lib/components/data-table/data-table.svelte";
   
   let createEditForm: SuperValidated<Infer<FormSchema>>;
   let deleteOrderOpened = false;
@@ -26,15 +27,31 @@
   let addProductsDalogOpened = false;
   let fetchProductsInProgress = false;
   let products: Record<string, any>[] = [];
+  let totalPrice: number = 0;
 
   onMount(() => {
     initializeForm();
+    initializeProducts();
   })
 
   function initializeForm() {
     superValidate(order, zod(formSchema)).then((form) => {
       createEditForm = form;
     })
+  }
+
+  function initializeProducts() {
+    products = order.items.map((item) => {
+      const product = order.products?.find(product => product.id === item.product_id);
+      return {
+        serial_number: product?.serial_number,
+        name: product?.name,
+        amount: item.amount,
+      }
+    });
+    totalPrice = order.products?.reduce((acc, curr) => {
+      return acc += curr.price * ((100 - (curr.discount ?? 0))/100);
+    }, 0) ?? 0;
   }
 
   function onAddProduct() {
@@ -95,7 +112,7 @@
 
   }
 
-  $: order = $page.data.order as StoreOrder;
+  $: order = $page.data.order as StoreOrder & { products?: StoreProduct[] };
   $: project = $page.data.project;
 </script>
 <Card.Root>
@@ -134,10 +151,13 @@
           <Card.Description>Handle products related to this order</Card.Description>
         </Card.Header>
         <Card.Content>
-          {#if !order.items || order.items?.length === 0}
+          {#if !products || products?.length === 0}
             <EmptyResults configuration={emptyProductsResultsConfiguration} on:create={onAddProduct}/>
           {:else}
-            <!-- data table -->
+            <DataTable data={products} configuration={productTableConfiguration} />
+            <div class="border rounded-md px-2 py-2">
+              Total price: {totalPrice}
+            </div>
           {/if}
         </Card.Content>
       </Card.Root>
