@@ -8,7 +8,9 @@
 	import { Button } from "$lib/components/ui/button";
 	import { LoaderCircle } from "lucide-svelte";
 	import { goto } from "$app/navigation";
-  
+  import EmptyResults from "$lib/components/empty-results/empty-results.svelte";
+  import { emptyImagesConfiguration, emptyVariantsConfiguration } from './configuration';
+
   let deleteProductOpened = false;
   let deletionInProgress = false;
   let saveInProgress = false;
@@ -43,6 +45,14 @@
       });
   }
 
+  function onAddImage() {
+
+  }
+
+  function onAddVariant() {
+    
+  }
+
 
   $: product = $page.data.product as StoreProduct;
   $: project = $page.data.project;
@@ -60,7 +70,45 @@
     </Card.Title>
   </Card.Header>
   <Card.Content>
-    
+    <div class="flex flex-row flex-wrap gap-4">
+      <Card.Root class=" flex-grow">
+        <Card.Header>
+          <Card.Title>Details</Card.Title>
+          <Card.Description>General information about this product</Card.Description>
+        </Card.Header>
+        <Card.Content>
+          
+        </Card.Content>
+      </Card.Root>
+      <Card.Root class=" flex-grow">
+        <Card.Header>
+          <Card.Title>Images</Card.Title>
+          <Card.Description>Handle images related to this product</Card.Description>
+        </Card.Header>
+        <Card.Content>
+          {#if !product.images || product.images?.length === 0}
+            <EmptyResults configuration={emptyImagesConfiguration} on:create={onAddImage}/>
+          {:else}
+            <!-- data table -->
+          {/if}
+        </Card.Content>
+      </Card.Root>
+    </div>
+    <div class="flex flex-row flex-wrap gap-4 mt-4">
+      <Card.Root class=" flex-grow">
+        <Card.Header>
+          <Card.Title>Variants</Card.Title>
+          <Card.Description>Handle variants related to this product</Card.Description>
+        </Card.Header>
+        <Card.Content>
+          {#if !product.variants || product.variants?.length === 0}
+            <EmptyResults configuration={emptyVariantsConfiguration} on:create={onAddVariant}/>
+          {:else}
+            <!-- data table -->
+          {/if}
+        </Card.Content>
+      </Card.Root>
+    </div>
   </Card.Content>
 </Card.Root>
 {#if product?.serial_number}
