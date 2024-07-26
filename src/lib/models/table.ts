@@ -32,6 +32,7 @@ export interface TableConfiguration<T> {
     label: string;
     icon?: ComponentType<Icon>
     class?: string;
+    disabled?: boolean;
   };
   search?: {
     placeholder?: string;

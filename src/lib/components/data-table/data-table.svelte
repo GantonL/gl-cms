@@ -24,6 +24,7 @@
 
   export let data: any[] = [];
   export let configuration: TableConfiguration<any>;
+  export let disabled = false; 
 
   let tableViewModel: TableViewModel<any, {
     page: TablePlugin<any, PaginationState, Record<string, never>, NewTablePropSet<never>>;
@@ -227,7 +228,7 @@
   {/if}
   {#if configuration?.createItemButton}
     <Button variant="outline" class="flex flex-row items-center gap-2 w-fit {configuration.createItemButton.class ?? ''}"
-      disabled={serverFetchInprogress}
+      disabled={serverFetchInprogress || disabled || configuration.createItemButton.disabled}
       on:click={() => dispatch('create')}>
       {#if configuration.createItemButton.icon}
         <svelte:component this={configuration.createItemButton.icon} size=16></svelte:component>

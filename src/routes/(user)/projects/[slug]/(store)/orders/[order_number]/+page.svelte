@@ -2,7 +2,7 @@
 	import { page } from "$app/stores";
 	import * as Card from "$lib/components/ui/card";
   import EmptyResults from "$lib/components/empty-results/empty-results.svelte";
-	import { emptyProductsResultsConfiguration, emptyProductsSearchResultsConfiguration, productTableConfiguration } from "./configuration";
+	import { emptyProductsResultsConfiguration, emptyProductsSearchResultsConfiguration, productsTableRowActions, productTableConfiguration } from "./configuration";
 	import CreateEditOrderForm from "./create-edit-order-form.svelte";
 	import { superValidate, type Infer, type SuperValidated } from "sveltekit-superforms";
 	import { formSchema, type FormSchema } from "./schema";
@@ -27,11 +27,12 @@
   let addProductsDalogOpened = false;
   let fetchProductsInProgress = false;
   let products: Record<string, any>[] = [];
-  let totalPrice: number = 0;
 
   onMount(() => {
     initializeForm();
     initializeProducts();
+    calculateTotalPrice();
+    handleOrderAction();
   })
 
   function initializeForm() {
@@ -49,9 +50,26 @@
         amount: item.amount,
       }
     });
-    totalPrice = order.products?.reduce((acc, curr) => {
-      return acc += curr.price * ((100 - (curr.discount ?? 0))/100);
+  }
+  
+  function calculateTotalPrice() {
+    let totalPrice = order.items?.reduce((acc, curr) => {
+      const product = order.products?.find(product => product.id === curr.product_id);
+      if (!product) { return acc };
+      return acc += product.price * ((100 - (product.discount ?? 0))/100) * curr.amount;
     }, 0) ?? 0;
+    totalPrice = totalPrice * ((100 - (order.additional_discount ?? 0))/100);
+    totalPrice = Number(totalPrice.toFixed(2));
+    order.total_price = totalPrice;
+  }
+
+  function handleOrderAction() {
+    const disabledByStatus = order.status === 'delivered' || order.status === 'canceled'; 
+    productsTableRowActions.items[1].disabled = disabledByStatus;
+    productTableConfiguration.columns = productTableConfiguration.columns;
+    if (productTableConfiguration.createItemButton) {
+      productTableConfiguration.createItemButton.disabled = disabledByStatus;
+    } 
   }
 
   function onAddProduct() {
@@ -128,39 +146,43 @@
     </Card.Title>
   </Card.Header>
   <Card.Content>
-    <div class="flex flex-row flex-wrap gap-4">
-      <Card.Root class=" flex-grow">
-        <Card.Header>
-          <Card.Title>Details</Card.Title>
-          <Card.Description>General information about this order</Card.Description>
-        </Card.Header>
-        <Card.Content>
-          {#if createEditForm}
-            <CreateEditOrderForm 
-              data={createEditForm} 
-              disabled={saveInProgress || deletionInProgress}
-              action={order ? 'update' : 'create'}
-              on:updated={(event) => onOrderUpdated(event)}
-              on:created={(event) => onOrderCreated(event)}/>
-          {/if}
-        </Card.Content>
-      </Card.Root>
-      <Card.Root class=" flex-grow">
-        <Card.Header>
-          <Card.Title>Products</Card.Title>
-          <Card.Description>Handle products related to this order</Card.Description>
-        </Card.Header>
-        <Card.Content>
-          {#if !products || products?.length === 0}
-            <EmptyResults configuration={emptyProductsResultsConfiguration} on:create={onAddProduct}/>
-          {:else}
-            <DataTable data={products} configuration={productTableConfiguration} />
-            <div class="border rounded-md px-2 py-2">
-              Total price: {totalPrice}
-            </div>
-          {/if}
-        </Card.Content>
-      </Card.Root>
+    <div class="flex flex-col gap-4">
+      <div class="flex flex-row flex-wrap gap-4">
+        <Card.Root class="flex-grow">
+          <Card.Header>
+            <Card.Title>Details</Card.Title>
+            <Card.Description>General information about this order</Card.Description>
+          </Card.Header>
+          <Card.Content>
+            {#if createEditForm}
+              <CreateEditOrderForm 
+                data={createEditForm} 
+                disabled={saveInProgress || deletionInProgress}
+                action={order ? 'update' : 'create'}
+                on:updated={(event) => onOrderUpdated(event)}
+                on:created={(event) => onOrderCreated(event)}/>
+            {/if}
+          </Card.Content>
+        </Card.Root>
+        <Card.Root class="flex-grow">
+          <Card.Header>
+            <Card.Title>Products</Card.Title>
+            <Card.Description>Handle products related to this order</Card.Description>
+          </Card.Header>
+          <Card.Content>
+            {#if !products || products?.length === 0}
+              <EmptyResults configuration={emptyProductsResultsConfiguration} on:create={onAddProduct}/>
+            {:else}
+              <DataTable 
+                data={products}
+                configuration={productTableConfiguration} />
+              {/if}
+            </Card.Content>
+        </Card.Root>
+      </div>
+      <div class="border rounded-md px-2 py-2">
+        <span>Total price: {order.total_price}</span>
+      </div>
     </div>
   </Card.Content>
 </Card.Root>

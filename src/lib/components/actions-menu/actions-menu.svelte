@@ -35,7 +35,11 @@
           <DropdownMenu.Group>
             {#each menuItem.group as groupItem}
               <DropdownMenu.Item class={groupItem.class}>
-                <button class="flex flex-row gap-2 items-center w-full" on:click={() => onGroupItemClick(groupItem)}>
+                <button class="flex flex-row gap-2 items-center w-full" 
+                  class:text-muted-foreground={groupItem.disabled || menuItem.disabled}
+                  class:cursor-not-allowed={groupItem.disabled || menuItem.disabled}
+                  disabled={groupItem.disabled || menuItem.disabled} 
+                  on:click={() => onGroupItemClick(groupItem)}>
                   {#if groupItem.icon}
                     <svelte:component this={groupItem.icon} size=16/>
                   {/if}

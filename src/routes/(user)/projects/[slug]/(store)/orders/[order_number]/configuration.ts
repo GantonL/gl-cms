@@ -27,7 +27,7 @@ export const emptyClientsResultsConfiguration: EmptyResultsConfiguration = {
   class: 'flex-grow',
 }
 
-const rowActions: ActionMenuConfiguration<StoreProduct> = {
+export const productsTableRowActions: ActionMenuConfiguration<StoreProduct> = {
   items: [
     {
       group: [
@@ -85,7 +85,13 @@ export const productTableConfiguration: TableConfiguration<StoreProduct> = {
       header: 'Actions',
       dataPath: (product) => product,
       cell: (c) => {
-        const render = createRender(ActionsMenu, { configuration: { ...rowActions, data: c.value } });
+        const render = createRender(ActionsMenu, { 
+          configuration: { 
+            items: productsTableRowActions.items, 
+            trigger: productsTableRowActions.trigger, 
+            data: c.value
+          } 
+        });
         ['copy', 'add', 'remove', 'delete'].forEach(eventType => {
           render.on(eventType, (event) => {
             dispatch(event.type, event.detail);

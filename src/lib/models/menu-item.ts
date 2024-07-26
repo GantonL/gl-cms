@@ -17,6 +17,7 @@ export interface ActionItem<T> {
   event?: string;
   class?: string;
   link?: string;
+  disabled?: boolean;
 }
 
 export interface ActionMenuConfiguration<T> {
