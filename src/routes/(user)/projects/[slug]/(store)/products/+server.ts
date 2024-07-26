@@ -26,9 +26,10 @@ export async function GET(event: RequestEvent) {
   const nameOrSerialNumberQuery = String(event.url.searchParams.get('q') ?? '');
   let filter: {path: keyof StoreProduct, value: string | number} | undefined;
   if (nameOrSerialNumberQuery.length > 0) {
+    const isNumber = /^\d+$/.test(nameOrSerialNumberQuery);
     filter = {
-      path: /^[0-9]$/.test(nameOrSerialNumberQuery) ? 'serial_number' : 'name',
-      value: nameOrSerialNumberQuery,
+      path: isNumber ? 'serial_number' : 'name',
+      value: isNumber ? Number(nameOrSerialNumberQuery) : String(nameOrSerialNumberQuery),
     }
   }
   const shouldCount = event.url.searchParams.get('count');

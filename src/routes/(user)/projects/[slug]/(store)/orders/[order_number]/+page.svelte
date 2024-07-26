@@ -42,7 +42,7 @@
   }
 
   function initializeProducts() {
-    products = order.items.map((item) => {
+    products = order.items?.map((item) => {
       const product = order.products?.find(product => product.id === item.product_id);
       return {
         serial_number: product?.serial_number,
@@ -119,7 +119,17 @@
   }
 
   function fetchProducts(limit?: number, query?: string) {
-    fetchProductsInProgress = false;
+    let path = `../products?pageSize=${limit}`;
+    if (query) {
+      path+=`&q=${query}`;
+    } 
+    fetch(path, { method: 'GET' })
+      .then((res) => res.json().then((res) => {
+          products = res?.products ?? [];
+          fetchProductsInProgress = false;
+        }
+      )
+    );
   }
 
   function addProductToOrder(product: Record<string, any>) {
@@ -228,31 +238,31 @@
     {#if fetchProductsInProgress}
       <LoaderCircle class="animate-spin flex-grow m-auto"/>
     {:else}
-      {#if products.length === 0}
+      {#if !products || products.length === 0}
         <EmptyResults configuration={emptyProductsSearchResultsConfiguration}/>
       {:else}
-      <ScrollArea class="h-64 rounded-md border">
-        <div class="p-4">
-          <h4 class="mb-4 text-sm font-medium leading-none">Products</h4>
-          {#each products as product}
-            <Separator class="my-2" />
-            <div class="flex flex-row items-center justify-between gap-2 w-full">
-              <span class="truncate w-5/6">{product.name} | {product.serial_number}</span>
-              <div class="flex flex-row gap-2 items-center">
-                <Button variant="ghost" size="icon"
-                  on:click={(event) => addProductToOrder(product)}>
-                  <PlusCircle size=14/>
-                </Button>
-                <Button variant="ghost" size="icon"
-                  disabled={!order.items?.find(item => item.product_id === product.id)}
-                  on:click={(event) => removeProductFromOrder(product)}>
-                  <MinusCircle size=14/>
-                </Button>
+        <ScrollArea class="h-64 rounded-md border">
+          <div class="p-4">
+            <h4 class="mb-4 text-sm font-medium leading-none">Products</h4>
+            {#each products as product}
+              <Separator class="my-2" />
+              <div class="flex flex-row items-center justify-between gap-2 w-full">
+                <span class="truncate w-5/6">{product.name} | {product.serial_number}</span>
+                <div class="flex flex-row gap-2 items-center">
+                  <Button variant="ghost" size="icon"
+                    on:click={(event) => addProductToOrder(product)}>
+                    <PlusCircle size=14/>
+                  </Button>
+                  <Button variant="ghost" size="icon"
+                    disabled={!order.items?.find(item => item.product_id === product.id)}
+                    on:click={(event) => removeProductFromOrder(product)}>
+                    <MinusCircle size=14/>
+                  </Button>
+                </div>
               </div>
-            </div>
-          {/each}
-        </div>
-      </ScrollArea>
+            {/each}
+          </div>
+        </ScrollArea>
       {/if}
     {/if}
   </Dialog.Content>

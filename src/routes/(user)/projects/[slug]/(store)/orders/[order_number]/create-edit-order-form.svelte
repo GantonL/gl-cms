@@ -34,10 +34,13 @@
   let submissionInProgress = false;
   let clients: StoreClient[] = [];
   let clientSearchInProgress = false;
+  let orderWithKnownClient = false;
 
   onMount(() => {
     if (!$formData.client_id) {
       initializeClientsOptions();
+    } else {
+      orderWithKnownClient = true;
     }
   });
 
@@ -127,7 +130,7 @@
                 "w-full justify-start pl-4 text-left font-normal",
                 !$formData.client_id && "text-muted-foreground"
               )}
-              disabled={submissionInProgress || disabled}>
+              disabled={submissionInProgress || disabled || orderWithKnownClient}>
               <span class="truncate w-5/6">
                 {$formData.client_id || 'Select a client'}
               </span>
@@ -148,8 +151,11 @@
                         <h4 class="mb-4 text-sm font-medium leading-none">Clients</h4>
                         {#each clients as client}
                           <Separator class="my-2" />
-                          <Button variant="ghost" size="sm" class="w-full"
-                            on:click={() => $formData.client_id = client.id}>
+                          <Button variant="ghost" size="sm" class="w-full {$formData.client_id === client.id ? ' bg-accent text-accent-foreground' : ''}"
+                            on:click={() => {
+                                $formData.client_id = client.id;
+                              }
+                            }>
                             <div class="flex flex-row gap-2 items-center text-sm truncate">
                               <span>{client.name}</span>
                               <span>{client.email}</span>
@@ -173,7 +179,7 @@
           <Form.Label>Shipping option</Form.Label>
           <Select.Root
             selected={selectedShippingOption}
-            disabled={submissionInProgress || disabled}
+            disabled={submissionInProgress || disabled || ($formData.status === 'canceled' || $formData.status === 'delivered')}
             onSelectedChange={(v) => {
               v && ($formData.shipping_option = v.value);
             }}
@@ -223,7 +229,7 @@
       <Form.Field {form} name="additional_discount">
         <Form.Control let:attrs>
           <Form.Label>Additional discount <span class="text-sm text-muted-foreground">(Optional)</span></Form.Label>
-          <Input type="number" {...attrs} bind:value={$formData.additional_discount} disabled={submissionInProgress || disabled}/>
+          <Input type="number" {...attrs} bind:value={$formData.additional_discount} disabled={submissionInProgress || disabled || ($formData.status === 'canceled' || $formData.status === 'delivered')}/>
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>
