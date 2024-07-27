@@ -70,6 +70,10 @@ export const productsTableRowActions: ActionMenuConfiguration<StoreProduct> = {
 export const productTableConfiguration: TableConfiguration<StoreProduct> = {
   columns: (dispatch: EventDispatcher<Record<string, string>>) => [
     {
+      dataPath: 'id',
+      hidden: true,
+    },
+    {
       header: '#',
       dataPath: 'serial_number'
     },
@@ -92,7 +96,7 @@ export const productTableConfiguration: TableConfiguration<StoreProduct> = {
             data: c.value
           } 
         });
-        ['copy', 'add', 'remove', 'delete'].forEach(eventType => {
+        ['copy', 'increase', 'decrease', 'delete'].forEach(eventType => {
           render.on(eventType, (event) => {
             dispatch(event.type, event.detail);
           })

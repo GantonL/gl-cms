@@ -9,6 +9,7 @@ export interface TableColumn<T> {
   header?: Column<T>['header'];
   cell?: DataLabel<T>;
   class?: string;
+  hidden?: boolean;
 }
 
 interface TableQueryParams<T> {

@@ -24,9 +24,10 @@
   let deleteOrderOpened = false;
   let deletionInProgress = false;
   let saveInProgress = false;
-  let addProductsDalogOpened = false;
+  let addProductsDailogOpened = false;
   let fetchProductsInProgress = false;
   let products: Record<string, any>[] = [];
+  let productsOptions: StoreProduct[] = [];
 
   onMount(() => {
     initializeForm();
@@ -48,6 +49,7 @@
         serial_number: product?.serial_number,
         name: product?.name,
         amount: item.amount,
+        id: item.product_id,
       }
     });
   }
@@ -73,7 +75,7 @@
   }
 
   function onAddProduct() {
-    addProductsDalogOpened = true;
+    addProductsDailogOpened = true;
   }
 
   function onOrderUpdated(event: CustomEvent) {
@@ -125,19 +127,77 @@
     } 
     fetch(path, { method: 'GET' })
       .then((res) => res.json().then((res) => {
-          products = res?.products ?? [];
+          productsOptions = res?.products ?? [];
           fetchProductsInProgress = false;
         }
       )
     );
   }
 
-  function addProductToOrder(product: Record<string, any>) {
-
+  function addProductToOrder(product: StoreProduct) {
+    if (!order.items) {
+      order.items = [];
+    }
+    if (!order.products) {
+      order.products = [];
+    }
+    const exisitingProduct = order.items.find((item) => item.product_id === product.id);
+    if (exisitingProduct) {
+      exisitingProduct.amount++;
+    } else {
+      order.items.push({
+        product_id: product.id,
+        amount: 1
+      });
+      order.products?.push(product);
+    }
+    initializeProducts();
+    calculateTotalPrice();
   }
 
-  function removeProductFromOrder(product: Record<string, any>) {
+  function increaseOrderItem(productId: string) {
+    const exisitingProduct = order.items.find((exisitingItem) => exisitingItem.product_id === productId);
+    if (exisitingProduct) {
+      exisitingProduct.amount++;
+    }
+    initializeProducts();
+    calculateTotalPrice();
+  }
 
+  
+  function removeProductFromOrder(product: StoreProduct) {
+    const exisitingProductIndex = order.items.findIndex((item) => item.product_id === product.id);
+    if (exisitingProductIndex > -1) {
+      const exisitingProduct = order.items[exisitingProductIndex];
+      exisitingProduct.amount--;
+      if (exisitingProduct.amount === 0) {
+        order.items.splice(exisitingProductIndex, 1);
+      }
+      initializeProducts();
+      calculateTotalPrice();
+    }
+  }
+
+  function decreaseOrderItem(productId: string) {
+    const exisitingProductIndex = order.items.findIndex((exisitingItem) => exisitingItem.product_id === productId);
+    if (exisitingProductIndex > -1) {
+      const exisitingProduct = order.items[exisitingProductIndex];
+      exisitingProduct.amount--;
+      if (exisitingProduct.amount === 0) {
+        order.items.splice(exisitingProductIndex, 1);
+      }
+      initializeProducts();
+      calculateTotalPrice();
+    }
+  }
+
+  function deleteOrderItem(productId: string) {
+    const exisitingProductIndex = order.items.findIndex((exisitingItem) => exisitingItem.product_id === productId);
+    if (exisitingProductIndex > -1) {
+      order.items.splice(exisitingProductIndex, 1);
+      initializeProducts();
+      calculateTotalPrice();
+    }
   }
 
   $: order = $page.data.order as StoreOrder & { products?: StoreProduct[] };
@@ -185,7 +245,11 @@
             {:else}
               <DataTable 
                 data={products}
-                configuration={productTableConfiguration} />
+                configuration={productTableConfiguration} 
+                on:create={onAddProduct}
+                on:increase={(event) => increaseOrderItem(event.detail.id)}
+                on:decrease={(event) => decreaseOrderItem(event.detail.id)}
+                on:delete={(event) => deleteOrderItem(event.detail.id)}/>
               {/if}
             </Card.Content>
         </Card.Root>
@@ -228,7 +292,7 @@
   </AlertDialog.Content>
 </AlertDialog.Root>
 
-<Dialog.Root bind:open={addProductsDalogOpened}>
+<Dialog.Root bind:open={addProductsDailogOpened}>
   <Dialog.Content class="sm:max-w-[425px]">
     <Dialog.Header>
       <Dialog.Title>Add products</Dialog.Title>
@@ -238,24 +302,24 @@
     {#if fetchProductsInProgress}
       <LoaderCircle class="animate-spin flex-grow m-auto"/>
     {:else}
-      {#if !products || products.length === 0}
+      {#if !productsOptions || productsOptions.length === 0}
         <EmptyResults configuration={emptyProductsSearchResultsConfiguration}/>
       {:else}
         <ScrollArea class="h-64 rounded-md border">
           <div class="p-4">
             <h4 class="mb-4 text-sm font-medium leading-none">Products</h4>
-            {#each products as product}
+            {#each productsOptions as product}
               <Separator class="my-2" />
               <div class="flex flex-row items-center justify-between gap-2 w-full">
                 <span class="truncate w-5/6">{product.name} | {product.serial_number}</span>
                 <div class="flex flex-row gap-2 items-center">
                   <Button variant="ghost" size="icon"
-                    on:click={(event) => addProductToOrder(product)}>
+                    on:click={(_) => addProductToOrder(product)}>
                     <PlusCircle size=14/>
                   </Button>
                   <Button variant="ghost" size="icon"
                     disabled={!order.items?.find(item => item.product_id === product.id)}
-                    on:click={(event) => removeProductFromOrder(product)}>
+                    on:click={(_) => removeProductFromOrder(product)}>
                     <MinusCircle size=14/>
                   </Button>
                 </div>

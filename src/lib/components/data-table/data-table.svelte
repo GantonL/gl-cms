@@ -96,7 +96,8 @@
   });
   
   function getColumns(config: TableColumn<any>[], table: Table<any, any>): Column<any>[] {
-    return config.map((item) => {
+    const filteredConfig = config.filter(item => !item.hidden);
+    return filteredConfig.map((item) => {
       return table.column({
         accessor: item.dataPath ?? '',
         header: item.header ?? '',
