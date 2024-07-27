@@ -1,4 +1,5 @@
 import type { Image } from "./image";
+import type { PaymentStatus } from "./payment";
 
 export interface StoreSettings {
   id: string;
@@ -56,6 +57,7 @@ export interface StoreOrder {
   total_price: number;
   items: StoreOrderItem[];
   serial_number: number;
+  payment_status: PaymentStatus;
   additional_discount?: number;
 }
 

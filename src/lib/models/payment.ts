@@ -1,0 +1,1 @@
+export type PaymentStatus = 'awaiting' | 'in_process' | 'partial' | 'received'; 

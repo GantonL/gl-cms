@@ -254,9 +254,28 @@
             </Card.Content>
         </Card.Root>
       </div>
-      <div class="border rounded-md px-2 py-2">
-        <span>Total price: {order.total_price}</span>
-      </div>
+      <Card.Root class="flex-grow">
+        <Card.Header>
+          <Card.Title>Summary</Card.Title>
+          <Card.Description>Total price and payment status</Card.Description>
+        </Card.Header>
+        <Card.Content>
+          <div class="flex flex-col gap-4">
+            <div>Total price: {order.total_price}</div>
+            {#if order.serial_number}
+              <div class="flex flex-row items-center justify-between flex-wrap">
+                <div>Payment Status: {order.payment_status ?? ''}</div>
+                <Button variant="secondary" size="lg" disabled={!['awaiting', 'partial', undefined].includes(order.payment_status) || !order.total_price}>
+                  {#if order.payment_status === 'in_process'}
+                    <LoaderCircle size=14/>
+                  {/if}
+                  PAYMENT
+                </Button>
+              </div>
+            {/if}
+          </div>
+        </Card.Content>
+      </Card.Root>
     </div>
   </Card.Content>
 </Card.Root>
