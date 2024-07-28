@@ -12,7 +12,7 @@
 	initializeAuthentication(path);
 	
 	$: pageTitle = $page?.data?.seo?.title;
-  $: pageDescription = $page?.data?.seo?.description;
+  	$: pageDescription = $page?.data?.seo?.description;
 	$: cookieBannerOpen = $page?.data?.cookieBannerOpen;
 	$: preferences = $page?.data?.cookiePreferences;
 </script>

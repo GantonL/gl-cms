@@ -78,6 +78,7 @@ export interface StoreProduct {
   stock: number;
   price: number;
   currency: string;
+  categories?: StoreCategory[];
   description?: string;
   images?: Image[];
   discount?: number;

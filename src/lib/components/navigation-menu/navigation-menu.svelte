@@ -1,24 +1,28 @@
 <script lang="ts">
-	import { ChevronsLeft, ChevronsRight, EyeOff, HeartCrack } from "lucide-svelte";
+	import { ChevronsLeft, ChevronsRight, HeartCrack } from "lucide-svelte";
   import Button from "../ui/button/button.svelte";
   import { Separator } from "../ui/separator";
   import { MoreNavigationItems, ItemsConfiguration, projectItemsConfiguraion } from "./configuration";
 	import NavigationItem from "./navigation-item.svelte";
 	import { currentProject, user } from "$lib/client/stores";
 	import { ProjectType } from "$lib/enums/projects";
+	import type { NavigationLink } from "$lib/models/navigation-link";
 
   export let currentPath: string;
   
   $: items = $user ? [
     ...ItemsConfiguration[$user.role],
-    ...projectItemsConfiguraion[$currentProject?.type ?? ProjectType.None]
+    ...(projectItemsConfiguraion[$currentProject?.type ?? ProjectType.None]).map<NavigationLink>((item) => {
+      item.link = `/projects/${$currentProject?.id ?? 'unknown'}/${item.link}`;
+      return item;
+    })
     ] : [];
   let expanded = false;
 </script>
 <nav class="flex items-start border-r flex-col h-full gap-2 p-2">
   {#if items.length }
     {#each items as navItem}
-      <NavigationItem navLink={navItem} active={navItem.link === currentPath || currentPath.includes(`/${navItem.link}`)} {expanded}/>
+      <NavigationItem navLink={navItem} active={navItem.link === currentPath || currentPath.includes(navItem.link)} {expanded}/>
     {/each}
     {#each MoreNavigationItems as navItem}
     <Separator />

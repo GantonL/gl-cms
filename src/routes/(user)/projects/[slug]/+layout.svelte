@@ -5,7 +5,11 @@
 	import type { Project } from "$lib/models/project";
   
   onMount(() => {
-    currentProject.set({name: project.name, type: project.type});
+    currentProject.set({
+      name: project.name, 
+      type: project.type,
+      id: project.id,
+    });
   })
   onDestroy(() => {
     currentProject.set(undefined);
