@@ -8,11 +8,11 @@
 	import { formSchema, type FormSchema } from "./schema";
 	import { onMount } from "svelte";
 	import { zod } from "sveltekit-superforms/adapters";
-	import type { StoreOrder, StoreProduct } from "$lib/models/store";
+	import type { StoreOrder, StoreOrderItem, StoreProduct } from "$lib/models/store";
 	import { toast } from "svelte-sonner";
 	import * as AlertDialog from "$lib/components/ui/alert-dialog";
 	import { Button } from "$lib/components/ui/button";
-	import { Currency, LoaderCircle, MinusCircle, PlusCircle } from "lucide-svelte";
+	import { LoaderCircle, MinusCircle, PlusCircle } from "lucide-svelte";
 	import { goto } from "$app/navigation";
 	import * as Dialog from "$lib/components/ui/dialog";
 	import { Input } from "$lib/components/ui/input";
@@ -28,7 +28,8 @@
   let fetchProductsInProgress = false;
   let products: Record<string, any>[] = [];
   let productsOptions: StoreProduct[] = [];
-
+  let createEditNonFormData: {total_price: number; items: StoreOrderItem[]} = {total_price: 0, items: []};
+  
   onMount(() => {
     initializeForm();
     initializeProducts();
@@ -52,6 +53,8 @@
         id: item.product_id,
       }
     });
+    createEditNonFormData.items = order.items;
+    createEditNonFormData = createEditNonFormData;
   }
   
   function calculateTotalPrice() {
@@ -63,6 +66,8 @@
     totalPrice = totalPrice * ((100 - (order.additional_discount ?? 0))/100);
     totalPrice = Number(totalPrice.toFixed(2));
     order.total_price = totalPrice;
+    createEditNonFormData.total_price = order.total_price;
+    createEditNonFormData = createEditNonFormData;
   }
 
   function handleOrderAction() {
@@ -226,7 +231,8 @@
           <Card.Content>
             {#if createEditForm}
               <CreateEditOrderForm 
-                data={createEditForm} 
+                data={createEditForm}
+                nonFormData={createEditNonFormData}
                 disabled={saveInProgress || deletionInProgress}
                 action={order ? 'update' : 'create'}
                 on:updated={(event) => onOrderUpdated(event)}

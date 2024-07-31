@@ -249,7 +249,7 @@ export const deleteOrder = async (project: Project, id: string): Promise<boolean
   return !!deleteRes;
 }
 
-export const createOrder = async (project: Project, order: Pick<StoreOrder, 'client_id' | 'items' | 'total_price' | 'additional_discount' | 'shipping_option' | 'status'>): Promise<StoreOrder | undefined> => {
+export const createOrder = async (project: Project, order: Pick<StoreOrder, 'client_id' | 'items' | 'total_price' | 'additional_discount' | 'shipping_option' | 'status' | 'payment_status'>): Promise<StoreOrder | undefined> => {
   const app = getSecondaryApp(project);
   if (!app) { return };
   const ordersCollectionRef = getFirestore(app).collection(StoreCollections.Orders);
@@ -262,6 +262,7 @@ export const createOrder = async (project: Project, order: Pick<StoreOrder, 'cli
     additional_discount: order.additional_discount,
     shipping_option: order.shipping_option,
     status: order.status,
+    payment_status: order.payment_status,
     serial_number: await getNextOrderSerialNumber<StoreOrder>(ordersCollectionRef),
   };
   const addRes = await ordersCollectionRef.add(newOrder);
@@ -276,7 +277,7 @@ export const getNextOrderSerialNumber = async <T extends { serial_number: number
   return highest + 1;
 }
 
-export const updateOrder = async (project: Project, id: StoreOrder['id'], order: Partial<Omit<StoreOrder, 'id' | 'created_at'>>): Promise<boolean> => {
+export const updateOrder = async (project: Project, id: StoreOrder['id'], order: Partial<Omit<StoreOrder, 'id' | 'created_at' | 'serial_number'>>): Promise<boolean> => {
   const app = getSecondaryApp(project);
   if (!app) { return false };
   const query = await getFirestore(app).collection(StoreCollections.Orders).where('id', '==', id).get();
@@ -384,7 +385,7 @@ export const getProduct = async (project: Project, serial_number: StoreProduct['
   return query.docs.pop()?.data() as StoreProduct;
 }
 
-export const createProduct = async (project: Project, product: Pick<StoreProduct, 'name' | 'description' | 'discount' | 'stock' | 'variants'>): Promise<StoreProduct | undefined> => {
+export const createProduct = async (project: Project, product: Pick<StoreProduct, 'name' | 'description' | 'discount' | 'stock' | 'variants' | 'currency' | 'price'>): Promise<StoreProduct | undefined> => {
   const app = getSecondaryApp(project);
   if (!app) { return };
   const productsCollectionRef = getFirestore(app).collection(StoreCollections.Products);
@@ -397,6 +398,8 @@ export const createProduct = async (project: Project, product: Pick<StoreProduct
     discount: product.discount,
     stock: product.stock,
     variants: product.variants,
+    price: product.price,
+    currency: product.currency,
   };
   const addRes = await productsCollectionRef.add(newProduct);
   return addRes?.id ? newProduct : undefined;

@@ -5,6 +5,7 @@ import type { Actions, PageServerLoad } from "./$types";
 import { zod } from "sveltekit-superforms/adapters";
 import { formSchema } from "./schema";
 import type { StoreOrder, StoreOrderStatus } from "$lib/models/store";
+import type { PaymentStatus } from "$lib/models/payment";
 
 let currentProject: Project;
 
@@ -33,8 +34,9 @@ export const actions: Actions = {
       shipping_option: form.data.shipping_option,
       status: form.data.status as StoreOrderStatus,
       additional_discount: form.data.additional_discount,
-      items: [],
-      total_price: 0//(form.data.items ?? []).reduce((acc, item) => acc += (item.price * item.amount), 0),
+      items: form.data.items,
+      total_price: form.data.total_price,
+      payment_status: form.data.payment_status as PaymentStatus,
     });
     if (order === undefined) {
       return fail(400, {form});
@@ -52,8 +54,9 @@ export const actions: Actions = {
       shipping_option: form.data.shipping_option,
       status: form.data.status as StoreOrderStatus,
       additional_discount: form.data.additional_discount,
-      // items: form.data.items,
-      // total_price: form.data.total_price ?? form.data.items.reduce((acc, item) => acc += (item.price * item.amount), 0),
+      items: form.data.items,
+      total_price: form.data.total_price,
+      payment_status: form.data.payment_status as PaymentStatus,
     };
     const updateRes = await updateOrder(currentProject, form.data.id!, orderUpdateObject);
     if (!updateRes) {

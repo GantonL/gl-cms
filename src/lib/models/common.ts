@@ -10,3 +10,8 @@ export interface EmptyResultsConfiguration {
   },
   class?: string;
 }
+
+export interface CurrencyItem {
+  label: string;
+  icon: string; // HTML Entity hex
+}

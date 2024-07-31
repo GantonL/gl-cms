@@ -18,7 +18,7 @@
   import * as Popover from "$lib/components/ui/popover";
 	import { cn } from "$lib/utils";
 	import { Button, buttonVariants } from "$lib/components/ui/button";
-	import type { StoreClient } from "$lib/models/store";
+	import type { StoreClient, StoreOrderItem } from "$lib/models/store";
   import EmptyResults from "$lib/components/empty-results/empty-results.svelte";
   import { emptyClientsResultsConfiguration } from "./configuration";
 	import { Separator } from "$lib/components/ui/separator";
@@ -27,6 +27,8 @@
   export let data: SuperValidated<Infer<FormSchema>>;
   export let action: 'update' | 'create';
   export let disabled = false;
+  export let nonFormData: {total_price: number; items: StoreOrderItem[]};
+
   let enhance: SuperForm<Infer<FormSchema>>['enhance'];
   let form: SuperForm<Infer<FormSchema>>;
   let formData: SuperForm<Infer<FormSchema>>['form'];
@@ -64,10 +66,13 @@
 
   function updateFormData() {
     form = superForm(data.data, {
+      dataType: 'json',
       validators: zodClient(formSchema),
       onSubmit: (input) => {
         submissionInProgress = true;
-        input.formData.append('id', String($formData.id))
+        input.formData.set('id', String($formData.id));
+        input.formData.set('total_price', String(nonFormData.total_price));
+        input.formData.set('items', JSON.stringify(nonFormData.items));
       },
       onUpdated: ({form: f}) => {
         if (f?.valid) {

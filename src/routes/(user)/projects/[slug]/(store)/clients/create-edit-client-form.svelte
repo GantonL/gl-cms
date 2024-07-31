@@ -32,7 +32,7 @@
       validators: zodClient(formSchema),
       onSubmit: (input) => {
         submissionInProgress = true;
-        input.formData.append('id', String($formData.id))
+        input.formData.set('id', String($formData.id))
       },
       onUpdated: ({form: f}) => {
         if (f?.valid) {
