@@ -7,6 +7,10 @@ import {
   RAICH_DESGINS_FB_CLIENT_EMAIL,
   RAICH_DESGINS_FB_PRIVATE_KEY,
   RAICH_DESGINS_STORAGE_BUCKET,
+  DRLK_FB_PROJECT_ID,
+  DRLK_FB_CLIENT_EMAIL,
+  DRLK_FB_PRIVATE_KEY,
+  DRLK_STORAGE_BUCKET,
 } from "$env/static/private";
 
 export const PROJECTS_KEYS: Record<string, Record<string, string>> = {
@@ -20,6 +24,12 @@ export const PROJECTS_KEYS: Record<string, Record<string, string>> = {
     'fb-project-id': RAICH_DESGINS_FB_PROJECT_ID,
     'fb-client-email': RAICH_DESGINS_FB_CLIENT_EMAIL,
     'fb-private-key': RAICH_DESGINS_FB_PRIVATE_KEY,
-    'fb-storage-bucket': RAICH_DESGINS_STORAGE_BUCKET,    
+    'fb-storage-bucket': RAICH_DESGINS_STORAGE_BUCKET,
+  },
+  'drlk': {
+    'fb-project-id': DRLK_FB_PROJECT_ID,
+    'fb-client-email': DRLK_FB_CLIENT_EMAIL,
+    'fb-private-key': DRLK_FB_PRIVATE_KEY,
+    'fb-storage-bucket': DRLK_STORAGE_BUCKET,
   }
 }

@@ -2,7 +2,7 @@
 	import { ChevronsLeft, ChevronsRight, HeartCrack } from "lucide-svelte";
   import Button from "../ui/button/button.svelte";
   import { Separator } from "../ui/separator";
-  import { MoreNavigationItems, ItemsConfiguration, projectItemsConfiguraion } from "./configuration";
+  import { MoreNavigationItems, ItemsConfiguration, projectItemsConfiguration } from "./configuration";
 	import NavigationItem from "./navigation-item.svelte";
 	import { currentProject, user } from "$lib/client/stores";
 	import { ProjectType } from "$lib/enums/projects";
@@ -11,16 +11,21 @@
   export let currentPath: string;
   
   $: items = $user ? [
-    ...ItemsConfiguration[$user.role],
-    ...(projectItemsConfiguraion[$currentProject?.type ?? ProjectType.None]).map<NavigationLink>((item) => {
-      item.link = `/projects/${$currentProject?.id ?? 'unknown'}/${item.link}`;
-      return item;
-    })
-    ] : [];
+          ...ItemsConfiguration[$user.role].map<NavigationLink>((item) => {
+            item.link = `/${item.path}`;
+            return item;
+          }),
+          ...(projectItemsConfiguration[$currentProject?.type ?? ProjectType.None]).map<NavigationLink>((item) => {
+            item.link = `/projects/${$currentProject?.id ?? 'unknown'}/${item.path}`;
+            return item;
+          })
+        ] : 
+        [];
+  
   let expanded = false;
 </script>
 <nav class="flex items-start border-r flex-col h-full gap-2 p-2">
-  {#if items.length }
+  {#if items.length > 0 }
     {#each items as navItem}
       <NavigationItem navLink={navItem} active={navItem.link === currentPath || currentPath.includes(navItem.link)} {expanded}/>
     {/each}

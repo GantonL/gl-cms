@@ -11,3 +11,7 @@ export enum StoreCollections {
   Orders = 'orders',
   Products = 'products'
 }
+
+export enum ClinicCollections {
+  Patients = 'patients',
+}

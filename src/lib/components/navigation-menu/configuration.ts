@@ -1,14 +1,24 @@
 import type { NavigationLink } from "$lib/models/navigation-link";
 import { UserRole } from "$lib/enums/user-role";
-import { Barcode, Grid2X2, HandMetal, Phone, Settings, ShoppingCart, SquareUser, Users } from "lucide-svelte";
+import { Barcode, ContactRound, Grid2X2, HandMetal, Phone, Settings, ShoppingCart, SquareUser, Users } from "lucide-svelte";
 import { ProjectType } from "$lib/enums/projects";
 
 const sharedItemsConfiguration: NavigationLink[] = [
-  { label: 'Projects', icon: HandMetal, link: '/projects' }, 
+  { 
+    label: 'Projects', 
+    icon: HandMetal, 
+    path: 'projects',
+    link: ''
+  }, 
 ];
 
 const AdminItemsConfiguration: NavigationLink[] = [
-  { label: 'Users', icon: Users, link: '/users' }, 
+  { 
+    label: 'Users', 
+    icon: Users, 
+    path: 'users',
+    link: ''
+  }, 
   ...sharedItemsConfiguration,
 ];
 
@@ -20,52 +30,73 @@ const NavigationItemsConfiguration: NavigationLink[] = [
 const settings: NavigationLink = 
   {
     label: 'Settings',
-    link: 'settings',
+    path: 'settings',
+    link: '',
     icon: Settings,
   };
 const storeSettings: NavigationLink = 
   {
     label: 'Settings',
-    link: 'store-settings',
+    path: 'store-settings',
+    link: '',
     icon: Settings,
   };
 const products: NavigationLink = 
   {
     label: 'Products',
-    link: 'products',
+    path: 'products',
+    link: '',
     icon: Barcode
   };
 const categories: NavigationLink = 
   {
     label: 'Categories',
-    link: 'categories',
+    path: 'categories',
+    link: '',
     icon: Grid2X2
   };
 const clients: NavigationLink = 
   {
     label: 'Clients',
-    link: 'clients',
+    path: 'clients',
+    link: '',
     icon: SquareUser
   };
 const orders: NavigationLink = 
   {
     label: 'Orders',
-    link: 'orders',
+    path: 'orders',
+    link: '',
     icon: ShoppingCart
   };
 const contact: NavigationLink = 
   {
     label: 'Contact',
-    link: 'contact',
+    path: 'contact',
+    link: '',
     icon: Phone
   };
+const patients: NavigationLink = 
+{
+  label: 'Patients',
+  path: 'patients',
+  link: '',
+  icon: ContactRound
+}
+const clinicSettings: NavigationLink = 
+{
+  label: 'Settings',
+  path: 'clinic-settings',
+  link: '',
+  icon: Settings,
+};
 
 export const ItemsConfiguration: Record<UserRole, NavigationLink[]> = {
   [UserRole.Admin]: AdminItemsConfiguration,
   [UserRole.User]: NavigationItemsConfiguration,
 }
 
-export const projectItemsConfiguraion: Record<ProjectType, NavigationLink[]> = {
+export const projectItemsConfiguration: Record<ProjectType, NavigationLink[]> = {
   [ProjectType.None]: [],
   [ProjectType.Store]: [
     orders,
@@ -78,6 +109,10 @@ export const projectItemsConfiguraion: Record<ProjectType, NavigationLink[]> = {
   [ProjectType.Website]: [
     contact,
     settings,
+  ],
+  [ProjectType.Clinic]: [
+    patients,
+    clinicSettings,
   ],
 }
 

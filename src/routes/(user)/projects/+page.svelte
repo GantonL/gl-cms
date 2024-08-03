@@ -27,7 +27,7 @@
   }
 
   function selectProject(event: CustomEvent) {
-    goto(`/projects/${event.detail}/orders`);
+    goto(`/projects/${event.detail}`);
   }
 
   $: projects = $page.data.projects;
