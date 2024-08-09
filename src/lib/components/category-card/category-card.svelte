@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { StoreCategory } from "$lib/models/store";
-	import { Edit2, ImageOff, Plus, Trash } from "lucide-svelte";
+	import { Download, Edit2, ImageOff, Plus, Trash } from "lucide-svelte";
 	import { Button } from "../ui/button";
 	import * as Card from "../ui/card";
 	import * as Tooltip from "../ui/tooltip";
@@ -16,18 +16,25 @@
       <Button variant="ghost" class="w-full h-full" on:click={() => dispatch('create')}><Plus size=24/></Button>
     {:else}
     <Card.Header>
-      <div class="w-full h-24 rounded-md">
+      <figure class="w-full h-24 rounded-md relative">
         {#if category.image?.url}
-        <!-- <a href={category.image.url}>
-          add download button
-        </a> -->
+        <a href={category.image.url} class="absolute right-1 top-1">
+          <Tooltip.Root>
+            <Tooltip.Trigger>
+              <Button variant="outline" size="icon" class="bg-secondary/50">
+                <Download size=14></Download>
+              </Button>
+            </Tooltip.Trigger>
+            <Tooltip.Content>Download</Tooltip.Content>
+          </Tooltip.Root>
+        </a>
         <img class="rounded-md object-center object-fill h-full w-full" src={category.image.url} alt="Category">
         {:else}
           <div class="flex items-center justify-center border rounded-md h-full text-muted-foreground">
             <ImageOff size=24></ImageOff>
           </div>
         {/if}
-      </div>
+      </figure>
       <Card.Title>{category.title}</Card.Title>
     </Card.Header>
     <Card.Content>
