@@ -16,15 +16,18 @@
       <Button variant="ghost" class="w-full h-full" on:click={() => dispatch('create')}><Plus size=24/></Button>
     {:else}
     <Card.Header>
-      <figure class="w-full h-24 rounded-md">
+      <div class="w-full h-24 rounded-md">
         {#if category.image?.url}
-          <img class="rounded-md object-center object-fill" src={category.image?.url} alt="Category">
+        <!-- <a href={category.image.url}>
+          add download button
+        </a> -->
+        <img class="rounded-md object-center object-fill h-full w-full" src={category.image.url} alt="Category">
         {:else}
           <div class="flex items-center justify-center border rounded-md h-full text-muted-foreground">
             <ImageOff size=24></ImageOff>
           </div>
         {/if}
-      </figure>
+      </div>
       <Card.Title>{category.title}</Card.Title>
     </Card.Header>
     <Card.Content>

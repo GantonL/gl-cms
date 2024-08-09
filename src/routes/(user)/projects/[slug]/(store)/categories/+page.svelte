@@ -67,7 +67,7 @@
 
 <div class="grid grid-cols-3 gap-4">
   <CategoryCard category={null} 
-    on:create={(_) => createCategory()}/>
+    on:create={(_) => createCategory()} />
     {#each categories as category}
       <CategoryCard 
         {category} 
@@ -82,7 +82,9 @@
     <Dialog.Header>
       <Dialog.Title>{selectedCategory ? 'Edit' : 'Create'} category</Dialog.Title>
     </Dialog.Header>
-    <CreateEditCategoryForm data={selectedCategoryForm} action={selectedCategory ? 'update' : 'create'}/>
+    <CreateEditCategoryForm data={selectedCategoryForm} action={selectedCategory ? 'update' : 'create'}
+      on:create={() => editCategoryOpened = false}
+      on:update={() => editCategoryOpened = false}/>
   </Dialog.Content>
 </Dialog.Root>
 

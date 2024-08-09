@@ -7,7 +7,8 @@ const categorySchema = z.object({
   discount: z.number({coerce: true}).optional(),
   imageFile: z
   .any()
-  .optional()
+  .optional(),
+  id: z.string().optional(),
 });
 
 export const formSchema = categorySchema

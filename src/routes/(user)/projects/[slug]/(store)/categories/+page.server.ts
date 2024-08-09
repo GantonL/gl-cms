@@ -58,6 +58,29 @@ export const actions: Actions = {
         withFiles({ form }),
       );
     }
+    const categoryId = form.data.id!;
+    const catepgryUpdated = await updateCategory(currentProject!, categoryId, {
+      title: form.data.title,
+      display_location: form.data.display_location,
+      discount: form.data.discount
+    });
+    if (!catepgryUpdated) {
+      return fail(400, withFiles({form}));
+    }
+    if (form.data.imageFile) {
+      // This will override an existing image 
+      const image = await uploadCategoryImage(currentProject!, categoryId, form.data.imageFile);
+      if (image) {
+        await updateCategory(currentProject!, categoryId, { image });
+      } else {
+        return {
+          form,
+          error: {
+            message: `Failed to upload image for category ${form.data.title}`
+          }
+        }
+      }
+    }
     return withFiles({ form });
   }
 };
