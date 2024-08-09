@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { StoreCategory } from "$lib/models/store";
-	import { Edit2, Plus, Trash } from "lucide-svelte";
+	import { Edit2, ImageOff, Plus, Trash } from "lucide-svelte";
 	import { Button } from "../ui/button";
 	import * as Card from "../ui/card";
 	import * as Tooltip from "../ui/tooltip";
@@ -16,16 +16,21 @@
       <Button variant="ghost" class="w-full h-full" on:click={() => dispatch('create')}><Plus size=24/></Button>
     {:else}
     <Card.Header>
+      <figure class="w-full h-24 rounded-md">
+        {#if category.image?.url}
+          <img class="rounded-md object-center object-fill" src={category.image?.url} alt="Category">
+        {:else}
+          <div class="flex items-center justify-center border rounded-md h-full text-muted-foreground">
+            <ImageOff size=24></ImageOff>
+          </div>
+        {/if}
+      </figure>
       <Card.Title>{category.title}</Card.Title>
     </Card.Header>
     <Card.Content>
-      <div class="flex flex-row gap-2">
-        <p class="text-sm text-muted-foreground font-italic">Created at: {new Intl.DateTimeFormat('en-US').format(category.created_at)}</p>
-        {#if category.image?.url}
-          <figure class="max-w-24">
-            <img class="border rounded-md" src={category.image?.url} alt="Category">
-          </figure>
-        {/if}
+      <div class="flex flex-col gap-2">
+        <span class="text-sm text-muted-foreground font-italic">Created at: {new Intl.DateTimeFormat('en-US').format(category.created_at)}</span>
+        <span class="text-sm text-muted-foreground font-italic">Discount: {category.discount}%</span>
       </div>
     </Card.Content>
     <Card.Footer>
