@@ -2,8 +2,10 @@ import type { Image } from "./image";
 
 export interface ClinicPatient {
     id: string;
-    private_name: string;
+    created_at: number;
+    first_name: string;
     sur_name: string;
+    personal_id: string;
     phone: string;
     email: string;
     date_of_birth: string;

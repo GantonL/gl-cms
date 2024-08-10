@@ -1,10 +1,8 @@
 import { getAuthenticatedUser, isAdminUser } from "$lib/server/auth";
 import { getProject } from "$lib/server/projects.db";
-import { getOrders, getOrdersCount } from "$lib/server/store.db";
 import { getUser } from "$lib/server/users.db";
 import { error, json } from "@sveltejs/kit";
 import type { RequestEvent } from "../../$types";
-import type { StoreOrder } from "$lib/models/store";
 import type { ClinicPatient } from "$lib/models/clinic";
 import { getPatients, getPatientsCount } from "$lib/server/clinic.db";
 
@@ -29,7 +27,7 @@ export async function GET(event: RequestEvent) {
   let filter: {path: keyof ClinicPatient, value: string | number} | undefined;
   if (nameOrEmailQuery.length > 0) {
     filter = {
-      path: nameOrEmailQuery.includes('@') ? 'email' : 'name',
+      path: nameOrEmailQuery.includes('@') ? 'email' : 'first_name',
       value: nameOrEmailQuery,
     }
   }

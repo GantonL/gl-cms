@@ -11,12 +11,13 @@
 
   let patients: ClinicPatient[] = [];
   let fetchingPatients = false;
+  let activeSearchPhrase = false;
   
   const getDataRoute = 'patients';
   
   onMount(() => {
     tableConfiguration.serverSide = {
-      totalItems: $page.data.totalOrders,
+      totalItems: $page.data.totalPatients,
       route: getDataRoute,
       paginationQuery: {
         paramName: 'pageAfterIndex',
@@ -65,7 +66,8 @@
 
   function onSearch(searchPhrase: string) {
     const failureMessage = 'Patients search failed:';
-    const failure = (error: any) => toast.error(`${failureMessage} ${error?.message || ''}`) 
+    const failure = (error: any) => toast.error(`${failureMessage} ${error?.message || ''}`);
+    activeSearchPhrase = !!searchPhrase;
     fetch(`${getDataRoute}?pageSize=${tableConfiguration?.pageSize}&q=${searchPhrase}&count=true`, { method: 'GET' })
       .then((res) => res.json().then((res) => {
           patients = res?.patients ?? [];
@@ -78,14 +80,22 @@
     );
   }
 
+  function onChat(patient: ClinicPatient) {
+    let link = 'https://wa.me/972';
+    const phoneNumber = patient.phone.split('-').join();
+    link+=phoneNumber;
+    window.open(link, '_blank');
+  }
+
 </script>
 <div class="py-5">
   {#if !fetchingPatients}
-    {#if patients?.length > 0}
+    {#if patients?.length > 0 || activeSearchPhrase}
       <DataTable data={patients} configuration={tableConfiguration} 
         on:edit={(event)=> onEditPatient(event.detail)}
         on:create={(_) => onCreatePatient()}
         on:search={(event) => onSearch(event.detail)}
+        on:open={(event) => onChat(event.detail)}
         on:copy={(event) => copy(event.detail)}/>
     {:else}
       <EmptyResults configuration={emptyResultsConfiguration} on:create={onCreatePatient}/>

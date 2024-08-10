@@ -3,7 +3,7 @@ import type { ClinicPatient } from "$lib/models/clinic";
 import type { EmptyResultsConfiguration } from "$lib/models/common";
 import type { ActionMenuConfiguration } from "$lib/models/menu-item";
 import type { TableConfiguration } from "$lib/models/table";
-import { CircleOff, Copy, Edit, Ellipsis } from "lucide-svelte";
+import { CircleOff, Copy, Edit, Ellipsis, MessageSquare } from "lucide-svelte";
 import type { EventDispatcher } from "svelte";
 import { createRender } from "svelte-headless-table";
 import DiceBearAvatar from "$lib/components/dice-bear-avatar/dice-bear-avatar.svelte";
@@ -26,6 +26,11 @@ const rowActions: ActionMenuConfiguration<ClinicPatient> = {
           label: 'Copy ID',
           icon: Copy,
           event: 'copy'
+        },
+        {
+          label: 'Open chat',
+          icon: MessageSquare,
+          event: 'open'
         },
       ],
     },
@@ -54,14 +59,18 @@ export const tableConfiguration: TableConfiguration<ClinicPatient> = {
           cell: (item) => {
             return createRender(DiceBearAvatar, { 
               seed: item.value,
-              style: dicebearCollections.notionists,
+              style: dicebearCollections.pixelArt,
               fallback: '?'
             });
           }
         },
         {
-          header: 'Name',
-          dataPath: 'name'
+          header: 'First name',
+          dataPath: 'first_name'
+        },
+        {
+          header: 'Surname',
+          dataPath: 'sur_name'
         },
         {
           header: 'Email',
@@ -80,7 +89,7 @@ export const tableConfiguration: TableConfiguration<ClinicPatient> = {
           dataPath: (client) => client,
           cell: (c) => {
             const render = createRender(ActionsMenu, { configuration: { ...rowActions, data: c.value } });
-            ['copy', 'edit'].forEach(eventType => {
+            ['copy', 'edit', 'open'].forEach(eventType => {
               render.on(eventType, (event) => {
                 dispatch(event.type, event.detail);
               })
