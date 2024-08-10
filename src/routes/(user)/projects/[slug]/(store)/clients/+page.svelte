@@ -21,7 +21,8 @@
   let selectedClient: StoreClient | undefined;
   let editClientOpened = false;
   let selectedClientForm: SuperValidated<Infer<FormSchema>>;
-  
+  let activeSearchPhrase: boolean;
+
   const getDataRoute = 'clients';
   
   onMount(() => {
@@ -95,7 +96,8 @@
 
   function onSearch(searchPhrase: string) {
     const failureMessage = 'Clients search failed:';
-    const failure = (error: any) => toast.error(`${failureMessage} ${error?.message || ''}`) 
+    const failure = (error: any) => toast.error(`${failureMessage} ${error?.message || ''}`);
+    activeSearchPhrase = !!searchPhrase;
     fetch(`${getDataRoute}?pageSize=${tableConfiguration?.pageSize}&q=${searchPhrase}&count=true`, { method: 'GET' })
       .then((res) => res.json().then((res) => {
           clients = res?.clients ?? [];
@@ -151,7 +153,7 @@
 </script>
 <div class="py-5">
   {#if !fetchingClients}
-    {#if clients?.length > 0}
+    {#if clients?.length > 0 || activeSearchPhrase}
       <DataTable data={clients} configuration={tableConfiguration} 
         on:delete={(event)=> onDeleteClient(event.detail)} 
         on:edit={(event)=> onEditClient(event.detail)}
