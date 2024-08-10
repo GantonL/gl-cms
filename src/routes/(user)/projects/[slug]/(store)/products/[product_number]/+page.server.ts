@@ -1,5 +1,5 @@
 import type { Project } from "$lib/models/project";
-import { createProduct, getProduct, updateProduct } from "$lib/server/store.db";
+import { createProduct, getCategories, getProduct, updateProduct } from "$lib/server/store.db";
 import { fail, superValidate } from "sveltekit-superforms";
 import type { Actions, PageServerLoad } from "./$types";
 import { zod } from "sveltekit-superforms/adapters";
@@ -16,9 +16,11 @@ export const load: PageServerLoad = async ({parent, params}) => {
   if (params.product_number !== 'new') {
     product = await getProduct(project, Number(params.product_number));
   }
+  const categories = await getCategories(project); 
   return {
     project,
     product,
+    categories,
   }
 }
 
@@ -33,6 +35,7 @@ export const actions: Actions = {
       description: form.data.description,
       discount: form.data.discount,
       stock: form.data.stock,
+      categories: form.data.categories,
     });
     if (product === undefined) {
       return fail(400, {form});

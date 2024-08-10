@@ -385,7 +385,7 @@ export const getProduct = async (project: Project, serial_number: StoreProduct['
   return query.docs.pop()?.data() as StoreProduct;
 }
 
-export const createProduct = async (project: Project, product: Pick<StoreProduct, 'name' | 'description' | 'discount' | 'stock' | 'variants' | 'currency' | 'price'>): Promise<StoreProduct | undefined> => {
+export const createProduct = async (project: Project, product: Pick<StoreProduct, 'name' | 'description' | 'discount' | 'stock' | 'variants' | 'currency' | 'price' | 'categories'>): Promise<StoreProduct | undefined> => {
   const app = getSecondaryApp(project);
   if (!app) { return };
   const productsCollectionRef = getFirestore(app).collection(StoreCollections.Products);
@@ -400,6 +400,7 @@ export const createProduct = async (project: Project, product: Pick<StoreProduct
     variants: product.variants,
     price: product.price,
     currency: product.currency,
+    categories: product.categories,
   };
   const addRes = await productsCollectionRef.add(newProduct);
   return addRes?.id ? newProduct : undefined;

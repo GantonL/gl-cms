@@ -65,7 +65,7 @@
 </script>
 
 
-<div class="grid grid-cols-3 gap-4">
+<div class="flex flex-row flex-wrap gap-4 justify-center">
   <CategoryCard category={null} 
     on:create={(_) => createCategory()} />
     {#each categories as category}

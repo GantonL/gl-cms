@@ -7,6 +7,7 @@ export const formSchema = z.object({
   description: z.string().optional(),
   stock: z.number({coerce: true}).optional(),
   discount: z.number({coerce: true}).optional(),
+  categories: z.array(z.string()).optional(),
 });
  
 export type FormSchema = typeof formSchema;
