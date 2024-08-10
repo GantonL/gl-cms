@@ -17,3 +17,11 @@ export interface ClinicPatient {
     treatments_history?: string[];
     notes?: string;
 }
+
+export interface TreatmentHistoryItem {
+    id: string;
+    type: string;
+    date: number;
+    notes: string;
+    price?: number;
+}

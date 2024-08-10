@@ -9,13 +9,14 @@
 	import { toast } from "svelte-sonner";
 	import * as AlertDialog from "$lib/components/ui/alert-dialog";
 	import { Button } from "$lib/components/ui/button";
-	import { LoaderCircle } from "lucide-svelte";
+	import { ImageOff, ImagePlus, LoaderCircle } from "lucide-svelte";
 	import { goto } from "$app/navigation";
 	import type { ClinicPatient } from "$lib/models/clinic";
   import * as Tabs from "$lib/components/ui/tabs";
 	import EmptyResults from "$lib/components/empty-results/empty-results.svelte";
 	import DataTable from "$lib/components/data-table/data-table.svelte";
 	import { emptyFilesResultsConfiguration, emptyTreatmentsResultsConfiguration, filesTableConfiguration, treatmentsHistoryTableConfiguration } from "./configurations";
+	import * as Avatar from "$lib/components/ui/avatar";
 
   let createEditForm: SuperValidated<Infer<FormSchema>>;
   let deletePatientOpened = false;
@@ -89,13 +90,19 @@
 <Card.Root>
   <Card.Header>
     <Card.Title>
-      <h1>
-        {#if !patient.id}
-          Create patient
-        {:else}
-          Patient #{patient.personal_id}
-        {/if}
-      </h1>
+      <div class="flex flex-row gap-2 items-center">
+        <Avatar.Root class="border rounded-full cursor-pointer">
+          <Avatar.Image src={patient.avatar?.url} alt="Dice bear avatar" />
+          <Avatar.Fallback><ImagePlus size=14 class="text-muted-foreground"/></Avatar.Fallback>
+        </Avatar.Root>
+        <h1>
+          {#if !patient.id}
+            Create patient
+          {:else}
+            {patient.first_name} {patient.sur_name}
+          {/if}
+        </h1>
+      </div>
     </Card.Title>
   </Card.Header>
   <Card.Content>
