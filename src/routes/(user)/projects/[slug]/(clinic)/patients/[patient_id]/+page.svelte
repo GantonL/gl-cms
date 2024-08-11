@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from "$app/stores";
 	import * as Card from "$lib/components/ui/card";
-	import CreateEditOrderForm from "./create-edit-order-form.svelte";
+	import CreateEditOrderForm from "./create-edit-patient-form.svelte";
 	import { superValidate, type Infer, type SuperValidated } from "sveltekit-superforms";
 	import { formSchema, type FormSchema } from "./schema";
 	import { onMount } from "svelte";
