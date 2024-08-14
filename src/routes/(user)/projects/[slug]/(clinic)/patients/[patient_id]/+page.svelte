@@ -9,7 +9,7 @@
 	import { toast } from "svelte-sonner";
 	import * as AlertDialog from "$lib/components/ui/alert-dialog";
 	import { Button } from "$lib/components/ui/button";
-	import { ImageOff, ImagePlus, LoaderCircle } from "lucide-svelte";
+	import { ArrowRight, ImagePlus, LoaderCircle } from "lucide-svelte";
 	import { goto } from "$app/navigation";
 	import type { ClinicPatient } from "$lib/models/clinic";
   import * as Tabs from "$lib/components/ui/tabs";
@@ -17,12 +17,16 @@
 	import DataTable from "$lib/components/data-table/data-table.svelte";
 	import { emptyFilesResultsConfiguration, emptyTreatmentsResultsConfiguration, filesTableConfiguration, treatmentsHistoryTableConfiguration } from "./configurations";
 	import * as Avatar from "$lib/components/ui/avatar";
+	import * as Tooltip from "$lib/components/ui/tooltip";
 
   let createEditForm: SuperValidated<Infer<FormSchema>>;
   let deletePatientOpened = false;
   let deletionInProgress = false;
   let saveInProgress = false;
-  
+  let avatarFileList: FileList | undefined;
+  let avatarCandidate: string;
+  let changeAvatarDialogOpened = false
+
   $: patient = $page.data.patient as ClinicPatient;
   $: project = $page.data.project;
 
@@ -86,15 +90,37 @@
 
   }
 
+
+  function changeAvatar() {
+    avatarFileList = undefined;
+  }
+
+  function onChangeAvatar() {
+    const file = avatarFileList?.item(0); 
+    file?.arrayBuffer()?.then((ab) => {
+      let blob = new Blob([ab], {type: file.type});
+      avatarCandidate = URL.createObjectURL(blob);
+      changeAvatarDialogOpened = true;
+    })
+  }
+
 </script>
 <Card.Root>
   <Card.Header>
     <Card.Title>
       <div class="flex flex-row gap-2 items-center">
-        <Avatar.Root class="border rounded-full cursor-pointer">
-          <Avatar.Image src={patient.avatar?.url} alt="Dice bear avatar" />
-          <Avatar.Fallback><ImagePlus size=14 class="text-muted-foreground"/></Avatar.Fallback>
-        </Avatar.Root>
+        <Tooltip.Root>
+          <Tooltip.Trigger>
+            <label for="avatar">
+              <Avatar.Root class="border rounded-full cursor-pointer">
+                <Avatar.Image src={patient.avatar?.url} alt="Avatar" />
+                <Avatar.Fallback><ImagePlus size=14 class="text-muted-foreground"/></Avatar.Fallback>
+              </Avatar.Root>
+            </label>
+            <input type="file" id="avatar" name="avatar" bind:files={avatarFileList} hidden on:change={onChangeAvatar}/>
+          </Tooltip.Trigger>
+          <Tooltip.Content>Change avatar</Tooltip.Content>
+        </Tooltip.Root>
         <h1>
           {#if !patient.id}
             Create patient
@@ -192,6 +218,30 @@
     <AlertDialog.Footer>
       <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
       <AlertDialog.Action class="bg-destructive text-destructive-foreground hover:bg-destructive/80" on:click={() => deletePatient(patient)}>DELETE</AlertDialog.Action>
+    </AlertDialog.Footer>
+  </AlertDialog.Content>
+</AlertDialog.Root>
+
+<AlertDialog.Root bind:open={changeAvatarDialogOpened}>
+  <AlertDialog.Content>
+    <AlertDialog.Header>
+      <AlertDialog.Title>Replace the existing patient avatar?</AlertDialog.Title>
+      <AlertDialog.Description>
+         <div class="flex flex-row items-center justify-center gap-4 w-full">
+          <Avatar.Root class="border rounded-full cursor-pointer">
+            <Avatar.Image src={patient.avatar?.url} alt="Current avatar" />
+            <Avatar.Fallback><ImagePlus size=14 class="text-muted-foreground"/></Avatar.Fallback>
+          </Avatar.Root>
+          <ArrowRight size=24/>
+          <Avatar.Root class="border rounded-full cursor-pointer">
+            <Avatar.Image src={avatarCandidate} alt="new avatar candidate" />
+          </Avatar.Root>
+         </div>
+      </AlertDialog.Description>
+    </AlertDialog.Header>
+    <AlertDialog.Footer>
+      <AlertDialog.Cancel on:click={() => {avatarFileList = undefined}}>No</AlertDialog.Cancel>
+      <AlertDialog.Action on:click={changeAvatar}>Yes</AlertDialog.Action>
     </AlertDialog.Footer>
   </AlertDialog.Content>
 </AlertDialog.Root>
