@@ -4,7 +4,7 @@ import type { Actions, PageServerLoad } from "./$types";
 import { zod } from "sveltekit-superforms/adapters";
 import { formSchema } from "./schema";
 import type { ClinicPatient } from "$lib/models/clinic";
-import { getPatient } from "$lib/server/clinic.db";
+import { createPatient, getPatient, updatePatient } from "$lib/server/clinic.db";
 
 let currentProject: Project;
 
@@ -23,32 +23,50 @@ export const load: PageServerLoad = async ({parent, params}) => {
 }
 
 export const actions: Actions = {
-  // create: async (event) => {
-  //   const form = await superValidate(event, zod(formSchema));
-  //   if (!form.valid) {
-  //     return fail(400, { form });
-  //   }
-  //   const patient: ClinicPatient | undefined = await createPatient(currentProject!, {
-      
-  //   });
-  //   if (patient === undefined) {
-  //     return fail(400, {form});
-  //   }
-  //   form.data.id = String(patient.id);
-  //   return { form };
-  // },
-  // update: async (event) => {
-  //   const form = await superValidate(event, zod(formSchema));
-  //   if (!form.valid) {
-  //     return fail(400, { form });
-  //   }
-  //   const updatePatient: Partial<Omit<ClinicPatient, 'id' | 'created_at'>> = {
-
-  //   };
-  //   const updateRes = await updatePatient(currentProject, form.data.id!, updatePatient);
-  //   if (!updateRes) {
-  //     return fail(403, { form });
-  //   }
-  //   return { form };
-  // }
+  create: async (event) => {
+    const form = await superValidate(event, zod(formSchema));
+    if (!form.valid) {
+      return fail(400, { form });
+    }
+    const patient: ClinicPatient | undefined = await createPatient(currentProject!, {
+      first_name: form.data.first_name,
+      sur_name: form.data.sur_name,
+      personal_id: form.data.personal_id,
+      email: form.data.email,
+      address: form.data.address,
+      date_of_birth: form.data.date_of_birth,
+      phone: form.data.phone,
+      gender: form.data.gender,
+      refered_by: form.data.refered_by,
+      notes: form.data.notes,
+    });
+    if (patient === undefined) {
+      return fail(400, {form});
+    }
+    form.data.id = String(patient.id);
+    return { form };
+  },
+  update: async (event) => {
+    const form = await superValidate(event, zod(formSchema));
+    if (!form.valid) {
+      return fail(400, { form });
+    }
+    const updatedPatient: Partial<Omit<ClinicPatient, 'id' | 'created_at'>> = {
+      first_name: form.data.first_name,
+      sur_name: form.data.sur_name,
+      personal_id: form.data.personal_id,
+      email: form.data.email,
+      address: form.data.address,
+      date_of_birth: form.data.date_of_birth,
+      phone: form.data.phone,
+      gender: form.data.gender,
+      refered_by: form.data.refered_by,
+      notes: form.data.notes,
+    };
+    const updateRes = await updatePatient(currentProject, form.data.id!, updatedPatient);
+    if (!updateRes) {
+      return fail(403, { form });
+    }
+    return { form };
+  }
 };

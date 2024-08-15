@@ -1,6 +1,5 @@
 import { getAuthenticatedUser, isAdminUser } from "$lib/server/auth";
 import { getProject } from "$lib/server/projects.db";
-import { deleteOrder } from "$lib/server/store.db";
 import { getUser } from "$lib/server/users.db";
 import { error, json } from "@sveltejs/kit";
 import type { RequestEvent } from "../$types";
@@ -25,8 +24,8 @@ export async function DELETE(event: RequestEvent) {
   if (!isAdmin && !user?.projects?.includes(project!.name)) {
     error(401, 'Unauthorized');
   }
-  const deletedOrder = await deleteOrder(project, clientId);
+  // const deletedOrder = await deleteOrder(project, clientId);
   return json({
-    success: !!deletedOrder
+    // success: !!deletedOrder
   })
 }

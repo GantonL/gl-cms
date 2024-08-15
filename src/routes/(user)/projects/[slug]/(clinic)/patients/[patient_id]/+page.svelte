@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from "$app/stores";
 	import * as Card from "$lib/components/ui/card";
-	import CreateEditOrderForm from "./create-edit-patient-form.svelte";
+	import CreateEditPatientForm from "./create-edit-patient-form.svelte";
 	import { superValidate, type Infer, type SuperValidated } from "sveltekit-superforms";
 	import { formSchema, type FormSchema } from "./schema";
 	import { onMount } from "svelte";
@@ -25,7 +25,8 @@
   let saveInProgress = false;
   let avatarFileList: FileList | undefined;
   let avatarCandidate: string;
-  let changeAvatarDialogOpened = false
+  let changeAvatarDialogOpened = false;
+  let avatarInput: HTMLInputElement;
 
   $: patient = $page.data.patient as ClinicPatient;
   $: project = $page.data.project;
@@ -39,13 +40,9 @@
       createEditForm = form;
     })
   }
-  
-  function onPatientUpdated(event: CustomEvent) {
-    const updatedOrder = event.detail;
-  }
-  
+    
   function onPatientCreated(event: CustomEvent) {
-    const createdOrder = event.detail;
+    goto(`../patients/${event.detail.id}`)
   }
 
   function deletePatient(patient: ClinicPatient) {
@@ -92,7 +89,7 @@
 
 
   function changeAvatar() {
-    avatarFileList = undefined;
+    clearAvatarInput();
   }
 
   function onChangeAvatar() {
@@ -104,23 +101,31 @@
     })
   }
 
+  function clearAvatarInput() {
+    URL.revokeObjectURL(avatarCandidate);
+    avatarFileList = undefined;
+    avatarInput.value = '';
+  }
+
 </script>
 <Card.Root>
   <Card.Header>
     <Card.Title>
       <div class="flex flex-row gap-2 items-center">
-        <Tooltip.Root>
-          <Tooltip.Trigger>
-            <label for="avatar">
-              <Avatar.Root class="border rounded-full cursor-pointer">
-                <Avatar.Image src={patient.avatar?.url} alt="Avatar" />
-                <Avatar.Fallback><ImagePlus size=14 class="text-muted-foreground"/></Avatar.Fallback>
-              </Avatar.Root>
-            </label>
-            <input type="file" id="avatar" name="avatar" bind:files={avatarFileList} hidden on:change={onChangeAvatar}/>
-          </Tooltip.Trigger>
-          <Tooltip.Content>Change avatar</Tooltip.Content>
-        </Tooltip.Root>
+        {#if patient.id}
+          <Tooltip.Root>
+            <Tooltip.Trigger>
+              <label for="avatar">
+                <Avatar.Root class="border rounded-full cursor-pointer">
+                  <Avatar.Image src={patient.avatar?.url} alt="Avatar" />
+                  <Avatar.Fallback><ImagePlus size=14 class="text-muted-foreground"/></Avatar.Fallback>
+                </Avatar.Root>
+              </label>
+              <input type="file" id="avatar" name="avatar" bind:this={avatarInput} bind:files={avatarFileList} hidden on:change={onChangeAvatar}/>
+            </Tooltip.Trigger>
+            <Tooltip.Content>Change avatar</Tooltip.Content>
+          </Tooltip.Root>
+        {/if}
         <h1>
           {#if !patient.id}
             Create patient
@@ -141,11 +146,10 @@
           </Card.Header>
           <Card.Content>
             {#if createEditForm}
-              <CreateEditOrderForm 
+              <CreateEditPatientForm 
                 data={createEditForm}
                 disabled={saveInProgress || deletionInProgress}
-                action={patient ? 'update' : 'create'}
-                on:updated={(event) => onPatientUpdated(event)}
+                action={patient.id ? 'update' : 'create'}
                 on:created={(event) => onPatientCreated(event)}/>
             {/if}
           </Card.Content>
@@ -240,7 +244,7 @@
       </AlertDialog.Description>
     </AlertDialog.Header>
     <AlertDialog.Footer>
-      <AlertDialog.Cancel on:click={() => {avatarFileList = undefined}}>No</AlertDialog.Cancel>
+      <AlertDialog.Cancel on:click={clearAvatarInput}>No</AlertDialog.Cancel>
       <AlertDialog.Action on:click={changeAvatar}>Yes</AlertDialog.Action>
     </AlertDialog.Footer>
   </AlertDialog.Content>
