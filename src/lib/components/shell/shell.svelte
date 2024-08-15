@@ -38,8 +38,8 @@
     <aside>
       <NavigationMenu currentPath={navigationPath} />
     </aside>
-    <main class="flex flex-col flex-grow relative overflow-y-auto overflow-x-hidden" bind:this={scrollable} on:scroll={(e) => onMainContentScrolled(e)}>
-      <div class="flex flex-col items-center m-auto gap-8 p-4 flex-auto">
+    <main class="flex flex-col items-center flex-grow relative overflow-y-auto overflow-x-hidden" bind:this={scrollable} on:scroll={(e) => onMainContentScrolled(e)}>
+      <div class="flex flex-col items-center gap-8 p-4 flex-auto w-full max-w-[1200px]">
         <slot />
       </div>
       <Footer />
