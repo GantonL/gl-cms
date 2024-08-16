@@ -9,7 +9,7 @@
 	import { toast } from "svelte-sonner";
 	import * as AlertDialog from "$lib/components/ui/alert-dialog";
 	import { Button } from "$lib/components/ui/button";
-	import { ArrowRight, Edit2, ImagePlus, LoaderCircle, Pencil, PencilOff } from "lucide-svelte";
+	import { ArrowRight, AlertTriangle, ImagePlus, LoaderCircle, Pencil, PencilOff, Pill, NotebookPen } from "lucide-svelte";
 	import { goto } from "$app/navigation";
 	import type { ClinicPatient } from "$lib/models/clinic";
   import * as Tabs from "$lib/components/ui/tabs";
@@ -21,6 +21,7 @@
 	import { enhance } from "$app/forms";
 	import type { ActionData } from "./$types";
 	import { DateFormatter, getLocalTimeZone, parseDate, today } from "@internationalized/date";
+	import { Separator } from "$lib/components/ui/separator";
 
   let createEditForm: SuperValidated<Infer<FormSchema>>;
   let deletePatientOpened = false;
@@ -205,7 +206,7 @@
             {/if}
           {:else}
             <div class="flex flex-row flex-wrap gap-6 items-start">
-            <div class="flex flex-col">
+              <div class="flex flex-col">
                 <h3>Email</h3>
                 <span class="text-muted-foreground">{patient.email}</span>
               </div>
@@ -230,6 +231,36 @@
                 <span class="text-muted-foreground">{patient.refered_by}</span>
               </div>
               <!-- Add medical condition, medications & notes -->
+            </div>
+            <Separator class="my-4"/>
+            <div class="flex flex-row flex-wrap gap-6 items-start">
+              <div class="flex flex-col flex-grow">
+                <h3 class="flex flex-row gap-2 items-center">
+                  {#if patient.medical_condition}
+                    <AlertTriangle size=14 class="text-destructive"/>
+                  {/if}
+                  <span>Medical condition</span>
+                </h3>
+                <span class="text-muted-foreground">{patient.medical_condition ?? ''}</span>
+              </div>
+              <div class="flex flex-col flex-grow">
+                <h3 class="flex flex-row gap-2 items-center">
+                  {#if patient.medications}
+                    <Pill size=14/>
+                  {/if}
+                  <span>Medications</span>
+                </h3>
+                <span class="text-muted-foreground">{patient.medications ?? ''}</span>
+              </div>
+              <div class="flex flex-col flex-grow">
+                <h3 class="flex flex-row gap-2 items-center">
+                  {#if patient.notes}
+                    <NotebookPen size=14/>
+                  {/if}
+                  <span>Notes</span>
+                </h3>
+                <span class="text-muted-foreground">{patient.notes ?? ''}</span>
+              </div>
             </div>
           {/if}
         </Card.Content>
