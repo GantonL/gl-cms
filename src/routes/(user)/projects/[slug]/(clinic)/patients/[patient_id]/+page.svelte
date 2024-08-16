@@ -9,7 +9,7 @@
 	import { toast } from "svelte-sonner";
 	import * as AlertDialog from "$lib/components/ui/alert-dialog";
 	import { Button } from "$lib/components/ui/button";
-	import { ArrowRight, AlertTriangle, ImagePlus, LoaderCircle, Pencil, PencilOff, Pill, NotebookPen } from "lucide-svelte";
+	import { ArrowRight, AlertTriangle, ImagePlus, LoaderCircle, Pencil, PencilOff, Pill, NotebookPen, Trash } from "lucide-svelte";
 	import { goto } from "$app/navigation";
 	import type { ClinicPatient } from "$lib/models/clinic";
   import * as Tabs from "$lib/components/ui/tabs";
@@ -135,26 +135,39 @@
   <Card.Header>
     <div class="flex flex-row gap-2 items-center">
       {#if patient.id}
-        <Tooltip.Root>
-          <Tooltip.Trigger>
-            <form id="set-avatar" method="POST" action="?/set-avatar" enctype="multipart/form-data" use:enhance>
-              <label for="avatar">
-                <Avatar.Root class="border rounded-full w-24 h-24 cursor-pointer">
-                  {#if avatarUpdateInProgress}
-                    <div class="flex h-full w-full items-center justify-center">
-                      <LoaderCircle class="animate-spin" size=24 />
-                    </div>
-                  {:else}
-                    <Avatar.Image src={patient.avatar?.url} alt="Avatar" />
-                    <Avatar.Fallback><ImagePlus size=24 class="text-muted-foreground"/></Avatar.Fallback>
-                  {/if}
-                </Avatar.Root>
-              </label>
-              <input type="file" id="avatar" name="avatar" bind:this={avatarInput} bind:files={avatarFileList} hidden on:change={onChangeAvatar}/>
-            </form>
-          </Tooltip.Trigger>
-          <Tooltip.Content>Change avatar</Tooltip.Content>
-        </Tooltip.Root>
+        <div class="relative rounded-full w-fit h-fit group">
+          <Avatar.Root class="border rounded-full w-24 h-24 group-hover:blur-sm">
+            {#if avatarUpdateInProgress}
+              <div class="flex h-full w-full items-center justify-center">
+                <LoaderCircle class="animate-spin" size=24 />
+              </div>
+            {:else}
+            <Avatar.Image src={patient.avatar?.url} alt="Avatar" />
+              <Avatar.Fallback><ImagePlus size=24 class="text-muted-foreground"/></Avatar.Fallback>
+            {/if}
+          </Avatar.Root>
+          <div class="absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]">
+            <div class="flex flex-row h-full w-full items-center justify-center gap-1">
+              <Tooltip.Root>
+                <Tooltip.Trigger>
+                  <form id="set-avatar" method="POST" action="?/set-avatar" enctype="multipart/form-data" use:enhance>
+                    <label for="avatar">
+                      <Button variant="secondary" size="icon" class="hidden group-hover:flex"><Pencil /></Button>
+                    </label>
+                    <input type="file" id="avatar" name="avatar" bind:this={avatarInput} bind:files={avatarFileList} hidden on:change={onChangeAvatar} />
+                  </form>
+                  </Tooltip.Trigger>
+                  <Tooltip.Content>Change avatar</Tooltip.Content>
+              </Tooltip.Root>
+              <Tooltip.Root>
+                <Tooltip.Trigger>
+                  <Button variant="destructive" size="icon" class="hidden group-hover:flex"><Trash /></Button>
+                </Tooltip.Trigger>
+                <Tooltip.Content>Delete avatar</Tooltip.Content>
+              </Tooltip.Root>
+            </div>
+          </div>
+        </div>
       {/if}
       <div class="flex flex-col gap-2">
         <Card.Title>
@@ -230,7 +243,6 @@
                 <h3 class="">Refered by</h3>
                 <span class="text-muted-foreground">{patient.refered_by}</span>
               </div>
-              <!-- Add medical condition, medications & notes -->
             </div>
             <Separator class="my-4"/>
             <div class="flex flex-row flex-wrap gap-6 items-start">
