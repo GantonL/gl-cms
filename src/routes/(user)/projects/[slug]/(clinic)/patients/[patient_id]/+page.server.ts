@@ -39,6 +39,8 @@ export const actions: Actions = {
       gender: form.data.gender,
       refered_by: form.data.refered_by,
       notes: form.data.notes,
+      medical_condition: form.data.medical_condition,
+      medications: form.data.medications,
     });
     if (patient === undefined) {
       return fail(400, {form});
@@ -62,6 +64,8 @@ export const actions: Actions = {
       gender: form.data.gender,
       refered_by: form.data.refered_by,
       notes: form.data.notes,
+      medical_condition: form.data.medical_condition,
+      medications: form.data.medications,
     };
     const updateRes = await updatePatient(currentProject, form.data.id!, updatedPatient);
     if (!updateRes) {

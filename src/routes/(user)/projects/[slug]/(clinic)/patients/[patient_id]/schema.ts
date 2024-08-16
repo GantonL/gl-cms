@@ -12,6 +12,8 @@ export const formSchema = z.object({
   address: z.string().min(3),
   refered_by: z.string().optional(),
   notes: z.string().optional(),
+  medical_condition: z.string().optional(),
+  medications: z.string().optional(),
 
   // Added upon changes from non-form origin
   id: z.string().optional(),

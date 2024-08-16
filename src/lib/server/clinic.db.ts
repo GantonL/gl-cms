@@ -52,7 +52,7 @@ export const getPatient = async (project: Project, id: ClinicPatient['id']): Pro
   return patient;
 }
 
-export const createPatient = async (project: Project, patient: Pick<ClinicPatient, 'address' | 'date_of_birth' | 'email' | 'first_name' | 'gender' | 'notes' | 'personal_id' | 'phone' | 'refered_by' | 'sur_name'>): Promise<ClinicPatient | undefined> => {
+export const createPatient = async (project: Project, patient: Pick<ClinicPatient, 'address' | 'date_of_birth' | 'email' | 'first_name' | 'gender' | 'notes' | 'personal_id' | 'phone' | 'refered_by' | 'sur_name' | 'medical_condition' | 'medications'>): Promise<ClinicPatient | undefined> => {
   const app = getSecondaryApp(project);
   if (!app) { return };
   const patientsCollectionRef = getFirestore(app).collection(ClinicCollections.Patients);

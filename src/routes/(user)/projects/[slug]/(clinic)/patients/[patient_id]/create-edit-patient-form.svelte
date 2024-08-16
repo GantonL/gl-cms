@@ -278,6 +278,24 @@
       </Form.Field>
     </div>
     <div class="grid items-center gap-4">
+      <Form.Field {form} name="medical_condition">
+        <Form.Control let:attrs>
+          <Form.Label>Medical condition</Form.Label> 
+          <Textarea {...attrs} bind:value={$formData.medical_condition} disabled={submissionInProgress}/>
+        </Form.Control>
+        <Form.FieldErrors />
+      </Form.Field>
+    </div>
+    <div class="grid items-center gap-4">
+      <Form.Field {form} name="medications">
+        <Form.Control let:attrs>
+          <Form.Label>Medications</Form.Label> 
+          <Textarea {...attrs} bind:value={$formData.medications} disabled={submissionInProgress}/>
+        </Form.Control>
+        <Form.FieldErrors />
+      </Form.Field>
+    </div>
+    <div class="grid items-center gap-4">
       <Form.Field {form} name="notes">
         <Form.Control let:attrs>
           <Form.Label>Notes</Form.Label> 

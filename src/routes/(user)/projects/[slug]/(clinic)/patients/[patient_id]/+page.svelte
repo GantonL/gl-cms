@@ -9,7 +9,7 @@
 	import { toast } from "svelte-sonner";
 	import * as AlertDialog from "$lib/components/ui/alert-dialog";
 	import { Button } from "$lib/components/ui/button";
-	import { ArrowRight, ImagePlus, LoaderCircle } from "lucide-svelte";
+	import { ArrowRight, Edit2, ImagePlus, LoaderCircle, Pencil, PencilOff } from "lucide-svelte";
 	import { goto } from "$app/navigation";
 	import type { ClinicPatient } from "$lib/models/clinic";
   import * as Tabs from "$lib/components/ui/tabs";
@@ -20,6 +20,7 @@
 	import * as Tooltip from "$lib/components/ui/tooltip";
 	import { enhance } from "$app/forms";
 	import type { ActionData } from "./$types";
+	import { DateFormatter, getLocalTimeZone, parseDate, today } from "@internationalized/date";
 
   let createEditForm: SuperValidated<Infer<FormSchema>>;
   let deletePatientOpened = false;
@@ -30,6 +31,8 @@
   let changeAvatarDialogOpened = false;
   let avatarInput: HTMLInputElement;
   let avatarUpdateInProgress = false;
+  let editPersonlInformation = false;
+  let patientDOB = '';
 
   export let form: ActionData;
 
@@ -45,6 +48,14 @@
         toast.success('Patient avatar updated successfuly')
       }
     }
+
+  $: if (patient.date_of_birth) {
+        const dateFormatter = new DateFormatter('en-UK', { dateStyle: "long" });
+        const parsedDate = parseDate(patient.date_of_birth);
+        const dob = dateFormatter.format(parsedDate.toDate(getLocalTimeZone()));
+        const years = today(getLocalTimeZone()).year - parsedDate.year;
+        patientDOB = `${dob} (${years})`; 
+  }
 
   onMount(() => {
     initializeForm();
@@ -164,59 +175,101 @@
   </Card.Header>
   <Card.Content>
     <div class="flex flex-col gap-4">
-      <div class="flex flex-row flex-wrap gap-4">
-        <Card.Root class="flex-grow">
-          <Card.Header>
-            <Card.Title>Details</Card.Title>
-            <Card.Description>General information about this patient</Card.Description>
-          </Card.Header>
-          <Card.Content>
+      <Card.Root class="flex-grow">
+        <Card.Header>
+          <div class="flex flex-row justify-between">
+            <div class="flex flex-col gap-2">
+              <Card.Title>Details</Card.Title>
+              <Card.Description>General information about this patient</Card.Description>
+            </div>
+            <Button variant={editPersonlInformation ? 'secondary' : 'default'} class="flex flex-row items-center gap-2"
+              on:click={() => {editPersonlInformation = !editPersonlInformation}}>
+              {#if editPersonlInformation}
+                <PencilOff size=14/>
+                <span>Cancel edit</span>
+              {:else}
+                <Pencil size=14/>
+                <span>Edit</span>
+              {/if}
+            </Button>
+          </div>
+        </Card.Header>
+        <Card.Content>
+          {#if editPersonlInformation || !patient.id}
             {#if createEditForm}
               <CreateEditPatientForm 
                 data={createEditForm}
-                disabled={saveInProgress || deletionInProgress}
+                disabled={avatarUpdateInProgress || saveInProgress || deletionInProgress}
                 action={patient.id ? 'update' : 'create'}
                 on:created={(event) => onPatientCreated(event)}/>
             {/if}
-          </Card.Content>
-        </Card.Root>
-        <Card.Root class="flex-grow">
-          <Card.Header>
-            <Card.Title>Data</Card.Title>
-            <Card.Description>Handle data related to this patient</Card.Description>
-          </Card.Header>
-          <Card.Content>
-            <Tabs.Root value="treatments" class="w-full">
-              <Tabs.List>
-                <Tabs.Trigger value="treatments">Treatments</Tabs.Trigger>
-                <Tabs.Trigger value="files">Files</Tabs.Trigger>
-              </Tabs.List>
-              <Tabs.Content value="treatments">
-                {#if !patient.treatments_history || patient.treatments_history?.length === 0}
-                  <EmptyResults configuration={emptyTreatmentsResultsConfiguration} on:create={onAddTreatment}/>
-                {:else}
-                  <DataTable 
-                    data={patient.treatments_history}
-                    configuration={treatmentsHistoryTableConfiguration} 
-                    on:create={onAddTreatment}
-                    on:delete={(event) => deleteTreatment(event.detail.id)}/>
-                {/if}
-              </Tabs.Content>
-              <Tabs.Content value="files">
-                {#if !patient.files || patient.files?.length === 0}
-                  <EmptyResults configuration={emptyFilesResultsConfiguration} on:create={onAddFile}/>
-                {:else}
-                  <DataTable 
-                    data={patient.files}
-                    configuration={filesTableConfiguration} 
-                    on:create={onAddFile}
-                    on:delete={(event) => deleteFile(event.detail.path)}/>
-                {/if}
-              </Tabs.Content>
-            </Tabs.Root>
-          </Card.Content>
-        </Card.Root>
-      </div>
+          {:else}
+            <div class="flex flex-row flex-wrap gap-6 items-start">
+            <div class="flex flex-col">
+                <h3>Email</h3>
+                <span class="text-muted-foreground">{patient.email}</span>
+              </div>
+              <div class="flex flex-col">
+                <h3 class="">Address</h3>
+                <span class="text-muted-foreground">{patient.address}</span>
+              </div>
+              <div class="flex flex-col">
+                <h3 class="">Phone</h3>
+                <span class="text-muted-foreground">{patient.phone}</span>
+              </div>
+              <div class="flex flex-col">
+                <h3 class="">Birth date</h3>
+                <span class="text-muted-foreground">{patientDOB}</span>
+              </div>
+              <div class="flex flex-col">
+                <h3 class="">Gender</h3>
+                <span class="text-muted-foreground">{patient.gender}</span>
+              </div>
+              <div class="flex flex-col">
+                <h3 class="">Refered by</h3>
+                <span class="text-muted-foreground">{patient.refered_by}</span>
+              </div>
+              <!-- Add medical condition, medications & notes -->
+            </div>
+          {/if}
+        </Card.Content>
+      </Card.Root>
+      <Card.Root class="flex-grow">
+        <Card.Header>
+          <Card.Title>Data</Card.Title>
+          <Card.Description>Handle data related to this patient</Card.Description>
+        </Card.Header>
+        <Card.Content>
+          <Tabs.Root value="treatments" class="w-full">
+            <Tabs.List>
+              <Tabs.Trigger value="treatments">Treatments</Tabs.Trigger>
+              <Tabs.Trigger value="files">Files</Tabs.Trigger>
+            </Tabs.List>
+            <Tabs.Content value="treatments">
+              {#if !patient.treatments_history || patient.treatments_history?.length === 0}
+                <EmptyResults configuration={emptyTreatmentsResultsConfiguration} on:create={onAddTreatment}/>
+              {:else}
+                <DataTable 
+                  data={patient.treatments_history}
+                  configuration={treatmentsHistoryTableConfiguration} 
+                  on:create={onAddTreatment}
+                  on:delete={(event) => deleteTreatment(event.detail.id)}/>
+              {/if}
+            </Tabs.Content>
+            <Tabs.Content value="files">
+              {#if !patient.files || patient.files?.length === 0}
+                <EmptyResults configuration={emptyFilesResultsConfiguration} on:create={onAddFile}/>
+              {:else}
+                <DataTable 
+                  data={patient.files}
+                  configuration={filesTableConfiguration} 
+                  on:create={onAddFile}
+                  on:delete={(event) => deleteFile(event.detail.path)}/>
+              {/if}
+            </Tabs.Content>
+          </Tabs.Root>
+        </Card.Content>
+      </Card.Root>
     </div>
   </Card.Content>
 </Card.Root>
@@ -226,7 +279,7 @@
       <Card.Title class="text-destructive">Danger Zone</Card.Title>
     </Card.Header>
     <Card.Footer>
-      <Button class="w-full flex flex-row gap-2 items-center" disabled={saveInProgress || deletionInProgress} variant='destructive'
+      <Button class="w-full flex flex-row gap-2 items-center" disabled={avatarUpdateInProgress || saveInProgress || deletionInProgress} variant='destructive'
         on:click={() => deletePatientOpened = true}>
         {#if deletionInProgress}
           <LoaderCircle class="animate-spin"></LoaderCircle>
