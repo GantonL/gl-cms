@@ -6,8 +6,7 @@ import type { TableConfiguration } from "$lib/models/table";
 import { CircleOff, Copy, Edit, Ellipsis, MessageSquare } from "lucide-svelte";
 import type { EventDispatcher } from "svelte";
 import { createRender } from "svelte-headless-table";
-import DiceBearAvatar from "$lib/components/dice-bear-avatar/dice-bear-avatar.svelte";
-import * as dicebearCollections from '@dicebear/collection'; 
+import GLAvatar from "$lib/components/gl-avatar/gl-avatar.svelte";
 
 export const emptyResultsConfiguration: EmptyResultsConfiguration = {
   icon: CircleOff,
@@ -55,22 +54,14 @@ const rowActions: ActionMenuConfiguration<ClinicPatient> = {
 export const tableConfiguration: TableConfiguration<ClinicPatient> = {
     columns: (dispatch: EventDispatcher<Record<string, string>>) => [
         {
-          dataPath: 'id',
+          dataPath: 'avatar.url',
           cell: (item) => {
-            return createRender(DiceBearAvatar, { 
-              seed: item.value,
-              style: dicebearCollections.pixelArt,
-              fallback: '?'
-            });
+            return createRender(GLAvatar, { url: item.value });
           }
         },
         {
-          header: 'First name',
-          dataPath: 'first_name'
-        },
-        {
-          header: 'Surname',
-          dataPath: 'sur_name'
+          header: 'Name',
+          dataPath: 'full_name'
         },
         {
           header: 'Email',

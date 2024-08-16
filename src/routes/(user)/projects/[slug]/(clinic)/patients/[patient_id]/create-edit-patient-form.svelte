@@ -281,7 +281,7 @@
       <Form.Field {form} name="notes">
         <Form.Control let:attrs>
           <Form.Label>Notes</Form.Label> 
-          <Textarea bind:value={$formData.notes} disabled={submissionInProgress}/>
+          <Textarea {...attrs} bind:value={$formData.notes} disabled={submissionInProgress}/>
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>

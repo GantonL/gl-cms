@@ -3,6 +3,7 @@ import { getProject } from "$lib/server/projects.db";
 import { getUser } from "$lib/server/users.db";
 import { error, json } from "@sveltejs/kit";
 import type { RequestEvent } from "../$types";
+import { deletePatient } from "$lib/server/clinic.db";
 
 export async function DELETE(event: RequestEvent) {
   const autheticatedUser = await getAuthenticatedUser(event);
@@ -15,17 +16,17 @@ export async function DELETE(event: RequestEvent) {
     error(404, 'Project not found')
   }
   const requestFormData = await event.request.formData();
-  const clientId = requestFormData.get('id')?.toString();
-  if (!clientId?.length) {
-    error(400, 'Missing client id')
+  const patientId = requestFormData.get('id')?.toString();
+  if (!patientId?.length) {
+    error(400, 'Missing patient id')
   }
   const isAdmin = await isAdminUser(autheticatedUser.uid);
   const user = await getUser(autheticatedUser.email!);
   if (!isAdmin && !user?.projects?.includes(project!.name)) {
     error(401, 'Unauthorized');
   }
-  // const deletedOrder = await deleteOrder(project, clientId);
+  const deletedPatient = await deletePatient(project, patientId);
   return json({
-    // success: !!deletedOrder
+    success: !!deletedPatient
   })
 }

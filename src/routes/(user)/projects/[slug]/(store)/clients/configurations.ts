@@ -1,10 +1,9 @@
-import DiceBearAvatar from "$lib/components/dice-bear-avatar/dice-bear-avatar.svelte";
+import GLAvatar from "$lib/components/gl-avatar/gl-avatar.svelte";
 import type { EmptyResultsConfiguration } from "$lib/models/common";
 import type { StoreClient } from "$lib/models/store";
 import type { TableConfiguration } from "$lib/models/table";
 import { CircleOff, Copy, Edit, Ellipsis, MessageSquare, ShoppingCart, Trash2 } from "lucide-svelte";
 import { createRender } from "svelte-headless-table";
-import * as dicebearCollections from '@dicebear/collection'; 
 import ActionsMenu from "$lib/components/actions-menu/actions-menu.svelte";
 import type { ActionMenuConfiguration } from "$lib/models/menu-item";
 import { type EventDispatcher } from "svelte";
@@ -59,11 +58,7 @@ export const tableConfiguration: TableConfiguration<StoreClient> = {
     {
       dataPath: 'id',
       cell: (item) => {
-        return createRender(DiceBearAvatar, { 
-          seed: item.value,
-          style: dicebearCollections.notionists,
-          fallback: '?'
-        });
+        return createRender(GLAvatar, { seed: item.value });
       }
     },
     {

@@ -5,6 +5,7 @@ export interface ClinicPatient {
     created_at: number;
     first_name: string;
     sur_name: string;
+    full_name: string
     personal_id: string;
     phone: string;
     email: string;

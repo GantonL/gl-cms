@@ -58,14 +58,15 @@ export const createPatient = async (project: Project, patient: Pick<ClinicPatien
     created_at: new Date().getTime(),
     first_name: patient.first_name,
     sur_name: patient.sur_name,
+    full_name: `${patient.first_name} ${patient.sur_name}`,
     personal_id: patient.personal_id,
     email: patient.email,
     address: patient.address,
     date_of_birth: patient.date_of_birth,
     phone: patient.phone,
     gender: patient.gender,
-    refered_by: patient.refered_by,
-    notes: patient.notes,
+    refered_by: patient.refered_by ?? '',
+    notes: patient.notes ?? '',
   };
   const addRes = await patientsCollectionRef.add(newPatient);
   return addRes?.id ? newPatient : undefined;
@@ -78,6 +79,22 @@ export const updatePatient = async (project: Project, id: ClinicPatient['id'], p
   if (query.empty) {
     return false;
   }
-  const setRes = await query.docs[0].ref.set(patient, { merge: true });
+  const ref = query.docs[0].ref;
+  if (patient.first_name || patient.sur_name) {
+    const data = (await ref.get()).data();
+    patient.full_name = `${patient.first_name ?? data?.first_name} ${patient.sur_name ?? data?.sur_name}`;
+  }
+  const setRes = await ref.set(patient, { merge: true });
   return !!setRes;
+}
+
+export const deletePatient = async (project: Project, id: ClinicPatient['id']): Promise<boolean> => {
+  const app = getSecondaryApp(project);
+  if (!app) { return false };
+  const patientsCollectionRef = getFirestore(app).collection(ClinicCollections.Patients);
+  const patientRes = await patientsCollectionRef.where('id', '==', id).get();
+  const patientDoc = patientRes?.docs?.pop();
+  if (!patientDoc?.exists) { return false; };
+  const deleteRes = await patientDoc.ref.delete();
+  return !!deleteRes;
 }
