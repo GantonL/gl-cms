@@ -72,18 +72,18 @@ export const actions: Actions = {
   'set-avatar': async (event) => {
     const formData = Object.fromEntries(await event.request.formData());
     if (!(formData.avatar as File).name) {
-      return fail(403, {error: true, message: 'Invalid file data'})
+      return fail(403, { type: 'avatar', error: true, message: 'Invalid file data'})
     }
     const { avatar } = formData as { avatar: File };
     const patientId = event.params.patient_id;
     const uploadedAvatar = await uploadImage(currentProject, patientId, avatar);
     if (uploadedAvatar === undefined) {
-      return fail(403, {error: true, message: 'Failed to updload patient avatar'});
+      return fail(403, { type: 'avatar', error: true, message: 'Failed to updload patient avatar'});
     }
     const updateRes = await updatePatient(currentProject, patientId, { avatar: uploadedAvatar });
     if (!updateRes) {
-      return fail(403, { error: true, message: 'Failed to update patient avatar data' });
+      return fail(403, { type: 'avatar', error: true, message: 'Failed to update patient avatar data' });
     }
-    return { avatar: uploadedAvatar };
+    return {  type: 'avatar', success: true };
   }
 };

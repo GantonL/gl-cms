@@ -19,6 +19,7 @@
 	import * as Avatar from "$lib/components/ui/avatar";
 	import * as Tooltip from "$lib/components/ui/tooltip";
 	import { enhance } from "$app/forms";
+	import type { ActionData } from "./$types";
 
   let createEditForm: SuperValidated<Infer<FormSchema>>;
   let deletePatientOpened = false;
@@ -28,9 +29,22 @@
   let avatarCandidate: string;
   let changeAvatarDialogOpened = false;
   let avatarInput: HTMLInputElement;
+  let avatarUpdateInProgress = false;
+
+  export let form: ActionData;
 
   $: patient = $page.data.patient as ClinicPatient;
   $: project = $page.data.project;
+  $: if (form?.type === 'avatar'){
+      if (form?.error || form?.success) {
+         avatarUpdateInProgress = false;
+      }
+      if (form?.error) {
+        toast.error(form.message);
+      } else if (form.success) {
+        toast.success('Patient avatar updated successfuly')
+      }
+    }
 
   onMount(() => {
     initializeForm();
@@ -114,8 +128,14 @@
             <form id="set-avatar" method="POST" action="?/set-avatar" enctype="multipart/form-data" use:enhance>
               <label for="avatar">
                 <Avatar.Root class="border rounded-full w-24 h-24 cursor-pointer">
-                  <Avatar.Image src={patient.avatar?.url} alt="Avatar" />
-                  <Avatar.Fallback><ImagePlus size=14 class="text-muted-foreground"/></Avatar.Fallback>
+                  {#if avatarUpdateInProgress}
+                    <div class="flex h-full w-full items-center justify-center">
+                      <LoaderCircle class="animate-spin" size=24 />
+                    </div>
+                  {:else}
+                    <Avatar.Image src={patient.avatar?.url} alt="Avatar" />
+                    <Avatar.Fallback><ImagePlus size=24 class="text-muted-foreground"/></Avatar.Fallback>
+                  {/if}
                 </Avatar.Root>
               </label>
               <input type="file" id="avatar" name="avatar" bind:this={avatarInput} bind:files={avatarFileList} hidden on:change={onChangeAvatar}/>
@@ -251,7 +271,7 @@
     </AlertDialog.Header>
     <AlertDialog.Footer>
       <AlertDialog.Cancel on:click={clearAvatarInput}>No</AlertDialog.Cancel>
-      <AlertDialog.Action type="submit" form="set-avatar">Yes</AlertDialog.Action>
+      <AlertDialog.Action type="submit" form="set-avatar" on:click={() => { avatarUpdateInProgress = true }}>Yes</AlertDialog.Action>
     </AlertDialog.Footer>
   </AlertDialog.Content>
 </AlertDialog.Root>
