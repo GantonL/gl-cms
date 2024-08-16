@@ -45,5 +45,6 @@ export interface TableConfiguration<T> {
     route: string;
     paginationQuery?: TableQueryParams<T>;
     resultDataPath?: string;
-  }
+  },
+  clickableRows?: boolean;
 }

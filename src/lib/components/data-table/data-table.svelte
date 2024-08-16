@@ -189,6 +189,11 @@
     }
   }
 
+  function onBodyRowClick(row: BodyRow<any, any>) {
+    if (!configuration.clickableRows) { return; }
+    dispatch('rowClicked', row.original);
+  }
+
 </script>
 
 {#if configuration?.filters}
@@ -262,9 +267,9 @@
         {#each $pageRows as row (row.id)}
           <Subscribe rowAttrs={row.attrs()} let:rowAttrs>
             <TableComponent.Row {...rowAttrs}>
-              {#each row.cells as cell (cell.id)}
+              {#each row.cells as cell, i (cell.id)}
                 <Subscribe attrs={cell.attrs()} let:attrs>
-                  <TableComponent.Cell {...attrs}>
+                  <TableComponent.Cell {...attrs} on:click={() => i < (row.cells.length - 1) ? onBodyRowClick(row) : null}>
                     <Render of={cell.render()} />
                   </TableComponent.Cell>
                 </Subscribe>

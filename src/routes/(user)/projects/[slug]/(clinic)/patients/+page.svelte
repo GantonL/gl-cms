@@ -96,7 +96,8 @@
         on:create={(_) => onCreatePatient()}
         on:search={(event) => onSearch(event.detail)}
         on:open={(event) => onChat(event.detail)}
-        on:copy={(event) => copy(event.detail)}/>
+        on:copy={(event) => copy(event.detail)}
+        on:rowClicked={(event) => onEditPatient(event.detail)}/>
     {:else}
       <EmptyResults configuration={emptyResultsConfiguration} on:create={onCreatePatient}/>
     {/if}

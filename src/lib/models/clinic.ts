@@ -17,6 +17,8 @@ export interface ClinicPatient {
     files?: Image[];
     treatments_history?: string[];
     notes?: string;
+    medical_condition?: string;
+    medications?: string;
 }
 
 export interface TreatmentHistoryItem {

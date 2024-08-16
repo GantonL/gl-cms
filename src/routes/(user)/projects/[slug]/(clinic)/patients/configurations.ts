@@ -7,6 +7,7 @@ import { CircleOff, Copy, Edit, Ellipsis, MessageSquare } from "lucide-svelte";
 import type { EventDispatcher } from "svelte";
 import { createRender } from "svelte-headless-table";
 import GLAvatar from "$lib/components/gl-avatar/gl-avatar.svelte";
+import { DateFormatter, getLocalTimeZone, parseDate, today } from "@internationalized/date";
 
 export const emptyResultsConfiguration: EmptyResultsConfiguration = {
   icon: CircleOff,
@@ -64,15 +65,18 @@ export const tableConfiguration: TableConfiguration<ClinicPatient> = {
           dataPath: 'full_name'
         },
         {
-          header: 'Email',
-          dataPath: 'email'
+          header: 'ID',
+          dataPath: 'personal_id'
         },
         {
-          header: 'Created',
-          dataPath: 'created_at',
+          header: 'Birth date',
+          dataPath: 'date_of_birth',
           cell: ({ value }) => {
-            const formatted = new Intl.DateTimeFormat("en-UK").format(value);
-            return formatted;
+            const dateFormatter = new DateFormatter('en-UK', { dateStyle: "long" });
+            const parsedDate = parseDate(value);
+            const dob = dateFormatter.format(parsedDate.toDate(getLocalTimeZone()));
+            const years = today(getLocalTimeZone()).year - parsedDate.year;
+            return `${dob} (${years})`
           },
         },
         {
@@ -96,6 +100,7 @@ export const tableConfiguration: TableConfiguration<ClinicPatient> = {
         class: 'self-end'
       },
       search: {
-        placeholder: 'Name or email...'
+        placeholder: 'Name or ID...'
       },
+      clickableRows: true,
 };
