@@ -54,9 +54,9 @@ const rowActions: ActionMenuConfiguration<ClinicPatient> = {
 export const tableConfiguration: TableConfiguration<ClinicPatient> = {
     columns: (dispatch: EventDispatcher<Record<string, string>>) => [
         {
-          dataPath: 'avatar.url',
+          dataPath: 'avatar',
           cell: (item) => {
-            return createRender(GLAvatar, { url: item.value });
+            return createRender(GLAvatar, { url: item.value?.url });
           }
         },
         {

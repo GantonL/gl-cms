@@ -18,6 +18,7 @@
 	import { emptyFilesResultsConfiguration, emptyTreatmentsResultsConfiguration, filesTableConfiguration, treatmentsHistoryTableConfiguration } from "./configurations";
 	import * as Avatar from "$lib/components/ui/avatar";
 	import * as Tooltip from "$lib/components/ui/tooltip";
+	import { enhance } from "$app/forms";
 
   let createEditForm: SuperValidated<Infer<FormSchema>>;
   let deletePatientOpened = false;
@@ -88,10 +89,6 @@
   }
 
 
-  function changeAvatar() {
-    clearAvatarInput();
-  }
-
   function onChangeAvatar() {
     const file = avatarFileList?.item(0); 
     file?.arrayBuffer()?.then((ab) => {
@@ -110,31 +107,40 @@
 </script>
 <Card.Root>
   <Card.Header>
-    <Card.Title>
-      <div class="flex flex-row gap-2 items-center">
-        {#if patient.id}
-          <Tooltip.Root>
-            <Tooltip.Trigger>
+    <div class="flex flex-row gap-2 items-center">
+      {#if patient.id}
+        <Tooltip.Root>
+          <Tooltip.Trigger>
+            <form id="set-avatar" method="POST" action="?/set-avatar" enctype="multipart/form-data" use:enhance>
               <label for="avatar">
-                <Avatar.Root class="border rounded-full cursor-pointer">
+                <Avatar.Root class="border rounded-full w-24 h-24 cursor-pointer">
                   <Avatar.Image src={patient.avatar?.url} alt="Avatar" />
                   <Avatar.Fallback><ImagePlus size=14 class="text-muted-foreground"/></Avatar.Fallback>
                 </Avatar.Root>
               </label>
               <input type="file" id="avatar" name="avatar" bind:this={avatarInput} bind:files={avatarFileList} hidden on:change={onChangeAvatar}/>
-            </Tooltip.Trigger>
-            <Tooltip.Content>Change avatar</Tooltip.Content>
-          </Tooltip.Root>
+            </form>
+          </Tooltip.Trigger>
+          <Tooltip.Content>Change avatar</Tooltip.Content>
+        </Tooltip.Root>
+      {/if}
+      <div class="flex flex-col gap-2">
+        <Card.Title>
+          <h1>
+            {#if !patient.id}
+              Create patient
+            {:else}
+              {patient.first_name} {patient.sur_name}
+            {/if}
+          </h1>
+        </Card.Title>
+        {#if patient.id && patient.personal_id}
+          <Card.Description>
+            {patient.personal_id}
+          </Card.Description>
         {/if}
-        <h1>
-          {#if !patient.id}
-            Create patient
-          {:else}
-            {patient.first_name} {patient.sur_name}
-          {/if}
-        </h1>
       </div>
-    </Card.Title>
+    </div>
   </Card.Header>
   <Card.Content>
     <div class="flex flex-col gap-4">
@@ -245,7 +251,7 @@
     </AlertDialog.Header>
     <AlertDialog.Footer>
       <AlertDialog.Cancel on:click={clearAvatarInput}>No</AlertDialog.Cancel>
-      <AlertDialog.Action on:click={changeAvatar}>Yes</AlertDialog.Action>
+      <AlertDialog.Action type="submit" form="set-avatar">Yes</AlertDialog.Action>
     </AlertDialog.Footer>
   </AlertDialog.Content>
 </AlertDialog.Root>

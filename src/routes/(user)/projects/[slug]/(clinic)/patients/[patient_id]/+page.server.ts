@@ -4,7 +4,7 @@ import type { Actions, PageServerLoad } from "./$types";
 import { zod } from "sveltekit-superforms/adapters";
 import { formSchema } from "./schema";
 import type { ClinicPatient } from "$lib/models/clinic";
-import { createPatient, getPatient, updatePatient } from "$lib/server/clinic.db";
+import { createPatient, getPatient, updatePatient, uploadImage } from "$lib/server/clinic.db";
 
 let currentProject: Project;
 
@@ -68,5 +68,22 @@ export const actions: Actions = {
       return fail(403, { form });
     }
     return { form };
+  },
+  'set-avatar': async (event) => {
+    const formData = Object.fromEntries(await event.request.formData());
+    if (!(formData.avatar as File).name) {
+      return fail(403, {error: true, message: 'Invalid file data'})
+    }
+    const { avatar } = formData as { avatar: File };
+    const patientId = event.params.patient_id;
+    const uploadedAvatar = await uploadImage(currentProject, patientId, avatar);
+    if (uploadedAvatar === undefined) {
+      return fail(403, {error: true, message: 'Failed to updload patient avatar'});
+    }
+    const updateRes = await updatePatient(currentProject, patientId, { avatar: uploadedAvatar });
+    if (!updateRes) {
+      return fail(403, { error: true, message: 'Failed to update patient avatar data' });
+    }
+    return { avatar: uploadedAvatar };
   }
 };

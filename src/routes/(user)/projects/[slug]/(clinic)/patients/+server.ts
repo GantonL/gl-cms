@@ -27,7 +27,7 @@ export async function GET(event: RequestEvent) {
   let filter: {path: keyof ClinicPatient, value: string | number} | undefined;
   if (nameOrEmailQuery.length > 0) {
     filter = {
-      path: nameOrEmailQuery.includes('@') ? 'email' : 'first_name',
+      path: nameOrEmailQuery.includes('@') ? 'email' : 'full_name',
       value: nameOrEmailQuery,
     }
   }

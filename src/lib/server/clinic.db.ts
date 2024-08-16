@@ -4,6 +4,9 @@ import { getSecondaryApp } from "./secondary.db";
 import type { ClinicPatient } from "$lib/models/clinic";
 import { ClinicCollections } from "$lib/enums/collections";
 import { uuidv4 } from '@firebase/util';
+import type { Image } from "$lib/models/image";
+import { getDownloadURL, getStorage } from "firebase-admin/storage";
+import { ClinicStorageDirectories } from "$lib/enums/storage";
 
 export const getPatientsCount = async (project: Project, filter?: {path: keyof ClinicPatient, value: string | number}): Promise<number | undefined> => {
   const app = getSecondaryApp(project);
@@ -98,3 +101,21 @@ export const deletePatient = async (project: Project, id: ClinicPatient['id']): 
   const deleteRes = await patientDoc.ref.delete();
   return !!deleteRes;
 }
+
+export const uploadImage = async (project: Project, id: string, image: File): Promise<Image | undefined> => {
+  let uploadedImage: Image | undefined = {path: '', url: ''};
+  const app = getSecondaryApp(project);
+  if (!app) { return uploadedImage };
+  const bucket = getStorage(app).bucket();
+  const buffer = Buffer.from(await image.arrayBuffer());
+  try {
+    uploadedImage.path = `${ClinicStorageDirectories.Avatars}/${id}`;
+    const fileRef = bucket.file(uploadedImage.path);
+    await fileRef.save(buffer);
+    uploadedImage.url = await getDownloadURL(fileRef);
+  } catch {
+    uploadedImage = undefined;
+  }
+  return uploadedImage;
+}
+
