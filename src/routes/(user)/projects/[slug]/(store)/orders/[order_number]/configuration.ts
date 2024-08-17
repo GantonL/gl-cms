@@ -54,6 +54,7 @@ export const productsTableRowActions: ActionMenuConfiguration<StoreProduct> = {
           label: 'Delete',
           icon: Trash2,
           event: 'delete',
+          class: 'bg-destructive/10 text-destructive'
         }
       ]
     }

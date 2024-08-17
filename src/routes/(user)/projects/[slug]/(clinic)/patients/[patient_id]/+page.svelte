@@ -2,8 +2,8 @@
 	import { page } from "$app/stores";
 	import * as Card from "$lib/components/ui/card";
 	import CreateEditPatientForm from "./create-edit-patient-form.svelte";
-	import { superValidate, type Infer, type SuperValidated } from "sveltekit-superforms";
-	import { formSchema, type FormSchema } from "./schema";
+	import { superValidate, type Infer,type SuperValidated } from "sveltekit-superforms";
+	import { patientFormSchema, type PatientFormSchema } from "./schema";
 	import { onMount } from "svelte";
 	import { zod } from "sveltekit-superforms/adapters";
 	import { toast } from "svelte-sonner";
@@ -22,8 +22,9 @@
 	import type { ActionData } from "./$types";
 	import { DateFormatter, getLocalTimeZone, parseDate, today } from "@internationalized/date";
 	import { Separator } from "$lib/components/ui/separator";
+	import AddPatientFileForm from "./add-patient-file-form.svelte";
 
-  let createEditForm: SuperValidated<Infer<FormSchema>>;
+  let createEditForm: SuperValidated<Infer<PatientFormSchema>>;
   let deletePatientOpened = false;
   let deletionInProgress = false;
   let saveInProgress = false;
@@ -34,6 +35,9 @@
   let avatarUpdateInProgress = false;
   let editPersonlInformation = false;
   let patientDOB = '';
+  let addPatientFilesDialogOpened = false;
+  let patientFilesUploadInprogress = false;
+  let deleteFileInProgress = false;
 
   export let form: ActionData;
 
@@ -59,13 +63,13 @@
   }
 
   onMount(() => {
-    initializeForm();
+    initializeForms();
   })
 
-  function initializeForm() {
-    superValidate(patient, zod(formSchema)).then((form) => {
+  function initializeForms() {
+    superValidate(patient, zod(patientFormSchema)).then((form) => {
       createEditForm = form;
-    })
+    });
   }
     
   function onPatientCreated(event: CustomEvent) {
@@ -102,16 +106,50 @@
     
   }
 
+  function onEditTreatment() {
+
+  }
+
   function deleteTreatment(id: string) {
 
   }
 
   function onAddFile() {
-
+    addPatientFilesDialogOpened = true;
   }
 
-  function deleteFile(path: string) {
+  function onFileAdded() {
+    patientFilesUploadInprogress = false;
+    addPatientFilesDialogOpened = false;
+  }
 
+  function deleteFile(event: CustomEvent) {
+    if (!patient?.id) return;
+    deleteFileInProgress = true;
+    const body = new FormData();
+    body.append('path', event.detail.path);
+    const errMsg = `failed to delete patient file`;
+    fetch(`/projects/${project.id}/patients/${patient.id}/files`, { method: 'DELETE', body })
+      .then((res) => {
+        res?.json().then((res) => {
+          if (res?.success) {
+            toast.success(`Successfuly deleted patient file`);
+          } else {
+            toast.error(errMsg);
+          }
+          deleteFileInProgress = false;
+        }, () => {
+          toast.error(errMsg);
+          deleteFileInProgress = false;
+        });
+      }, () => {
+        toast.error(errMsg);
+        deleteFileInProgress = false;
+      });
+  }
+
+  function onViewFile(event: CustomEvent) {
+    window.open(event.detail.url, "_blank");
   }
 
 
@@ -274,6 +312,7 @@
             <Tabs.List>
               <Tabs.Trigger value="treatments">Treatments</Tabs.Trigger>
               <Tabs.Trigger value="files">Files</Tabs.Trigger>
+              <Tabs.Trigger value="images">Images</Tabs.Trigger>
             </Tabs.List>
             <Tabs.Content value="treatments">
               {#if !patient.treatments_history || patient.treatments_history?.length === 0}
@@ -283,6 +322,7 @@
                   data={patient.treatments_history}
                   configuration={treatmentsHistoryTableConfiguration} 
                   on:create={onAddTreatment}
+                  on:edit={onEditTreatment}
                   on:delete={(event) => deleteTreatment(event.detail.id)}/>
               {/if}
             </Tabs.Content>
@@ -291,11 +331,16 @@
                 <EmptyResults configuration={emptyFilesResultsConfiguration} on:create={onAddFile}/>
               {:else}
                 <DataTable 
+                  disabled={deleteFileInProgress || deletionInProgress || saveInProgress || avatarUpdateInProgress || patientFilesUploadInprogress}
                   data={patient.files}
                   configuration={filesTableConfiguration} 
                   on:create={onAddFile}
-                  on:delete={(event) => deleteFile(event.detail.path)}/>
+                  on:view={onViewFile}
+                  on:delete={deleteFile}/>
               {/if}
+            </Tabs.Content>
+            <Tabs.Content value="images">
+
             </Tabs.Content>
           </Tabs.Root>
         </Card.Content>
@@ -356,5 +401,16 @@
       <AlertDialog.Cancel on:click={clearAvatarInput}>No</AlertDialog.Cancel>
       <AlertDialog.Action type="submit" form="set-avatar" on:click={() => { avatarUpdateInProgress = true }}>Yes</AlertDialog.Action>
     </AlertDialog.Footer>
+  </AlertDialog.Content>
+</AlertDialog.Root>
+
+<AlertDialog.Root bind:open={addPatientFilesDialogOpened} closeOnOutsideClick={!patientFilesUploadInprogress}>
+  <AlertDialog.Content>
+    <AlertDialog.Header>
+      <AlertDialog.Title>Add new file</AlertDialog.Title>
+    </AlertDialog.Header>
+    <AddPatientFileForm 
+      on:inProgress={() => {patientFilesUploadInprogress = true}}
+      on:created={onFileAdded}/>
   </AlertDialog.Content>
 </AlertDialog.Root>

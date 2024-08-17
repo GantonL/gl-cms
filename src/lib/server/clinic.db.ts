@@ -1,5 +1,5 @@
 import type { Project } from "$lib/models/project";
-import { getFirestore } from "firebase-admin/firestore";
+import { FieldValue, getFirestore } from "firebase-admin/firestore";
 import { getSecondaryApp } from "./secondary.db";
 import type { ClinicPatient } from "$lib/models/clinic";
 import { ClinicCollections } from "$lib/enums/collections";
@@ -102,7 +102,7 @@ export const deletePatient = async (project: Project, id: ClinicPatient['id']): 
   return !!deleteRes;
 }
 
-export const uploadImage = async (project: Project, id: string, image: File): Promise<Image | undefined> => {
+export const uploadAvatar = async (project: Project, id: string, image: File): Promise<Image | undefined> => {
   let uploadedImage: Image | undefined = {path: '', url: ''};
   const app = getSecondaryApp(project);
   if (!app) { return uploadedImage };
@@ -119,3 +119,41 @@ export const uploadImage = async (project: Project, id: string, image: File): Pr
   return uploadedImage;
 }
 
+export const uploadFile = async (project: Project, id: string, file: File, location?: string): Promise<Image | undefined> => {
+  let uploadedFile: Image | undefined = {path: '', url: '', date: file.lastModified};
+  const app = getSecondaryApp(project);
+  if (!app) { return uploadedFile };
+  const bucket = getStorage(app).bucket();
+  const buffer = Buffer.from(await file.arrayBuffer());
+  try {
+    uploadedFile.path = `${ClinicStorageDirectories.Files}/${id}${location && location.length > 0 ? `/${location}` : ''}/${file.name}`;
+    const fileRef = bucket.file(uploadedFile.path);
+    await fileRef.save(buffer);
+    uploadedFile.url = await getDownloadURL(fileRef);
+  } catch {
+    uploadedFile = undefined;
+  }
+  return uploadedFile;
+}
+
+export const addPatientFiles = async (project: Project, id: ClinicPatient['id'], files: Image[]): Promise<boolean> => {
+  const app = getSecondaryApp(project);
+  if (!app) { return false };
+  const query = await getFirestore(app).collection(ClinicCollections.Patients).where('id', '==', id).get();
+  if (query.empty) {
+    return false;
+  }
+  const setRes = await query.docs[0].ref.set({files: FieldValue.arrayUnion(...files)}, { merge: true });
+  return !!setRes;
+}
+
+export const removePatientFiles = async (project: Project, id: ClinicPatient['id'], files: Image[]): Promise<boolean> => {
+  const app = getSecondaryApp(project);
+  if (!app) { return false };
+  const query = await getFirestore(app).collection(ClinicCollections.Patients).where('id', '==', id).get();
+  if (query.empty) {
+    return false;
+  }
+  const setRes = await query.docs[0].ref.set({files: FieldValue.arrayRemove(...files)}, { merge: true });
+  return !!setRes;
+}

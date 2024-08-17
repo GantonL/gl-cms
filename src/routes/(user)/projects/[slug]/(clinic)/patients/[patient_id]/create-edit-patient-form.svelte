@@ -1,7 +1,7 @@
 <script lang="ts">
   import * as Form from "$lib/components/ui/form";
   import { Input } from "$lib/components/ui/input";
-  import { formSchema, type FormSchema } from "./schema";
+  import { patientFormSchema, type PatientFormSchema } from "./schema";
   import {
     type SuperValidated,
     type Infer,
@@ -20,13 +20,13 @@
 	import { cn } from "$lib/utils";
   import { Textarea } from "$lib/components/ui/textarea";
 
-  export let data: SuperValidated<Infer<FormSchema>>;
+  export let data: SuperValidated<Infer<PatientFormSchema>>;
   export let action: 'update' | 'create';
   export let disabled = false;
 
-  let enhance: SuperForm<Infer<FormSchema>>['enhance'];
-  let form: SuperForm<Infer<FormSchema>>;
-  let formData: SuperForm<Infer<FormSchema>>['form'];
+  let enhance: SuperForm<Infer<PatientFormSchema>>['enhance'];
+  let form: SuperForm<Infer<PatientFormSchema>>;
+  let formData: SuperForm<Infer<PatientFormSchema>>['form'];
   const dispatch = createEventDispatcher();
   let submissionInProgress = false;
 
@@ -34,7 +34,7 @@
   function updateFormData() {
     form = superForm(data.data, {
       dataType: 'json',
-      validators: zodClient(formSchema),
+      validators: zodClient(patientFormSchema),
       onSubmit: (input) => {
         submissionInProgress = true;
         input.formData.set('id', String($formData.id));

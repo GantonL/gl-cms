@@ -1,10 +1,10 @@
 import type { Project } from "$lib/models/project";
-import { fail, superValidate } from "sveltekit-superforms";
+import { fail, superValidate, withFiles } from "sveltekit-superforms";
 import type { Actions, PageServerLoad } from "./$types";
 import { zod } from "sveltekit-superforms/adapters";
-import { formSchema } from "./schema";
+import { patientFileFormSchema, patientFormSchema } from "./schema";
 import type { ClinicPatient } from "$lib/models/clinic";
-import { createPatient, getPatient, updatePatient, uploadImage } from "$lib/server/clinic.db";
+import { addPatientFiles, createPatient, getPatient, updatePatient, uploadAvatar, uploadFile } from "$lib/server/clinic.db";
 
 let currentProject: Project;
 
@@ -24,7 +24,7 @@ export const load: PageServerLoad = async ({parent, params}) => {
 
 export const actions: Actions = {
   create: async (event) => {
-    const form = await superValidate(event, zod(formSchema));
+    const form = await superValidate(event, zod(patientFormSchema));
     if (!form.valid) {
       return fail(400, { form });
     }
@@ -49,7 +49,7 @@ export const actions: Actions = {
     return { form };
   },
   update: async (event) => {
-    const form = await superValidate(event, zod(formSchema));
+    const form = await superValidate(event, zod(patientFormSchema));
     if (!form.valid) {
       return fail(400, { form });
     }
@@ -80,7 +80,7 @@ export const actions: Actions = {
     }
     const { avatar } = formData as { avatar: File };
     const patientId = event.params.patient_id;
-    const uploadedAvatar = await uploadImage(currentProject, patientId, avatar);
+    const uploadedAvatar = await uploadAvatar(currentProject, patientId, avatar);
     if (uploadedAvatar === undefined) {
       return fail(403, { type: 'avatar', error: true, message: 'Failed to updload patient avatar'});
     }
@@ -88,6 +88,29 @@ export const actions: Actions = {
     if (!updateRes) {
       return fail(403, { type: 'avatar', error: true, message: 'Failed to update patient avatar data' });
     }
-    return {  type: 'avatar', success: true };
+    return { type: 'avatar', success: true };
+  },
+  'add-file': async (event) => {
+    const form = await superValidate(event, zod(patientFileFormSchema));
+    if (!form.valid) {
+      return fail(400, 
+        withFiles({ form }),
+      );
+    }
+    if (!form.data.file) {
+      return fail(400, 
+        withFiles({ form }),
+      );
+    }
+    const patientId = event.params.patient_id;
+    const uploadedFile = await uploadFile(currentProject, patientId, form.data.file, form.data.location);
+    if (uploadedFile === undefined) {
+      return fail(403, { type: 'file', error: true, message: 'Failed to updload patient file'});
+    }
+    const updateRes = await addPatientFiles(currentProject, patientId, [uploadedFile]);
+    if (!updateRes) {
+      return fail(403, { type: 'file', error: true, message: 'Failed to update patient avatar data' });
+    }
+    return withFiles({ form });
   }
 };

@@ -5,4 +5,5 @@ export enum StoreStorageDirectories {
 
 export enum ClinicStorageDirectories {
   Avatars = 'avatars',
+  Files = 'files'
 }

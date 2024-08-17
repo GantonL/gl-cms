@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const formSchema = z.object({
+export const patientFormSchema = z.object({
   // Form native values (inserted directly to form by user)
   first_name: z.string().min(2),
   sur_name: z.string().min(2),
@@ -19,4 +19,11 @@ export const formSchema = z.object({
   id: z.string().optional(),
 });
  
-export type FormSchema = typeof formSchema;
+export type PatientFormSchema = typeof patientFormSchema;
+
+export const patientFileFormSchema = z.object({
+  location: z.string().optional(),
+  file: z.any().optional(),
+});
+
+export type PatientFileFormSchema = typeof patientFileFormSchema;

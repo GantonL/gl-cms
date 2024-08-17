@@ -2,7 +2,7 @@ import type { ClinicPatient } from "$lib/models/clinic";
 import type { EmptyResultsConfiguration } from "$lib/models/common";
 import type { ActionMenuConfiguration } from "$lib/models/menu-item";
 import type { TableConfiguration } from "$lib/models/table";
-import { CircleOff, Edit, Ellipsis, File, Trash2 } from "lucide-svelte";
+import { CircleOff, Edit, Ellipsis, Eye, File, Trash2 } from "lucide-svelte";
 import type { EventDispatcher } from "svelte";
 import { createRender } from "svelte-headless-table";
 import ActionsMenu from "$lib/components/actions-menu/actions-menu.svelte";
@@ -25,6 +25,12 @@ export const treatmentsTableRowActions: ActionMenuConfiguration<ClinicPatient['t
             label: 'Edit',
             icon: Edit,
             event: 'edit',
+          },
+          {
+            label: 'Delete',
+            icon: Trash2,
+            event: 'delete',
+            class: 'bg-destructive/10 text-destructive'
           },
         ]
       }
@@ -75,7 +81,7 @@ export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicPatie
                 data: c.value
             } 
             });
-            ['edit'].forEach(eventType => {
+            ['edit', 'delete'].forEach(eventType => {
                 render.on(eventType, (event) => {
                     dispatch(event.type, event.detail);
                 })
@@ -107,9 +113,15 @@ export const filesTableRowActions: ActionMenuConfiguration<ClinicPatient['treatm
       {
         group: [
           {
+            label: 'View',
+            icon: Eye,
+            event: 'view',
+          },
+          {
             label: 'Delete',
             icon: Trash2,
             event: 'delete',
+            class: 'bg-destructive/10 text-destructive'
           },
         ]
       }
@@ -129,13 +141,17 @@ export const filesTableConfiguration: TableConfiguration<ClinicPatient> = {
             header: 'Last modified',
             dataPath: 'date',
             cell: ({ value }) => {
-                const formatted = new Intl.DateTimeFormat("en-UK", {'hour': '2-digit'}).format(value);
+                const formatted = new Intl.DateTimeFormat("en-UK").format(value);
                 return formatted;
             },
         },
         {
             header: 'name',
             dataPath: 'path',
+            cell: ({value}) => {
+                const pathSegments = value.split('/');
+                return pathSegments[pathSegments.length - 1];
+            }
         },
         {
             header: 'Actions',
@@ -143,12 +159,12 @@ export const filesTableConfiguration: TableConfiguration<ClinicPatient> = {
             cell: (c) => {
                 const render = createRender(ActionsMenu, { 
                 configuration: { 
-                    items: treatmentsTableRowActions.items, 
-                    trigger: treatmentsTableRowActions.trigger, 
+                    items: filesTableRowActions.items, 
+                    trigger: filesTableRowActions.trigger, 
                     data: c.value
                 } 
                 });
-                ['delete'].forEach(eventType => {
+                ['delete', 'view'].forEach(eventType => {
                     render.on(eventType, (event) => {
                         dispatch(event.type, event.detail);
                     })
