@@ -8,6 +8,7 @@ import type { EventDispatcher } from "svelte";
 import { createRender } from "svelte-headless-table";
 import GLAvatar from "$lib/components/gl-avatar/gl-avatar.svelte";
 import { DateFormatter, getLocalTimeZone, parseDate, today } from "@internationalized/date";
+import PatientTableIndications from './patient-table-indications.svelte';
 
 export const emptyResultsConfiguration: EmptyResultsConfiguration = {
   icon: CircleOff,
@@ -80,10 +81,17 @@ export const tableConfiguration: TableConfiguration<ClinicPatient> = {
           },
         },
         {
+          header: "Indications",
+          dataPath: (patient) => patient,
+          cell: (p) => {
+            return createRender(PatientTableIndications, { indications: {...p.value} })
+          }
+        },
+        {
           header: 'Actions',
-          dataPath: (client) => client,
-          cell: (c) => {
-            const render = createRender(ActionsMenu, { configuration: { ...rowActions, data: c.value } });
+          dataPath: (patient) => patient,
+          cell: (p) => {
+            const render = createRender(ActionsMenu, { configuration: { ...rowActions, data: p.value } });
             ['copy', 'edit', 'open'].forEach(eventType => {
               render.on(eventType, (event) => {
                 dispatch(event.type, event.detail);
