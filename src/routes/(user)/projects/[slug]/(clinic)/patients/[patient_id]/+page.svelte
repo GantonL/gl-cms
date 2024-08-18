@@ -128,12 +128,15 @@
     deleteFileInProgress = true;
     const body = new FormData();
     body.append('path', event.detail.path);
+    body.append('url', event.detail.url);
+    body.append('date', event.detail.date);
     const errMsg = `failed to delete patient file`;
     fetch(`/projects/${project.id}/patients/${patient.id}/files`, { method: 'DELETE', body })
       .then((res) => {
         res?.json().then((res) => {
           if (res?.success) {
             toast.success(`Successfuly deleted patient file`);
+            patient.files?.splice(patient.files.findIndex(file => file.path === event.detail.path && file.url === event.detail.url && file.date === event.detail.date), 1);
           } else {
             toast.error(errMsg);
           }

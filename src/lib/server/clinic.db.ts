@@ -141,6 +141,19 @@ export const uploadFile = async (project: Project, id: string, file: File, date?
   return uploadedFile;
 }
 
+export const deleteFile = async (project: Project, path: string): Promise<boolean> => {
+     const app = getSecondaryApp(project);
+  if (!app) { return false };
+  const bucket = getStorage(app).bucket();
+  try {
+    const fileRef = bucket.file(path);
+    const deleted = await fileRef.delete().catch(() => false );
+    return !!deleted;
+  } catch {
+    return false;
+  }
+}
+
 export const addPatientFiles = async (project: Project, id: ClinicPatient['id'], files: Image[]): Promise<boolean> => {
   const app = getSecondaryApp(project);
   if (!app) { return false };
