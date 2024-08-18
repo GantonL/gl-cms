@@ -98,8 +98,23 @@ export const deletePatient = async (project: Project, id: ClinicPatient['id']): 
   const patientsCollectionRef = getFirestore(app).collection(ClinicCollections.Patients);
   const patientRes = await patientsCollectionRef.where('id', '==', id).get();
   const patientDoc = patientRes?.docs?.pop();
+  const data = patientDoc?.data();
   if (!patientDoc?.exists) { return false; };
   const deleteRes = await patientDoc.ref.delete();
+  if (deleteRes) {
+    if (data?.files?.length) {
+      const deleteFiles = await deleteFileOrDirectory(project, `${ClinicStorageDirectories.Files}/${id}`, { isPathDirectory: true });
+      if (!deleteFiles) {
+        return false;
+      }
+    }
+    if (data?.avatar) {
+      const deleteAvatar = await deleteFileOrDirectory(project, `${ClinicStorageDirectories.Avatars}/${id}`, { isPathDirectory: true });
+      if (!deleteAvatar) {
+        return false;
+      }
+    }
+  }
   return !!deleteRes;
 }
 
@@ -141,14 +156,19 @@ export const uploadFile = async (project: Project, id: string, file: File, date?
   return uploadedFile;
 }
 
-export const deleteFile = async (project: Project, path: string): Promise<boolean> => {
-     const app = getSecondaryApp(project);
+export const deleteFileOrDirectory = async (project: Project, path: string, options?: {isPathDirectory?: boolean}): Promise<boolean> => {
+  const app = getSecondaryApp(project);
   if (!app) { return false };
   const bucket = getStorage(app).bucket();
   try {
-    const fileRef = bucket.file(path);
-    const deleted = await fileRef.delete().catch(() => false );
-    return !!deleted;
+    if (options?.isPathDirectory) {
+      await bucket.deleteFiles({prefix: path});
+      return true;
+    } else {
+      const fileRef = bucket.file(path);
+      const deleted = await fileRef.delete().catch(() => false );
+      return !!deleted;
+    }
   } catch {
     return false;
   }

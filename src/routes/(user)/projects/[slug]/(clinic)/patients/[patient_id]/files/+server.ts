@@ -2,7 +2,7 @@ import { getAuthenticatedUser, isAdminUser } from "$lib/server/auth";
 import { getProject } from "$lib/server/projects.db";
 import { getUser } from "$lib/server/users.db";
 import { error, json } from "@sveltejs/kit";
-import { deleteFile, removePatientFiles } from "$lib/server/clinic.db";
+import { deleteFileOrDirectory, removePatientFiles } from "$lib/server/clinic.db";
 import type { RequestEvent } from "../$types";
 import type { ClinicPatient } from "$lib/models/clinic";
 
@@ -37,7 +37,7 @@ export async function DELETE(event: RequestEvent) {
   if (!isAdmin && !user?.projects?.includes(project!.name)) {
     error(401, 'Unauthorized');
   }
-  const deletedPatientFile = await deleteFile(project, path);
+  const deletedPatientFile = await deleteFileOrDirectory(project, path);
   if (!deletedPatientFile) {
     return json({success: false});
   }

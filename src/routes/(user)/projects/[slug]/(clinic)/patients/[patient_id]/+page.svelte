@@ -305,49 +305,51 @@
           {/if}
         </Card.Content>
       </Card.Root>
-      <Card.Root class="flex-grow">
-        <Card.Header>
-          <Card.Title>Data</Card.Title>
-          <Card.Description>Handle data related to this patient</Card.Description>
-        </Card.Header>
-        <Card.Content>
-          <Tabs.Root value="treatments" class="w-full">
-            <Tabs.List>
-              <Tabs.Trigger value="treatments">Treatments</Tabs.Trigger>
-              <Tabs.Trigger value="files">Files</Tabs.Trigger>
-              <Tabs.Trigger value="images">Images</Tabs.Trigger>
-            </Tabs.List>
-            <Tabs.Content value="treatments">
-              {#if !patient.treatments_history || patient.treatments_history?.length === 0}
-                <EmptyResults configuration={emptyTreatmentsResultsConfiguration} on:create={onAddTreatment}/>
-              {:else}
-                <DataTable 
-                  data={patient.treatments_history}
-                  configuration={treatmentsHistoryTableConfiguration} 
-                  on:create={onAddTreatment}
-                  on:edit={onEditTreatment}
-                  on:delete={(event) => deleteTreatment(event.detail.id)}/>
-              {/if}
-            </Tabs.Content>
-            <Tabs.Content value="files">
-              {#if !patient.files || patient.files?.length === 0}
-                <EmptyResults configuration={emptyFilesResultsConfiguration} on:create={onAddFile}/>
-              {:else}
-                <DataTable 
-                  disabled={deleteFileInProgress || deletionInProgress || saveInProgress || avatarUpdateInProgress || patientFilesUploadInprogress}
-                  data={patient.files}
-                  configuration={filesTableConfiguration} 
-                  on:create={onAddFile}
-                  on:view={onViewFile}
-                  on:delete={deleteFile}/>
-              {/if}
-            </Tabs.Content>
-            <Tabs.Content value="images">
+      {#if patient?.id}
+        <Card.Root class="flex-grow">
+          <Card.Header>
+            <Card.Title>Data</Card.Title>
+            <Card.Description>Handle data related to this patient</Card.Description>
+          </Card.Header>
+          <Card.Content>
+            <Tabs.Root value="treatments" class="w-full">
+              <Tabs.List>
+                <Tabs.Trigger value="treatments">Treatments</Tabs.Trigger>
+                <Tabs.Trigger value="files">Files</Tabs.Trigger>
+                <Tabs.Trigger value="images">Images</Tabs.Trigger>
+              </Tabs.List>
+              <Tabs.Content value="treatments">
+                {#if !patient.treatments_history || patient.treatments_history?.length === 0}
+                  <EmptyResults configuration={emptyTreatmentsResultsConfiguration} on:create={onAddTreatment}/>
+                {:else}
+                  <DataTable 
+                    data={patient.treatments_history}
+                    configuration={treatmentsHistoryTableConfiguration} 
+                    on:create={onAddTreatment}
+                    on:edit={onEditTreatment}
+                    on:delete={(event) => deleteTreatment(event.detail.id)}/>
+                {/if}
+              </Tabs.Content>
+              <Tabs.Content value="files">
+                {#if !patient.files || patient.files?.length === 0}
+                  <EmptyResults configuration={emptyFilesResultsConfiguration} on:create={onAddFile}/>
+                {:else}
+                  <DataTable 
+                    disabled={deleteFileInProgress || deletionInProgress || saveInProgress || avatarUpdateInProgress || patientFilesUploadInprogress}
+                    data={patient.files}
+                    configuration={filesTableConfiguration} 
+                    on:create={onAddFile}
+                    on:view={onViewFile}
+                    on:delete={deleteFile}/>
+                {/if}
+              </Tabs.Content>
+              <Tabs.Content value="images">
 
-            </Tabs.Content>
-          </Tabs.Root>
-        </Card.Content>
-      </Card.Root>
+              </Tabs.Content>
+            </Tabs.Root>
+          </Card.Content>
+        </Card.Root>
+      {/if}
     </div>
   </Card.Content>
 </Card.Root>
