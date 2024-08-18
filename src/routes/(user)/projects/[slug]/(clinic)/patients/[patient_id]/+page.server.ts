@@ -103,7 +103,7 @@ export const actions: Actions = {
       );
     }
     const patientId = event.params.patient_id;
-    const uploadedFile = await uploadFile(currentProject, patientId, form.data.file, form.data.location);
+    const uploadedFile = await uploadFile(currentProject, patientId, form.data.file, form.data.date);
     if (uploadedFile === undefined) {
       return fail(403, { type: 'file', error: true, message: 'Failed to updload patient file'});
     }

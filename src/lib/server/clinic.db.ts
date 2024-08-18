@@ -7,6 +7,7 @@ import { uuidv4 } from '@firebase/util';
 import type { Image } from "$lib/models/image";
 import { getDownloadURL, getStorage } from "firebase-admin/storage";
 import { ClinicStorageDirectories } from "$lib/enums/storage";
+import { getLocalTimeZone, parseDate } from "@internationalized/date";
 
 export const getPatientsCount = async (project: Project, filter?: {path: keyof ClinicPatient, value: string | number}): Promise<number | undefined> => {
   const app = getSecondaryApp(project);
@@ -119,14 +120,18 @@ export const uploadAvatar = async (project: Project, id: string, image: File): P
   return uploadedImage;
 }
 
-export const uploadFile = async (project: Project, id: string, file: File, location?: string): Promise<Image | undefined> => {
-  let uploadedFile: Image | undefined = {path: '', url: '', date: file.lastModified};
+export const uploadFile = async (project: Project, id: string, file: File, date?: string): Promise<Image | undefined> => {
+  let formattedDate: number | undefined;
+  if (date) {
+    formattedDate = parseDate(date).toDate(getLocalTimeZone()).getTime();
+  } 
+  let uploadedFile: Image | undefined = {path: '', url: '', date: formattedDate ?? file.lastModified};
   const app = getSecondaryApp(project);
   if (!app) { return uploadedFile };
   const bucket = getStorage(app).bucket();
   const buffer = Buffer.from(await file.arrayBuffer());
   try {
-    uploadedFile.path = `${ClinicStorageDirectories.Files}/${id}${location && location.length > 0 ? `/${location}` : ''}/${file.name}`;
+    uploadedFile.path = `${ClinicStorageDirectories.Files}/${id}/${file.name}`;
     const fileRef = bucket.file(uploadedFile.path);
     await fileRef.save(buffer);
     uploadedFile.url = await getDownloadURL(fileRef);

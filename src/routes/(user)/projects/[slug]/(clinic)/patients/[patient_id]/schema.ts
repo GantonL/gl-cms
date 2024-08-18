@@ -22,8 +22,8 @@ export const patientFormSchema = z.object({
 export type PatientFormSchema = typeof patientFormSchema;
 
 export const patientFileFormSchema = z.object({
-  location: z.string().optional(),
-  file: z.any().optional(),
+  file: z.any(),
+  date: z.string().optional(),
 });
 
 export type PatientFileFormSchema = typeof patientFileFormSchema;
