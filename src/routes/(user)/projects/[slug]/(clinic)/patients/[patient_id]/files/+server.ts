@@ -2,9 +2,10 @@ import { getAuthenticatedUser, isAdminUser } from "$lib/server/auth";
 import { getProject } from "$lib/server/projects.db";
 import { getUser } from "$lib/server/users.db";
 import { error, json } from "@sveltejs/kit";
-import { deleteFileOrDirectory, removePatientFiles } from "$lib/server/clinic.db";
+import { deleteFileOrDirectory, removePatientFiles, removePatientImages } from "$lib/server/clinic.db";
 import type { RequestEvent } from "../$types";
-import type { ClinicPatient } from "$lib/models/clinic";
+import type { Image } from "$lib/models/image";
+import { ClinicStorageDirectories } from "$lib/enums/storage";
 
 export async function DELETE(event: RequestEvent) {
   const autheticatedUser = await getAuthenticatedUser(event);
@@ -41,10 +42,19 @@ export async function DELETE(event: RequestEvent) {
   if (!deletedPatientFile) {
     return json({success: false});
   }
-  const patientFile: ClinicPatient['files'] = [{ path, url, date: Number(date) }];
-  const deleteFilesRefFromPatient = await removePatientFiles(project, patientId, patientFile);
-  if (!deleteFilesRefFromPatient) {
-    return json({success: false});
+  const mainSegment = path.split('/')[0];
+  const fileOrImage: Image[] = [{ path, url, date: Number(date) }];
+  if (mainSegment === ClinicStorageDirectories.Files) {
+    const deleteFilesRefFromPatient = await removePatientFiles(project, patientId, fileOrImage);
+    if (!deleteFilesRefFromPatient) {
+      return json({success: false});
+    }
+  }
+  if (mainSegment === ClinicStorageDirectories.PatientsImages) {
+    const deleteImagesRefFromPatient = await removePatientImages(project, patientId, fileOrImage);
+    if (!deleteImagesRefFromPatient) {
+      return json({success: false});
+    }  
   }
   return json({
     success: true

@@ -24,6 +24,8 @@
 	import { Separator } from "$lib/components/ui/separator";
 	import AddPatientFileForm from "./add-patient-file-form.svelte";
 	import ImagesScroller from "$lib/components/images-scroller/images-scroller.svelte";
+	import type { Image } from "$lib/models/image";
+	import { ClinicStorageDirectories } from "$lib/enums/storage";
 
   let createEditForm: SuperValidated<Infer<PatientFormSchema>>;
   let deletePatientOpened = false;
@@ -147,7 +149,15 @@
         res?.json().then((res) => {
           if (res?.success) {
             toast.success(`Successfuly deleted patient file`);
-            patient.files?.splice(patient.files.findIndex(file => file.path === event.detail.path && file.url === event.detail.url && file.date === event.detail.date), 1);
+            const indexHandler = (file: Image) => file.path === event.detail.path && file.url === event.detail.url && file.date === event.detail.date;
+            const mainSegment = event.detail.path.spilce('/')[0];
+            let key: keyof Pick<ClinicPatient, 'files' | 'images'>;
+            if (mainSegment === ClinicStorageDirectories.Files) {
+              key = 'files'
+            } else if (mainSegment === ClinicStorageDirectories.PatientsImages) {
+              key = 'images'
+            }
+            patient[key!]?.splice(patient[key!]!.findIndex(indexHandler, 1));
           } else {
             toast.error(errMsg);
           }
@@ -358,7 +368,10 @@
                 {#if !patient.images || patient.images?.length === 0}
                   <EmptyResults configuration={emptyImagesResultsConfiguration} on:create={onAddImage}/>
                 {:else}
-                  <ImagesScroller images={patient.images} on:create={onAddImage}/>
+                  <ImagesScroller images={patient.images}
+                    disabled={deleteFileInProgress || deletionInProgress || saveInProgress || avatarUpdateInProgress || patientFilesUploadInprogress}
+                    on:create={onAddImage}
+                    on:delete={deleteFile}/>
                 {/if}
               </Tabs.Content>
             </Tabs.Root>
