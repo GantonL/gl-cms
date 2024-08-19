@@ -108,6 +108,12 @@ export const deletePatient = async (project: Project, id: ClinicPatient['id']): 
         return false;
       }
     }
+    if (data?.images?.length) {
+      const deleteFiles = await deleteFileOrDirectory(project, `${ClinicStorageDirectories.PatientsImages}/${id}`, { isPathDirectory: true });
+      if (!deleteFiles) {
+        return false;
+      }
+    }
     if (data?.avatar) {
       const deleteAvatar = await deleteFileOrDirectory(project, `${ClinicStorageDirectories.Avatars}/${id}`, { isPathDirectory: true });
       if (!deleteAvatar) {
@@ -135,18 +141,17 @@ export const uploadAvatar = async (project: Project, id: string, image: File): P
   return uploadedImage;
 }
 
-export const uploadFile = async (project: Project, id: string, file: File, date?: string): Promise<Image | undefined> => {
+export const uploadFile = async (project: Project, path: string, file: File, date?: string): Promise<Image | undefined> => {
   let formattedDate: number | undefined;
-  if (date) {
+  if (date && date !== 'undefined') {
     formattedDate = parseDate(date).toDate(getLocalTimeZone()).getTime();
   } 
-  let uploadedFile: Image | undefined = {path: '', url: '', date: formattedDate ?? file.lastModified};
+  let uploadedFile: Image | undefined = {path, url: '', date: formattedDate ?? file.lastModified};
   const app = getSecondaryApp(project);
   if (!app) { return uploadedFile };
   const bucket = getStorage(app).bucket();
   const buffer = Buffer.from(await file.arrayBuffer());
   try {
-    uploadedFile.path = `${ClinicStorageDirectories.Files}/${id}/${file.name}`;
     const fileRef = bucket.file(uploadedFile.path);
     await fileRef.save(buffer);
     uploadedFile.url = await getDownloadURL(fileRef);
@@ -185,6 +190,17 @@ export const addPatientFiles = async (project: Project, id: ClinicPatient['id'],
   return !!setRes;
 }
 
+export const addPatientImages = async (project: Project, id: ClinicPatient['id'], images: Image[]): Promise<boolean> => {
+  const app = getSecondaryApp(project);
+  if (!app) { return false };
+  const query = await getFirestore(app).collection(ClinicCollections.Patients).where('id', '==', id).get();
+  if (query.empty) {
+    return false;
+  }
+  const setRes = await query.docs[0].ref.set({images: FieldValue.arrayUnion(...images)}, { merge: true });
+  return !!setRes;
+}
+
 export const removePatientFiles = async (project: Project, id: ClinicPatient['id'], files: Image[]): Promise<boolean> => {
   const app = getSecondaryApp(project);
   if (!app) { return false };
@@ -193,5 +209,16 @@ export const removePatientFiles = async (project: Project, id: ClinicPatient['id
     return false;
   }
   const setRes = await query.docs[0].ref.set({files: FieldValue.arrayRemove(...files)}, { merge: true });
+  return !!setRes;
+}
+
+export const removePatientImages = async (project: Project, id: ClinicPatient['id'], images: Image[]): Promise<boolean> => {
+  const app = getSecondaryApp(project);
+  if (!app) { return false };
+  const query = await getFirestore(app).collection(ClinicCollections.Patients).where('id', '==', id).get();
+  if (query.empty) {
+    return false;
+  }
+  const setRes = await query.docs[0].ref.set({images: FieldValue.arrayRemove(...images)}, { merge: true });
   return !!setRes;
 }

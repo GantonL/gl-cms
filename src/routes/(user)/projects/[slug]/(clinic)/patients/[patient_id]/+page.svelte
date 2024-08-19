@@ -15,7 +15,7 @@
   import * as Tabs from "$lib/components/ui/tabs";
 	import EmptyResults from "$lib/components/empty-results/empty-results.svelte";
 	import DataTable from "$lib/components/data-table/data-table.svelte";
-	import { emptyFilesResultsConfiguration, emptyTreatmentsResultsConfiguration, filesTableConfiguration, treatmentsHistoryTableConfiguration } from "./configurations";
+	import { emptyFilesResultsConfiguration, emptyImagesResultsConfiguration, emptyTreatmentsResultsConfiguration, filesTableConfiguration, treatmentsHistoryTableConfiguration } from "./configurations";
 	import * as Avatar from "$lib/components/ui/avatar";
 	import * as Tooltip from "$lib/components/ui/tooltip";
 	import { enhance } from "$app/forms";
@@ -23,6 +23,7 @@
 	import { DateFormatter, getLocalTimeZone, parseDate, today } from "@internationalized/date";
 	import { Separator } from "$lib/components/ui/separator";
 	import AddPatientFileForm from "./add-patient-file-form.svelte";
+	import ImagesScroller from "$lib/components/images-scroller/images-scroller.svelte";
 
   let createEditForm: SuperValidated<Infer<PatientFormSchema>>;
   let deletePatientOpened = false;
@@ -38,6 +39,7 @@
   let addPatientFilesDialogOpened = false;
   let patientFilesUploadInprogress = false;
   let deleteFileInProgress = false;
+  let addPatientImagesDialogOpened = false;
 
   export let form: ActionData;
 
@@ -112,6 +114,15 @@
 
   function deleteTreatment(id: string) {
 
+  }
+
+  function onAddImage() {
+    addPatientImagesDialogOpened = true;
+  }
+  
+  function onImageAdded() {
+    patientFilesUploadInprogress = false;
+    addPatientImagesDialogOpened = false;
   }
 
   function onAddFile() {
@@ -344,7 +355,11 @@
                 {/if}
               </Tabs.Content>
               <Tabs.Content value="images">
-
+                {#if !patient.images || patient.images?.length === 0}
+                  <EmptyResults configuration={emptyImagesResultsConfiguration} on:create={onAddImage}/>
+                {:else}
+                  <ImagesScroller images={patient.images} on:create={onAddImage}/>
+                {/if}
               </Tabs.Content>
             </Tabs.Root>
           </Card.Content>
@@ -417,5 +432,17 @@
     <AddPatientFileForm 
       on:inProgress={() => {patientFilesUploadInprogress = true}}
       on:created={onFileAdded}/>
+  </AlertDialog.Content>
+</AlertDialog.Root>
+
+<AlertDialog.Root bind:open={addPatientImagesDialogOpened} closeOnOutsideClick={!patientFilesUploadInprogress}>
+  <AlertDialog.Content>
+    <AlertDialog.Header>
+      <AlertDialog.Title>Add new image</AlertDialog.Title>
+    </AlertDialog.Header>
+    <AddPatientFileForm 
+      action="add-image"
+      on:inProgress={() => {patientFilesUploadInprogress = true}}
+      on:created={onImageAdded}/>
   </AlertDialog.Content>
 </AlertDialog.Root>

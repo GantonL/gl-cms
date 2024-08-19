@@ -13,10 +13,12 @@
 	import * as Popover  from "$lib/components/ui/popover";
 	import { cn } from "$lib/utils";
 	import { buttonVariants } from "$lib/components/ui/button";
-	import { CalendarDate, DateFormatter, getLocalTimeZone, parseDate, today, type DateValue } from "@internationalized/date";
+	import { CalendarDate, DateFormatter, getLocalTimeZone, today, type DateValue } from "@internationalized/date";
 	import * as Select from "$lib/components/ui/select";
 	import { Calendar } from "$lib/components/ui/calendar";
     
+  export let action = 'add-file';
+
     let enhance: SuperForm<Infer<PatientFileFormSchema>>['enhance'];
     let form: SuperForm<Infer<PatientFileFormSchema>>;
     let formData: SuperForm<Infer<PatientFileFormSchema>>['form'];
@@ -75,7 +77,7 @@
   });
         
   </script>
-  <form id="add-file" method="POST" action={`?/add-file`} enctype="multipart/form-data" use:enhance>
+  <form id="add-file" method="POST" action={`?/${action}`} enctype="multipart/form-data" use:enhance>
     <div class="grid gap-4">
       <div class="grid items-center gap-4">
         <Form.Field {form} name="file">
@@ -170,7 +172,7 @@
         </Form.Field>
       </div>
     </div>
-    <Form.Button disabled={submissionInProgress}>
+    <Form.Button disabled={submissionInProgress || !$formData.file}>
         <div class="flex flex-row gap-2 items-center">
             {#if submissionInProgress}
                 <LoaderCircle size=14 class="animate-spin"/>

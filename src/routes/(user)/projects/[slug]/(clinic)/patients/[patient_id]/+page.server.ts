@@ -4,7 +4,8 @@ import type { Actions, PageServerLoad } from "./$types";
 import { zod } from "sveltekit-superforms/adapters";
 import { patientFileFormSchema, patientFormSchema } from "./schema";
 import type { ClinicPatient } from "$lib/models/clinic";
-import { addPatientFiles, createPatient, getPatient, updatePatient, uploadAvatar, uploadFile } from "$lib/server/clinic.db";
+import { addPatientFiles, createPatient, getPatient, updatePatient, uploadAvatar, uploadFile, addPatientImages } from "$lib/server/clinic.db";
+import { ClinicStorageDirectories } from "$lib/enums/storage";
 
 let currentProject: Project;
 
@@ -103,11 +104,36 @@ export const actions: Actions = {
       );
     }
     const patientId = event.params.patient_id;
-    const uploadedFile = await uploadFile(currentProject, patientId, form.data.file, form.data.date);
+    const path = `${ClinicStorageDirectories.Files}/${patientId}/${form.data.file.name}`;
+    const uploadedFile = await uploadFile(currentProject, path, form.data.file, form.data.date);
     if (uploadedFile === undefined) {
       return fail(403, { type: 'file', error: true, message: 'Failed to updload patient file'});
     }
     const updateRes = await addPatientFiles(currentProject, patientId, [uploadedFile]);
+    if (!updateRes) {
+      return fail(403, { type: 'file', error: true, message: 'Failed to update patient avatar data' });
+    }
+    return withFiles({ form });
+  },
+  'add-image': async (event) => {
+    const form = await superValidate(event, zod(patientFileFormSchema));
+    if (!form.valid) {
+      return fail(400, 
+        withFiles({ form }),
+      );
+    }
+    if (!form.data.file) {
+      return fail(400, 
+        withFiles({ form }),
+      );
+    }
+    const patientId = event.params.patient_id;
+    const path = `${ClinicStorageDirectories.PatientsImages}/${patientId}/${form.data.file.name}`;
+    const uploadedFile = await uploadFile(currentProject, path, form.data.file, form.data.date);
+    if (uploadedFile === undefined) {
+      return fail(403, { type: 'file', error: true, message: 'Failed to updload patient file'});
+    }
+    const updateRes = await addPatientImages(currentProject, patientId, [uploadedFile]);
     if (!updateRes) {
       return fail(403, { type: 'file', error: true, message: 'Failed to update patient avatar data' });
     }

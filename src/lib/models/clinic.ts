@@ -19,6 +19,7 @@ export interface ClinicPatient {
     notes?: string;
     medical_condition?: string;
     medications?: string;
+    images?: Image[];
 }
 
 export interface TreatmentHistoryItem {

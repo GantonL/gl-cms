@@ -2,7 +2,7 @@ import type { ClinicPatient } from "$lib/models/clinic";
 import type { EmptyResultsConfiguration } from "$lib/models/common";
 import type { ActionMenuConfiguration } from "$lib/models/menu-item";
 import type { TableConfiguration } from "$lib/models/table";
-import { CircleOff, Edit, Ellipsis, Eye, File, Trash2 } from "lucide-svelte";
+import { CircleOff, Edit, Ellipsis, Eye, File, ImageOff, Trash2 } from "lucide-svelte";
 import type { EventDispatcher } from "svelte";
 import { createRender } from "svelte-headless-table";
 import ActionsMenu from "$lib/components/actions-menu/actions-menu.svelte";
@@ -98,6 +98,15 @@ export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicPatie
     },
 }
 
+
+export const emptyImagesResultsConfiguration: EmptyResultsConfiguration = {
+    icon: ImageOff,
+    label: 'No images found',
+    action: {
+        label: 'Add image',
+        event: 'create',
+    }
+};
 
 export const emptyFilesResultsConfiguration: EmptyResultsConfiguration = {
     icon: File,
