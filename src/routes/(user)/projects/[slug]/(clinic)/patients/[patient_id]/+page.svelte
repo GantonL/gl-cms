@@ -157,7 +157,7 @@
             } else if (mainSegment === ClinicStorageDirectories.PatientsImages) {
               key = 'images'
             }
-            patient[key!]?.splice(patient[key!]!.findIndex(indexHandler, 1));
+            patient[key!]?.splice(patient[key!]!.findIndex(indexHandler), 1);
             patient[key!] = patient[key!];
           } else {
             toast.error(errMsg);

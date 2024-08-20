@@ -6,13 +6,14 @@
 	import { createEventDispatcher } from "svelte";
 	import * as AlertDialog from "../ui/alert-dialog";
 
-    export let images: (Image & {month?: number, displayDate?: string})[];
+    type scrollableImage = Image & {month?: number, displayDate?: string, deleteInProgress?: boolean;};   
+    export let images: scrollableImage[];
     export let disabled = false;
     export let scrollAreaClass = '';
     const dispatch = createEventDispatcher();
     let editMode = false;
     let deleteImageDialogOpened = false;
-    let deleteCandidate: Image;
+    let deleteCandidate: scrollableImage;
 
     $: if (images.length > 0) {
         images = images.sort((a,b) => { 
@@ -63,7 +64,7 @@
                         <span class="m-auto">{image.displayDate}</span>
                     </div>
                 {/if}
-                <figure class="w-48 relative">
+                <figure class="w-48 relative" class:blur-sm={image.deleteInProgress}>
                     <img src={image.url} class="object-cover border rounded-md shadow-md" loading="lazy" alt="Figure in a scroll area"/>
                     <Button variant="ghost" size="icon" class="bg-destructive/70 absolute bottom-1 right-1 {editMode ? 'flex' : 'hidden'}" 
                         {disabled}
@@ -89,7 +90,13 @@
     </AlertDialog.Header>
     <AlertDialog.Footer>
     <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-    <AlertDialog.Action class="bg-destructive text-destructive-foreground hover:bg-destructive/80" on:click={() => dispatch('delete', deleteCandidate)}>DELETE</AlertDialog.Action>
+    <AlertDialog.Action class="bg-destructive text-destructive-foreground hover:bg-destructive/80"
+        on:click={() => {
+            dispatch('delete', deleteCandidate);
+            deleteCandidate.deleteInProgress = true
+            images = images
+        }}
+    >DELETE</AlertDialog.Action>
     </AlertDialog.Footer>
 </AlertDialog.Content>
 </AlertDialog.Root>
