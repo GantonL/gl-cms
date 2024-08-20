@@ -19,6 +19,7 @@ export const patientFormSchema = z.object({
   id: z.string().optional(),
 });
  
+
 export type PatientFormSchema = typeof patientFormSchema;
 
 export const patientFileFormSchema = z.object({
@@ -27,3 +28,10 @@ export const patientFileFormSchema = z.object({
 });
 
 export type PatientFileFormSchema = typeof patientFileFormSchema;
+
+
+export const patientTreatmentFormSchema = z.object({
+
+});
+
+export type PatienttreatmentFormSchema = typeof patientTreatmentFormSchema;

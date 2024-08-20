@@ -24,7 +24,7 @@
 	import { Separator } from "$lib/components/ui/separator";
 	import AddPatientFileForm from "./add-patient-file-form.svelte";
 	import ImagesScroller from "$lib/components/images-scroller/images-scroller.svelte";
-	import type { Image } from "$lib/models/image";
+	import type { Image as PateintImage } from "$lib/models/image";
 	import { ClinicStorageDirectories } from "$lib/enums/storage";
 
   let createEditForm: SuperValidated<Infer<PatientFormSchema>>;
@@ -149,7 +149,7 @@
         res?.json().then((res) => {
           if (res?.success) {
             toast.success(`Successfuly deleted patient file`);
-            const indexHandler = (file: Image) => file.path === event.detail.path && file.url === event.detail.url && file.date === event.detail.date;
+            const indexHandler = (file: PateintImage) => file.path === event.detail.path && file.url === event.detail.url && file.date === event.detail.date;
             const mainSegment = event.detail.path.split('/')[0];
             let key: keyof Pick<ClinicPatient, 'files' | 'images'>;
             if (mainSegment === ClinicStorageDirectories.Files) {
@@ -377,7 +377,8 @@
                     configuration={filesTableConfiguration} 
                     on:create={onAddFile}
                     on:view={onViewFile}
-                    on:delete={deleteFile}/>
+                    on:delete={deleteFile}
+                    on:rowClicked={onViewFile}/>
                 {/if}
               </Tabs.Content>
               <Tabs.Content value="images">

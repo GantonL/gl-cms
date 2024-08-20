@@ -16,7 +16,6 @@ export const emptyTreatmentsResultsConfiguration: EmptyResultsConfiguration = {
     }
 };
 
-
 export const treatmentsTableRowActions: ActionMenuConfiguration<ClinicPatient['treatments_history']> = {
     items: [
       {
@@ -42,7 +41,6 @@ export const treatmentsTableRowActions: ActionMenuConfiguration<ClinicPatient['t
       iconClass: 'h-4 w-4 rotate-90'
     }
 }
-
 
 export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicPatient> = {
     columns: (dispatch: EventDispatcher<Record<string, string>>) => [
@@ -98,7 +96,6 @@ export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicPatie
     },
 }
 
-
 export const emptyImagesResultsConfiguration: EmptyResultsConfiguration = {
     icon: ImageOff,
     label: 'No images found',
@@ -142,7 +139,6 @@ export const filesTableRowActions: ActionMenuConfiguration<ClinicPatient['treatm
       iconClass: 'h-4 w-4 rotate-90'
     }
 }
-
 
 export const filesTableConfiguration: TableConfiguration<ClinicPatient> = {
     columns: (dispatch: EventDispatcher<Record<string, string>>) => [
@@ -188,4 +184,5 @@ export const filesTableConfiguration: TableConfiguration<ClinicPatient> = {
         label: 'Add file',
         class: 'self-end'
     },
+    clickableRows: true,
 }
