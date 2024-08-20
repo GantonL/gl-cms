@@ -150,7 +150,7 @@
           if (res?.success) {
             toast.success(`Successfuly deleted patient file`);
             const indexHandler = (file: Image) => file.path === event.detail.path && file.url === event.detail.url && file.date === event.detail.date;
-            const mainSegment = event.detail.path.spilce('/')[0];
+            const mainSegment = event.detail.path.split('/')[0];
             let key: keyof Pick<ClinicPatient, 'files' | 'images'>;
             if (mainSegment === ClinicStorageDirectories.Files) {
               key = 'files'
@@ -158,6 +158,7 @@
               key = 'images'
             }
             patient[key!]?.splice(patient[key!]!.findIndex(indexHandler, 1));
+            patient[key!] = patient[key!];
           } else {
             toast.error(errMsg);
           }
@@ -369,6 +370,7 @@
                   <EmptyResults configuration={emptyImagesResultsConfiguration} on:create={onAddImage}/>
                 {:else}
                   <ImagesScroller images={patient.images}
+                    scrollAreaClass="max-h-[600px]"
                     disabled={deleteFileInProgress || deletionInProgress || saveInProgress || avatarUpdateInProgress || patientFilesUploadInprogress}
                     on:create={onAddImage}
                     on:delete={deleteFile}/>
