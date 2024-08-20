@@ -9,7 +9,7 @@
 	import { toast } from "svelte-sonner";
 	import * as AlertDialog from "$lib/components/ui/alert-dialog";
 	import { Button } from "$lib/components/ui/button";
-	import { ArrowRight, AlertTriangle, ImagePlus, LoaderCircle, Pencil, PencilOff, Pill, NotebookPen } from "lucide-svelte";
+	import { ArrowRight, AlertTriangle, ImagePlus, LoaderCircle, Pencil, PencilOff, Pill, NotebookPen, Stethoscope, File, Image } from "lucide-svelte";
 	import { goto } from "$app/navigation";
 	import type { ClinicPatient } from "$lib/models/clinic";
   import * as Tabs from "$lib/components/ui/tabs";
@@ -336,9 +336,24 @@
           <Card.Content>
             <Tabs.Root value="treatments" class="w-full">
               <Tabs.List>
-                <Tabs.Trigger value="treatments">Treatments</Tabs.Trigger>
-                <Tabs.Trigger value="files">Files</Tabs.Trigger>
-                <Tabs.Trigger value="images">Images</Tabs.Trigger>
+                <Tabs.Trigger value="treatments">
+                  <div class="flex flex-row items-center gap-2">
+                    <Stethoscope size=14 />
+                    <span>Treatments</span>
+                  </div>
+                </Tabs.Trigger>
+                <Tabs.Trigger value="files">
+                  <div class="flex flex-row items-center gap-2">
+                    <File size=14 />
+                    <span>Files</span>
+                  </div>
+                </Tabs.Trigger>
+                <Tabs.Trigger value="images">
+                  <div class="flex flex-row items-center gap-2">
+                    <Image size=14 />
+                    <span>Images</span>
+                  </div>
+                </Tabs.Trigger>
               </Tabs.List>
               <Tabs.Content value="treatments">
                 {#if !patient.treatments_history || patient.treatments_history?.length === 0}
