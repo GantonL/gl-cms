@@ -1,7 +1,7 @@
 import type { Project } from "$lib/models/project";
 import { FieldValue, getFirestore } from "firebase-admin/firestore";
 import { getSecondaryApp } from "./secondary.db";
-import type { ClinicPatient } from "$lib/models/clinic";
+import type { ClinicPatient, ClinicTreatmentHistoryItem } from "$lib/models/clinic";
 import { ClinicCollections } from "$lib/enums/collections";
 import { uuidv4 } from '@firebase/util';
 import type { Image } from "$lib/models/image";
@@ -221,4 +221,17 @@ export const removePatientImages = async (project: Project, id: ClinicPatient['i
   }
   const setRes = await query.docs[0].ref.set({images: FieldValue.arrayRemove(...images)}, { merge: true });
   return !!setRes;
+}
+
+
+export const getPatientTreatmentsHistory = async (project: Project, patient_id: ClinicPatient['id']): Promise<ClinicTreatmentHistoryItem[]> => {
+  const history: ClinicTreatmentHistoryItem[] = [];
+  const app = getSecondaryApp(project);
+  if (!app) { return [] };
+  const query = await getFirestore(app).collection(ClinicCollections.TreatmentsHistory).where('patient_id', '==', patient_id).get();
+  if (query.empty) {
+    return [];
+  }
+  history.push(...query.docs.map(doc => doc.data() as ClinicTreatmentHistoryItem))
+  return history;
 }

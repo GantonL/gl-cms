@@ -31,7 +31,13 @@ export type PatientFileFormSchema = typeof patientFileFormSchema;
 
 
 export const patientTreatmentFormSchema = z.object({
-
+  documentation: z.string(),
+  type: z.string().optional(),
+  notes: z.string().optional(),
+  price: z.number({coerce: true}).optional(),
+  // Added upon changes from non-form origin
+  id: z.string().optional(),
+  patient_id: z.string().optional(),
 });
 
 export type PatienttreatmentFormSchema = typeof patientTreatmentFormSchema;

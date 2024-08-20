@@ -14,4 +14,5 @@ export enum StoreCollections {
 
 export enum ClinicCollections {
   Patients = 'patients',
+  TreatmentsHistory = 'treatments_history'
 }

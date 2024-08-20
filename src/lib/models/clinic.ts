@@ -15,17 +15,18 @@ export interface ClinicPatient {
     avatar?: Image;
     refered_by?: string;
     files?: Image[];
-    treatments_history?: string[];
     notes?: string;
     medical_condition?: string;
     medications?: string;
     images?: Image[];
 }
 
-export interface TreatmentHistoryItem {
+export interface ClinicTreatmentHistoryItem {
     id: string;
-    type: string;
+    patient_id: string;
     date: number;
-    notes: string;
+    documentation: string;
+    type?: string;
+    notes?: string;
     price?: number;
 }

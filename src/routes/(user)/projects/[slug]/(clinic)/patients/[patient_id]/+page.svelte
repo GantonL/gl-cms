@@ -11,7 +11,7 @@
 	import { Button } from "$lib/components/ui/button";
 	import { ArrowRight, AlertTriangle, ImagePlus, LoaderCircle, Pencil, PencilOff, Pill, NotebookPen, Stethoscope, File, Image } from "lucide-svelte";
 	import { goto } from "$app/navigation";
-	import type { ClinicPatient } from "$lib/models/clinic";
+	import type { ClinicPatient, ClinicTreatmentHistoryItem } from "$lib/models/clinic";
   import * as Tabs from "$lib/components/ui/tabs";
 	import EmptyResults from "$lib/components/empty-results/empty-results.svelte";
 	import DataTable from "$lib/components/data-table/data-table.svelte";
@@ -42,7 +42,8 @@
   let patientFilesUploadInprogress = false;
   let deleteFileInProgress = false;
   let addPatientImagesDialogOpened = false;
-
+  let patientTreatmentsHistory: ClinicTreatmentHistoryItem[] = [];
+  
   export let form: ActionData;
 
   $: patient = $page.data.patient as ClinicPatient;
@@ -68,12 +69,23 @@
 
   onMount(() => {
     initializeForms();
+    initializePatientTreatmentHistory();
   })
 
   function initializeForms() {
     superValidate(patient, zod(patientFormSchema)).then((form) => {
       createEditForm = form;
     });
+  }
+
+  function initializePatientTreatmentHistory() {
+    if (!patient.id) { return; };
+    fetch(`/projects/${project.id}/patients/${patient.id}/treatments`, { method: 'GET' })
+      .then((res) => {
+        res?.json().then((res) => {
+          patientTreatmentsHistory = res.treatmentsHistory;  
+        })
+      });
   }
     
   function onPatientCreated(event: CustomEvent) {
@@ -356,11 +368,11 @@
                 </Tabs.Trigger>
               </Tabs.List>
               <Tabs.Content value="treatments">
-                {#if !patient.treatments_history || patient.treatments_history?.length === 0}
+                {#if patientTreatmentsHistory?.length === 0}
                   <EmptyResults configuration={emptyTreatmentsResultsConfiguration} on:create={onAddTreatment}/>
                 {:else}
                   <DataTable 
-                    data={patient.treatments_history}
+                    data={patientTreatmentsHistory}
                     configuration={treatmentsHistoryTableConfiguration} 
                     on:create={onAddTreatment}
                     on:edit={onEditTreatment}
