@@ -1,4 +1,4 @@
-import type { ClinicPatient } from "$lib/models/clinic";
+import type { ClinicTreatmentHistoryItem } from "$lib/models/clinic";
 import type { EmptyResultsConfiguration } from "$lib/models/common";
 import type { ActionMenuConfiguration } from "$lib/models/menu-item";
 import type { TableConfiguration } from "$lib/models/table";
@@ -6,6 +6,7 @@ import { CircleOff, Edit, Ellipsis, Eye, File, ImageOff, Trash2 } from "lucide-s
 import type { EventDispatcher } from "svelte";
 import { createRender } from "svelte-headless-table";
 import ActionsMenu from "$lib/components/actions-menu/actions-menu.svelte";
+import type { Image } from "$lib/models/image";
 
 export const emptyTreatmentsResultsConfiguration: EmptyResultsConfiguration = {
     icon: CircleOff,
@@ -16,7 +17,7 @@ export const emptyTreatmentsResultsConfiguration: EmptyResultsConfiguration = {
     }
 };
 
-export const treatmentsTableRowActions: ActionMenuConfiguration<ClinicPatient['treatments_history']> = {
+export const treatmentsTableRowActions: ActionMenuConfiguration<ClinicTreatmentHistoryItem> = {
     items: [
       {
         group: [
@@ -42,10 +43,14 @@ export const treatmentsTableRowActions: ActionMenuConfiguration<ClinicPatient['t
     }
 }
 
-export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicPatient> = {
+export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicTreatmentHistoryItem> = {
     columns: (dispatch: EventDispatcher<Record<string, string>>) => [
         {
             dataPath: 'id',
+            hidden: true,
+        },
+        {
+            dataPath: 'patient_id',
             hidden: true,
         },
         {
@@ -57,8 +62,8 @@ export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicPatie
             },
         },
         {
-            header: 'Type',
-            dataPath: 'type',
+            header: 'Documentation',
+            dataPath: 'documentation',
         },
         {
             header: 'Notes',
@@ -94,6 +99,7 @@ export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicPatie
         label: 'Add treatment',
         class: 'self-end'
     },
+    clickableRows: true,
 }
 
 export const emptyImagesResultsConfiguration: EmptyResultsConfiguration = {
@@ -114,7 +120,7 @@ export const emptyFilesResultsConfiguration: EmptyResultsConfiguration = {
     }
 };
 
-export const filesTableRowActions: ActionMenuConfiguration<ClinicPatient['treatments_history']> = {
+export const filesTableRowActions: ActionMenuConfiguration<Image> = {
     items: [
       {
         group: [
@@ -140,7 +146,7 @@ export const filesTableRowActions: ActionMenuConfiguration<ClinicPatient['treatm
     }
 }
 
-export const filesTableConfiguration: TableConfiguration<ClinicPatient> = {
+export const filesTableConfiguration: TableConfiguration<Image> = {
     columns: (dispatch: EventDispatcher<Record<string, string>>) => [
         {
             header: 'Last modified',

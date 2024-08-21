@@ -3,7 +3,7 @@
 	import * as Card from "$lib/components/ui/card";
 	import CreateEditPatientForm from "./create-edit-patient-form.svelte";
 	import { superValidate, type Infer,type SuperValidated } from "sveltekit-superforms";
-	import { patientFormSchema, type PatientFormSchema } from "./schema";
+	import { patientFormSchema, patientTreatmentFormSchema, type PatientFormSchema, type PatientTreatmentFormSchema } from "./schema";
 	import { onMount } from "svelte";
 	import { zod } from "sveltekit-superforms/adapters";
 	import { toast } from "svelte-sonner";
@@ -26,6 +26,7 @@
 	import ImagesScroller from "$lib/components/images-scroller/images-scroller.svelte";
 	import type { Image as PateintImage } from "$lib/models/image";
 	import { ClinicStorageDirectories } from "$lib/enums/storage";
+	import CreateEditPatientTreatmentForm from "./create-edit-patient-treatment-form.svelte";
 
   let createEditForm: SuperValidated<Infer<PatientFormSchema>>;
   let deletePatientOpened = false;
@@ -43,7 +44,11 @@
   let deleteFileInProgress = false;
   let addPatientImagesDialogOpened = false;
   let patientTreatmentsHistory: ClinicTreatmentHistoryItem[] = [];
-  
+  let editCreateTreatmentDialogOpened = false;
+  let updateTreatmentInProgress = false;
+  let selectedTreatmentForm: SuperValidated<Infer<PatientTreatmentFormSchema>>;
+  let selectedTreatment: ClinicTreatmentHistoryItem | undefined;
+
   export let form: ActionData;
 
   $: patient = $page.data.patient as ClinicPatient;
@@ -119,11 +124,19 @@
   }
 
   function onAddTreatment() {
-    
+    selectedTreatment = undefined;
+    superValidate(zod(patientTreatmentFormSchema)).then((form) => {
+      selectedTreatmentForm = form;
+      editCreateTreatmentDialogOpened = true;
+    });
   }
 
-  function onEditTreatment() {
-
+  function onEditTreatment(treatment: ClinicTreatmentHistoryItem) {
+    editCreateTreatmentDialogOpened = true;
+    selectedTreatment = treatment;
+    superValidate(treatment, zod(patientTreatmentFormSchema)).then((form) => {
+      selectedTreatmentForm = form;
+    });
   }
 
   function deleteTreatment(id: string) {
@@ -375,7 +388,8 @@
                     data={patientTreatmentsHistory}
                     configuration={treatmentsHistoryTableConfiguration} 
                     on:create={onAddTreatment}
-                    on:edit={onEditTreatment}
+                    on:edit={(event) => onEditTreatment(event.detail)}
+                    on:rowClicked={onEditTreatment}
                     on:delete={(event) => deleteTreatment(event.detail.id)}/>
                 {/if}
               </Tabs.Content>
@@ -487,5 +501,19 @@
       action="add-image"
       on:inProgress={() => {patientFilesUploadInprogress = true}}
       on:created={onImageAdded}/>
+  </AlertDialog.Content>
+</AlertDialog.Root>
+
+<AlertDialog.Root bind:open={editCreateTreatmentDialogOpened} closeOnOutsideClick={!updateTreatmentInProgress}>
+  <AlertDialog.Content>
+    <AlertDialog.Header>
+      <AlertDialog.Title>Treatment</AlertDialog.Title>
+    </AlertDialog.Header>
+    <CreateEditPatientTreatmentForm
+      disabled={avatarUpdateInProgress || saveInProgress || deletionInProgress || updateTreatmentInProgress}
+      action={selectedTreatment?.id ? 'update' : 'create'}
+      data={selectedTreatmentForm}
+      on:inProgress={() => {updateTreatmentInProgress = true}}
+      on:created={onAddTreatment}/>
   </AlertDialog.Content>
 </AlertDialog.Root>
