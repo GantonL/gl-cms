@@ -2,9 +2,9 @@ import type { Project } from "$lib/models/project";
 import { fail, superValidate, withFiles } from "sveltekit-superforms";
 import type { Actions, PageServerLoad } from "./$types";
 import { zod } from "sveltekit-superforms/adapters";
-import { patientFileFormSchema, patientFormSchema } from "./schema";
-import type { ClinicPatient } from "$lib/models/clinic";
-import { addPatientFiles, createPatient, getPatient, updatePatient, uploadAvatar, uploadFile, addPatientImages } from "$lib/server/clinic.db";
+import { patientFileFormSchema, patientFormSchema, patientTreatmentFormSchema } from "./schema";
+import type { ClinicPatient, ClinicTreatmentHistoryItem } from "$lib/models/clinic";
+import { addPatientFiles, createPatient, getPatient, updatePatient, uploadAvatar, uploadFile, addPatientImages, createPatientTreatment } from "$lib/server/clinic.db";
 import { ClinicStorageDirectories } from "$lib/enums/storage";
 
 let currentProject: Project;
@@ -63,10 +63,10 @@ export const actions: Actions = {
       date_of_birth: form.data.date_of_birth,
       phone: form.data.phone,
       gender: form.data.gender,
-      refered_by: form.data.refered_by,
-      notes: form.data.notes,
-      medical_condition: form.data.medical_condition,
-      medications: form.data.medications,
+      refered_by: form.data.refered_by ?? '',
+      notes: form.data.notes ?? '',
+      medical_condition: form.data.medical_condition ?? '',
+      medications: form.data.medications ?? '',
     };
     const updateRes = await updatePatient(currentProject, form.data.id!, updatedPatient);
     if (!updateRes) {
@@ -138,5 +138,30 @@ export const actions: Actions = {
       return fail(403, { type: 'file', error: true, message: 'Failed to update patient avatar data' });
     }
     return withFiles({ form });
+  },
+  'create-treatment': async (event) => {
+    const form = await superValidate(event, zod(patientTreatmentFormSchema));
+    if (!form.valid) {
+      return fail(400, { form });
+    }
+    if (!form.data.date) {
+      return fail(400, { form });
+    }
+    const patientId = event.params.patient_id;
+    if (!patientId) {
+      return fail(400, { form });
+    }
+    const treatment: ClinicTreatmentHistoryItem | undefined = await createPatientTreatment(currentProject!, {
+      patient_id: patientId,
+      date: form.data.date!,
+      documentation: form.data.documentation,
+      notes: form.data.notes,
+      price: form.data.price,
+    });
+    if (treatment === undefined) {
+      return fail(400, {form});
+    }
+    form.data.id = String(treatment.id);
+    return { form };
   }
 };

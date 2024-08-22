@@ -37,7 +37,6 @@ export const patientTreatmentFormSchema = z.object({
   price: z.number({coerce: true}).min(0).optional(),
   // Added upon changes from non-form origin
   id: z.string().optional(),
-  patient_id: z.string().optional(),
 });
 
 export type PatientTreatmentFormSchema = typeof patientTreatmentFormSchema;

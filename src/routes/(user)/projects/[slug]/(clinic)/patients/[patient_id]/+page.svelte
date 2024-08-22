@@ -132,10 +132,10 @@
   }
 
   function onEditTreatment(treatment: ClinicTreatmentHistoryItem) {
-    editCreateTreatmentDialogOpened = true;
-    selectedTreatment = treatment;
     superValidate(treatment, zod(patientTreatmentFormSchema)).then((form) => {
       selectedTreatmentForm = form;
+      selectedTreatment = treatment;
+      editCreateTreatmentDialogOpened = true;
     });
   }
 
@@ -389,7 +389,7 @@
                     configuration={treatmentsHistoryTableConfiguration} 
                     on:create={onAddTreatment}
                     on:edit={(event) => onEditTreatment(event.detail)}
-                    on:rowClicked={onEditTreatment}
+                    on:rowClicked={(event) => onEditTreatment(event.detail)}
                     on:delete={(event) => deleteTreatment(event.detail.id)}/>
                 {/if}
               </Tabs.Content>
@@ -511,7 +511,7 @@
     </AlertDialog.Header>
     <CreateEditPatientTreatmentForm
       disabled={avatarUpdateInProgress || saveInProgress || deletionInProgress || updateTreatmentInProgress}
-      action={selectedTreatment?.id ? 'update' : 'create'}
+      action={selectedTreatment?.id ? 'update-treatment' : 'create-treatment'}
       data={selectedTreatmentForm}
       on:inProgress={() => {updateTreatmentInProgress = true}}
       on:created={onAddTreatment}/>

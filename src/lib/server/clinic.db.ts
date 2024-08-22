@@ -235,3 +235,19 @@ export const getPatientTreatmentsHistory = async (project: Project, patient_id: 
   history.push(...query.docs.map(doc => doc.data() as ClinicTreatmentHistoryItem))
   return history;
 }
+
+export const createPatientTreatment = async (project: Project, treatment: Pick<ClinicTreatmentHistoryItem, 'date' | 'documentation' | 'notes' | 'patient_id' | 'price'>): Promise<ClinicTreatmentHistoryItem | undefined> => {
+  const app = getSecondaryApp(project);
+  if (!app) { return };
+  const treatmentsHistoryCollectionRef = getFirestore(app).collection(ClinicCollections.TreatmentsHistory);
+  const newTreatment: ClinicTreatmentHistoryItem = {
+    id: uuidv4(),
+    date: treatment.date,
+    patient_id: treatment.patient_id,
+    documentation: treatment.documentation ?? '',
+    notes: treatment.notes ?? '',
+    price: treatment.price ?? 0,
+  };
+  const addRes = await treatmentsHistoryCollectionRef.add(newTreatment);
+  return addRes?.id ? newTreatment : undefined;
+}

@@ -7,6 +7,7 @@ import type { EventDispatcher } from "svelte";
 import { createRender } from "svelte-headless-table";
 import ActionsMenu from "$lib/components/actions-menu/actions-menu.svelte";
 import type { Image } from "$lib/models/image";
+import { DateFormatter, getLocalTimeZone, parseDate } from "@internationalized/date";
 
 export const emptyTreatmentsResultsConfiguration: EmptyResultsConfiguration = {
     icon: CircleOff,
@@ -50,15 +51,12 @@ export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicTreat
             hidden: true,
         },
         {
-            dataPath: 'patient_id',
-            hidden: true,
-        },
-        {
             header: 'Last modified',
             dataPath: 'date',
             cell: ({ value }) => {
-                const formatted = new Intl.DateTimeFormat("en-UK", {'hour': '2-digit'}).format(value);
-                return formatted;
+                const dateFormatter = new DateFormatter('en-UK', { dateStyle: "long" });
+                const parsedDate = parseDate(value);
+                return dateFormatter.format(parsedDate.toDate(getLocalTimeZone()));
             },
         },
         {

@@ -21,7 +21,7 @@
     import { Textarea } from "$lib/components/ui/textarea";
   
     export let data: SuperValidated<Infer<PatientTreatmentFormSchema>>;
-    export let action: 'update' | 'create';
+    export let action: 'update-treatment' | 'create-treatment';
     export let disabled = false;
   
     let enhance: SuperForm<Infer<PatientTreatmentFormSchema>>['enhance'];
@@ -42,7 +42,7 @@
         onUpdated: ({form: f}) => {
           if (f?.valid) {
             formData.set(f.data);
-            if (action === 'create') {
+            if (action === 'create-treatment') {
               toast.success('Treatment was successfuly created');
               dispatch('created', f.data);
             } else {

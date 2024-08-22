@@ -26,7 +26,6 @@ export interface ClinicTreatmentHistoryItem {
     patient_id: string;
     date: string;
     documentation: string;
-    type?: string;
     notes?: string;
     price?: number;
 }
