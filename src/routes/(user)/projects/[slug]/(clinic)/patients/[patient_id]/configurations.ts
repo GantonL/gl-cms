@@ -2,7 +2,7 @@ import type { ClinicTreatmentHistoryItem } from "$lib/models/clinic";
 import type { EmptyResultsConfiguration } from "$lib/models/common";
 import type { ActionMenuConfiguration } from "$lib/models/menu-item";
 import type { TableConfiguration } from "$lib/models/table";
-import { CircleOff, Edit, Ellipsis, Eye, File, ImageOff, Trash2 } from "lucide-svelte";
+import { CircleOff, Edit, Ellipsis, Eye, File, HandCoins, ImageOff, Trash2 } from "lucide-svelte";
 import type { EventDispatcher } from "svelte";
 import { createRender } from "svelte-headless-table";
 import ActionsMenu from "$lib/components/actions-menu/actions-menu.svelte";
@@ -22,6 +22,12 @@ export const treatmentsTableRowActions: ActionMenuConfiguration<ClinicTreatmentH
     items: [
       {
         group: [
+          {
+            label: 'Payment',
+            icon: HandCoins,
+            event: 'payment',
+            disabled: true,
+          },
           {
             label: 'Edit',
             icon: Edit,

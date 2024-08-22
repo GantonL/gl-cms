@@ -4,7 +4,7 @@ import type { Actions, PageServerLoad } from "./$types";
 import { zod } from "sveltekit-superforms/adapters";
 import { patientFileFormSchema, patientFormSchema, patientTreatmentFormSchema } from "./schema";
 import type { ClinicPatient, ClinicTreatmentHistoryItem } from "$lib/models/clinic";
-import { addPatientFiles, createPatient, getPatient, updatePatient, uploadAvatar, uploadFile, addPatientImages, createPatientTreatment } from "$lib/server/clinic.db";
+import { addPatientFiles, createPatient, getPatient, updatePatient, uploadAvatar, uploadFile, addPatientImages, createPatientTreatment, updatePatientTreatment } from "$lib/server/clinic.db";
 import { ClinicStorageDirectories } from "$lib/enums/storage";
 
 let currentProject: Project;
@@ -162,6 +162,29 @@ export const actions: Actions = {
       return fail(400, {form});
     }
     form.data.id = String(treatment.id);
+    return { form };
+  },
+  'update-treatment': async (event) => {
+    const form = await superValidate(event, zod(patientTreatmentFormSchema));
+    if (!form.valid) {
+      return fail(400, { form });
+    }
+    if (!form.data.date) {
+      return fail(400, { form });
+    }
+    const patientId = event.params.patient_id;
+    if (!patientId) {
+      return fail(400, { form });
+    }
+    const treatmentUpdated: boolean = await updatePatientTreatment(currentProject!, patientId, {
+      date: form.data.date!,
+      documentation: form.data.documentation,
+      notes: form.data.notes,
+      price: form.data.price,
+    });
+    if (!treatmentUpdated) {
+      return fail(400, {form});
+    }
     return { form };
   }
 };
