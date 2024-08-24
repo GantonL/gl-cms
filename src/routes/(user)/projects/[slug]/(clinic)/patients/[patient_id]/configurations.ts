@@ -70,7 +70,7 @@ export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicTreat
             header: 'Documentation',
             dataPath: 'documentation',
             cell: ({value}) => {
-                const render = createRender(ScrollArea, {class: 'flex flex-col overflow-y-auto max-h-[150px]'}); 
+                const render = createRender(ScrollArea, {class: 'flex flex-col overflow-y-auto max-h-[150px] whitespace-pre-wrap'}); 
                 render.slot(value);
                 return render;
             }
@@ -79,7 +79,7 @@ export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicTreat
             header: 'Notes',
             dataPath: 'notes',
             cell: ({value}) => {
-                const render = createRender(ScrollArea, {class: 'flex flex-col overflow-y-auto max-h-[150px]'}); 
+                const render = createRender(ScrollArea, {class: 'flex flex-col overflow-y-auto max-h-[150px] whitespace-pre-wrap'}); 
                 render.slot(value);
                 return render;
             }
