@@ -162,7 +162,7 @@ export const actions: Actions = {
       return fail(400, {form});
     }
     form.data.id = String(treatment.id);
-    return { form };
+    return { form, type: 'treatment' };
   },
   'update-treatment': async (event) => {
     const form = await superValidate(event, zod(patientTreatmentFormSchema));
@@ -185,6 +185,6 @@ export const actions: Actions = {
     if (!treatmentUpdated) {
       return fail(400, {form});
     }
-    return { form };
+    return { form, type: 'treatment' };
   }
 };

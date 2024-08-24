@@ -8,6 +8,7 @@ import { createRender } from "svelte-headless-table";
 import ActionsMenu from "$lib/components/actions-menu/actions-menu.svelte";
 import type { Image } from "$lib/models/image";
 import { DateFormatter, getLocalTimeZone, parseDate } from "@internationalized/date";
+import { ScrollArea } from "$lib/components/ui/scroll-area";
 
 export const emptyTreatmentsResultsConfiguration: EmptyResultsConfiguration = {
     icon: CircleOff,
@@ -68,10 +69,20 @@ export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicTreat
         {
             header: 'Documentation',
             dataPath: 'documentation',
+            cell: ({value}) => {
+                const render = createRender(ScrollArea, {class: 'flex flex-col overflow-y-auto max-h-[150px]'}); 
+                render.slot(value);
+                return render;
+            }
         },
         {
             header: 'Notes',
             dataPath: 'notes',
+            cell: ({value}) => {
+                const render = createRender(ScrollArea, {class: 'flex flex-col overflow-y-auto max-h-[150px]'}); 
+                render.slot(value);
+                return render;
+            }
         },
         {
             header: 'Price',

@@ -53,15 +53,34 @@
 
   $: patient = $page.data.patient as ClinicPatient;
   $: project = $page.data.project;
-  $: if (form?.type === 'avatar'){
-      if (form?.error || form?.success) {
-         avatarUpdateInProgress = false;
+  $: if (form) {
+      switch (form?.type) {
+        case 'avatar':
+          if (form?.error || form?.success) {
+             avatarUpdateInProgress = false;
+          }
+          if (form?.error) {
+            toast.error(form.message);
+          } else if (form.success) {
+            toast.success('Patient avatar updated successfuly')
+          }
+          break;
+        case 'treatment': 
+          updateTreatmentInProgress = false;
+          editCreateTreatmentDialogOpened = false;
+          const treatmentToUpdateIndex = patientTreatmentsHistory.findIndex((t) => t.id === form.form?.data?.id);
+          patientTreatmentsHistory[treatmentToUpdateIndex] = {
+            ...patientTreatmentsHistory[treatmentToUpdateIndex],
+            ...form.form!.data,
+          }
+          if (form?.error) {
+            toast.error(form.message);
+          }
+          break;
+        default:
+          break;
       }
-      if (form?.error) {
-        toast.error(form.message);
-      } else if (form.success) {
-        toast.success('Patient avatar updated successfuly')
-      }
+    
     }
 
   $: if (patient.date_of_birth) {
