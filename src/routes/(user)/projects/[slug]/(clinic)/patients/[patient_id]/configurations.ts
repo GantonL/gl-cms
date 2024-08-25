@@ -61,7 +61,7 @@ export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicTreat
             header: 'Last modified',
             dataPath: 'date',
             cell: ({ value }) => {
-                const dateFormatter = new DateFormatter('en-UK', { dateStyle: "long" });
+                const dateFormatter = new DateFormatter('en-UK', { dateStyle: "full", timeStyle: 'short' });
                 const parsedDate = parseDate(value);
                 return dateFormatter.format(parsedDate.toDate(getLocalTimeZone()));
             },

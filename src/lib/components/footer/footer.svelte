@@ -22,5 +22,5 @@
       {/each}
     </section>
   </div>
-  <section class="text-center">Built & Designed by Guy Lahav | Powered by SvelteKit</section>
+  <section class="text-center">Designed & Built by Guy Lahav</section>
 </footer>

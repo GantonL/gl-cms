@@ -16,7 +16,7 @@
       import * as Popover from "$lib/components/ui/popover";
       import * as Select from "$lib/components/ui/select";
       import { Calendar } from "$lib/components/ui/calendar";
-      import { buttonVariants } from "$lib/components/ui/button";
+      import { Button, buttonVariants } from "$lib/components/ui/button";
       import { cn } from "$lib/utils";
     import { Textarea } from "$lib/components/ui/textarea";
 	import { ScrollArea } from "$lib/components/ui/scroll-area";
@@ -211,13 +211,16 @@
       </div>
 
     </ScrollArea>
-    <Form.Button disabled={submissionInProgress || disabled}>
-      <div class="flex flex-row gap-1 items-center">
-        {#if submissionInProgress}
-          <LoaderCircle class="animate-spin" size=16/>       
-        {/if}
-        <span>Submit</span>
-      </div>
-    </Form.Button>
+    <div class="flex flex-row gap-2 items-center">
+      <Form.Button disabled={submissionInProgress || disabled}>
+        <div class="flex flex-row gap-1 items-center">
+          {#if submissionInProgress}
+            <LoaderCircle class="animate-spin" size=16/>       
+          {/if}
+          <span>Submit</span>
+        </div>
+      </Form.Button>
+      <Button variant="secondary" on:click={() => {dispatch('cancel')}}>Cancel</Button>
+    </div>
   </form>
   

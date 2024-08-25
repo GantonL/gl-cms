@@ -533,6 +533,7 @@
       action={selectedTreatment?.id ? 'update-treatment' : 'create-treatment'}
       data={selectedTreatmentForm}
       on:inProgress={() => {updateTreatmentInProgress = true}}
-      on:created={onAddTreatment}/>
+      on:created={onAddTreatment}
+      on:cancel={() => {editCreateTreatmentDialogOpened = false}}/>
   </AlertDialog.Content>
 </AlertDialog.Root>
