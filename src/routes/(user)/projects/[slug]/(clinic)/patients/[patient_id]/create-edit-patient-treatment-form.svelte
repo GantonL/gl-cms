@@ -19,6 +19,7 @@
       import { buttonVariants } from "$lib/components/ui/button";
       import { cn } from "$lib/utils";
     import { Textarea } from "$lib/components/ui/textarea";
+	import { ScrollArea } from "$lib/components/ui/scroll-area";
   
     export let data: SuperValidated<Infer<PatientTreatmentFormSchema>>;
     export let action: 'update-treatment' | 'create-treatment';
@@ -96,7 +97,7 @@
     
   </script>
   <form method="POST" action={`?/${action}`} enctype="multipart/form-data" use:enhance>
-    <div class="grid gap-4">
+    <ScrollArea class="flex flex-col gap-4 overflow-y-auto max-h-[80vh]">
       <div class="grid items-center gap-4">
         <Form.Field {form} name="date" class="flex flex-col">
           <Form.Control let:attrs>
@@ -209,7 +210,7 @@
         </Form.Field>
       </div>
 
-    </div>
+    </ScrollArea>
     <Form.Button disabled={submissionInProgress || disabled}>
       <div class="flex flex-row gap-1 items-center">
         {#if submissionInProgress}
