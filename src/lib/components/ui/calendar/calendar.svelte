@@ -2,19 +2,93 @@
 	import { Calendar as CalendarPrimitive } from "bits-ui";
 	import * as Calendar from "./index.js";
 	import { cn } from "$lib/utils.js";
+	import * as Select from '$lib/components/ui/select';
+	import { CalendarDate, getLocalTimeZone, today } from "@internationalized/date";
 
 	type $$Props = CalendarPrimitive.Props;
 
 	type $$Events = CalendarPrimitive.Events;
 
 	export let value: $$Props["value"] = undefined;
-	export let placeholder: $$Props["placeholder"] = undefined;
+	export let placeholder: $$Props["placeholder"] = today(getLocalTimeZone());
 	export let weekdayFormat: $$Props["weekdayFormat"] = "short";
 
 	let className: $$Props["class"] = undefined;
 	export { className as class };
+
+	const maxYears = 100;
+	const yearOptions = Array.from({ length: maxYears }, (_, i) => ({
+    	label: String(new Date().getFullYear() - i),
+    	value: new Date().getFullYear() - i
+  	}));
+ 
+	const monthFormat = new Intl.DateTimeFormat('en-UK', {month: 'short'});
+	const months = [...Array(12).keys()].map((_, index) => {
+		const dateInMonth = new CalendarDate(maxYears, index+1, 1);
+		const value = dateInMonth.month; 
+		return {
+		value,
+		label: monthFormat.format(dateInMonth.toDate(getLocalTimeZone()))
+		}
+	});
+
+  $: defaultYear = placeholder
+    ? {
+        value: placeholder.year,
+        label: String(placeholder.year)
+      }
+    : undefined;
+ 
+  $: defaultMonth = placeholder
+    ? {
+        value: placeholder.month,
+        label: monthFormat.format(placeholder.toDate(getLocalTimeZone()))
+      }
+    : undefined;
+ 
+  
 </script>
 
+<div class="flex flex-row gap-2 p-2">
+	<Select.Root
+		items={yearOptions}
+		selected={defaultYear}
+		onSelectedChange={(v) => {
+			if (!v) return;
+			if (value) {
+				value = value.set({year: v.value})
+			}
+		}}
+	>
+		<Select.Trigger>
+		<Select.Value placeholder="Year" />
+		</Select.Trigger>
+		<Select.Content class="max-h-48 overflow-auto">
+		{#each yearOptions as item}
+			<Select.Item value={item.value}>{item.label}</Select.Item>
+		{/each}
+		</Select.Content>
+	</Select.Root>
+	<Select.Root
+		items={months}
+		selected={defaultMonth}
+		onSelectedChange={(v) => {
+			if (!v) return;
+			if (value) {
+				value = value.set({month: v.value})
+			}
+		}}
+	>
+		<Select.Trigger>
+		<Select.Value placeholder="Month" />
+		</Select.Trigger>
+		<Select.Content class="max-h-48 overflow-auto">
+		{#each months as item}
+			<Select.Item value={item.value}>{item.label}</Select.Item>
+		{/each}
+		</Select.Content>
+	</Select.Root>
+</div>
 <CalendarPrimitive.Root
 	bind:value
 	bind:placeholder
@@ -24,6 +98,7 @@
 	on:keydown
 	let:months
 	let:weekdays
+	
 >
 	<Calendar.Header>
 		<Calendar.PrevButton />
