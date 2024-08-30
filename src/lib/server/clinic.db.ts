@@ -263,3 +263,18 @@ export const updatePatientTreatment = async (project: Project, patient_id: strin
   const setRes = await ref.set(treatment, { merge: true });
   return !!setRes;
 }
+
+export const deletePatientTreatment = async (project: Project, patient_id: string, treatment_id: string): Promise<boolean> => {
+  const app = getSecondaryApp(project);
+  if (!app) { return false };
+  const query = await getFirestore(app).collection(ClinicCollections.TreatmentsHistory)
+    .where('patient_id', '==', patient_id)
+    .where('id', '==', treatment_id).get();
+  if (query.empty) {
+    return false;
+  }
+  const treatmentDoc = query?.docs?.pop();
+  if (!treatmentDoc?.exists) { return false; };
+  const deleteRes = await treatmentDoc.ref.delete();
+  return !!deleteRes;
+}

@@ -12,7 +12,7 @@
     import { CalendarDays, LoaderCircle } from "lucide-svelte";
     import { toast } from "svelte-sonner";
     import { createEventDispatcher } from "svelte";
-    import { DateFormatter, getLocalTimeZone, now, parseDateTime, parseTime, Time, toCalendarDateTime } from "@internationalized/date";
+    import { DateFormatter, getLocalTimeZone, now, parseDateTime, Time, toCalendarDateTime } from "@internationalized/date";
     import * as Popover from "$lib/components/ui/popover";
     import { Calendar } from "$lib/components/ui/calendar";
     import { Button, buttonVariants } from "$lib/components/ui/button";

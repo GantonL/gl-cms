@@ -48,6 +48,7 @@
   let updateTreatmentInProgress = false;
   let selectedTreatmentForm: SuperValidated<Infer<PatientTreatmentFormSchema>>;
   let selectedTreatment: ClinicTreatmentHistoryItem | undefined;
+  let deleteTreatmentInProgress = false;
 
   export let form: ActionData;
 
@@ -149,6 +150,12 @@
       editCreateTreatmentDialogOpened = true;
     });
   }
+  
+  function onTreatmentAdded(newTreatment: ClinicTreatmentHistoryItem) {
+    editCreateTreatmentDialogOpened = false;
+    patientTreatmentsHistory.push(newTreatment);
+    patientTreatmentsHistory = patientTreatmentsHistory;
+  }
 
   function onEditTreatment(treatment: ClinicTreatmentHistoryItem) {
     superValidate(treatment, zod(patientTreatmentFormSchema)).then((form) => {
@@ -159,7 +166,22 @@
   }
 
   function deleteTreatment(id: string) {
-
+    if (!patient.id || !id) { return; };
+    deleteTreatmentInProgress = true;
+    fetch(`/projects/${project.id}/patients/${patient.id}/treatments/${id}`, { method: 'DELETE' })
+      .then((res) => {
+        res?.json().then((res) => {
+          deleteTreatmentInProgress = false;
+          if (res?.success) {
+            const indexToRemove = patientTreatmentsHistory.findIndex((i) => i.id === id);
+            patientTreatmentsHistory.splice(indexToRemove, 1);
+            patientTreatmentsHistory = patientTreatmentsHistory;
+            toast.success('Treatement was successfully deleted');
+          } else {
+            toast.error('Failed to delete treatment');
+          }
+        })
+      });
   }
 
   function onAddImage() {
@@ -404,6 +426,7 @@
                   <EmptyResults configuration={emptyTreatmentsResultsConfiguration} on:create={onAddTreatment}/>
                 {:else}
                   <DataTable 
+                    disabled={deleteTreatmentInProgress || deletionInProgress || saveInProgress}
                     data={patientTreatmentsHistory}
                     configuration={treatmentsHistoryTableConfiguration} 
                     on:create={onAddTreatment}
@@ -533,7 +556,7 @@
       action={selectedTreatment?.id ? 'update-treatment' : 'create-treatment'}
       data={selectedTreatmentForm}
       on:inProgress={() => {updateTreatmentInProgress = true}}
-      on:created={onAddTreatment}
+      on:created={(event) => onTreatmentAdded(event.detail)}
       on:cancel={() => {editCreateTreatmentDialogOpened = false}}/>
   </AlertDialog.Content>
 </AlertDialog.Root>
