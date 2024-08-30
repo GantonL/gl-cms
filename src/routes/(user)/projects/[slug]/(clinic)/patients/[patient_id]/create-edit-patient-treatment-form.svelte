@@ -70,8 +70,8 @@
       dateStyle: "long",
     });
   
-    $: dateValue = $formData.date ? parseDateTime($formData.date) : undefined;
     $: timeValue = $formData.date ? new Time(parseDateTime($formData.date).hour, parseDateTime($formData.date).minute) : now(getLocalTimeZone());
+    $: dateValue = $formData.date ? parseDateTime($formData.date) : undefined;
        
   </script>
   <form method="POST" action={`?/${action}`} enctype="multipart/form-data" use:enhance>
@@ -115,7 +115,7 @@
               </Popover.Content>
             </Popover.Root>
             <Form.FieldErrors />
-            <input hidden value={$formData.date} name={attrs.name} />
+            <input hidden value={$formData.date} name={attrs.name}/>
           </Form.Control>
         </Form.Field>
       </div>
@@ -123,7 +123,7 @@
         <Form.Field {form} name="documentation">
           <Form.Control let:attrs>
             <Form.Label>Documentation</Form.Label> 
-            <Textarea {...attrs} class="min-h-48" bind:value={$formData.documentation} disabled={submissionInProgress}/>
+            <Textarea {...attrs} class="min-h-48" bind:value={$formData.documentation} disabled={submissionInProgress} required/>
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>
