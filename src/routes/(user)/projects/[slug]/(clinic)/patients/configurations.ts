@@ -108,7 +108,7 @@ export const tableConfiguration: TableConfiguration<ClinicPatient> = {
         class: 'self-end'
       },
       search: {
-        placeholder: 'Name or ID...'
+        placeholder: 'Name, ID or Email...'
       },
       clickableRows: true,
 };

@@ -23,12 +23,29 @@ export async function GET(event: RequestEvent) {
   }
   const pageAfterIndex = Number(event.url.searchParams.get('pageAfterIndex') ?? -1);
   const pageSize = Number(event.url.searchParams.get('pageSize') ?? 10);
-  const nameOrEmailQuery = String(event.url.searchParams.get('q') ?? '');
+  const nameOrIDQuery = String(event.url.searchParams.get('q') ?? '');
   let filter: {path: keyof ClinicPatient, value: string | number} | undefined;
-  if (nameOrEmailQuery.length > 0) {
-    filter = {
-      path: nameOrEmailQuery.includes('@') ? 'email' : 'full_name',
-      value: nameOrEmailQuery,
+  if (nameOrIDQuery.length > 0) {
+    if (/^\d{9}$/.test(nameOrIDQuery)) {
+      filter = {
+        path: 'personal_id',
+        value: nameOrIDQuery,
+      }
+    } else if (nameOrIDQuery.includes("@")) {
+      filter = {
+        path: 'email',
+        value: nameOrIDQuery,
+      }
+    } else if (nameOrIDQuery.split(' ').length === 1) {
+      filter = {
+        path: 'first_name',
+        value: nameOrIDQuery,
+      }
+    } else {
+      filter = {
+        path: 'full_name',
+        value: nameOrIDQuery,
+      }
     }
   }
   const shouldCount = event.url.searchParams.get('count');
