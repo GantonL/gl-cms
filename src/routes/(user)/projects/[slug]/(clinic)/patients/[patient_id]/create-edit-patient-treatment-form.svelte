@@ -12,7 +12,7 @@
     import { CalendarDays, LoaderCircle } from "lucide-svelte";
     import { toast } from "svelte-sonner";
     import { createEventDispatcher } from "svelte";
-    import { DateFormatter, getLocalTimeZone, parseDate } from "@internationalized/date";
+    import { DateFormatter, getLocalTimeZone, now, parseDateTime, parseTime, Time, toCalendarDateTime } from "@internationalized/date";
     import * as Popover from "$lib/components/ui/popover";
     import { Calendar } from "$lib/components/ui/calendar";
     import { Button, buttonVariants } from "$lib/components/ui/button";
@@ -70,7 +70,8 @@
       dateStyle: "long",
     });
   
-    $: dateValue = $formData.date ? parseDate($formData.date) : undefined;
+    $: dateValue = $formData.date ? parseDateTime($formData.date) : undefined;
+    $: timeValue = $formData.date ? new Time(parseDateTime($formData.date).hour, parseDateTime($formData.date).minute) : now(getLocalTimeZone());
        
   </script>
   <form method="POST" action={`?/${action}`} enctype="multipart/form-data" use:enhance>
@@ -95,12 +96,19 @@
               <Popover.Content class="w-auto p-0" side="top">
                 <Calendar
                   bind:value={dateValue}
+                  includeTime={true}
                   initialFocus
                   onValueChange={(v) => {
                     if (v) {
-                      $formData.date = v.toString();
+                      $formData.date = toCalendarDateTime(v, timeValue).toString().toString() ?? '';
                     } else {
                       $formData.date = "";
+                    }
+                  }}
+                  on:timeChanged={(t) => {
+                    if (t.detail) {
+                      timeValue = t.detail; 
+                      $formData.date = toCalendarDateTime(dateValue, timeValue).toString();
                     }
                   }}
                 />
@@ -115,7 +123,7 @@
         <Form.Field {form} name="documentation">
           <Form.Control let:attrs>
             <Form.Label>Documentation</Form.Label> 
-            <Textarea {...attrs} bind:value={$formData.documentation} disabled={submissionInProgress}/>
+            <Textarea {...attrs} class="min-h-48" bind:value={$formData.documentation} disabled={submissionInProgress}/>
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>

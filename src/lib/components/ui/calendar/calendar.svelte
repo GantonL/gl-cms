@@ -1,25 +1,32 @@
 <script lang="ts">
-	import { Calendar as CalendarPrimitive } from "bits-ui";
+	import { Calendar as CalendarPrimitive, type CustomEventHandler } from "bits-ui";
 	import * as Calendar from "./index.js";
 	import { cn } from "$lib/utils.js";
 	import * as Select from '$lib/components/ui/select';
-	import { CalendarDate, getLocalTimeZone, today } from "@internationalized/date";
+	import { Input } from '$lib/components/ui/input';
+	import { CalendarDate, getLocalTimeZone, now, Time, toCalendarDateTime, today } from "@internationalized/date";
+	import { Clock } from "lucide-svelte";
+	import Separator from "../separator/separator.svelte";
+	import { createEventDispatcher } from "svelte";
+
+	const dispatch = createEventDispatcher();
 
 	type $$Props = CalendarPrimitive.Props;
 
-	type $$Events = CalendarPrimitive.Events;
+	type $$Events = CalendarPrimitive.Events & { timeChanged: CustomEventHandler };
 
 	export let value: $$Props["value"] = undefined;
 	export let placeholder: $$Props["placeholder"] = today(getLocalTimeZone());
 	export let weekdayFormat: $$Props["weekdayFormat"] = "short";
-
+	
 	let className: $$Props["class"] = undefined;
 	export { className as class };
+	export let includeTime = false;
 
 	const maxYears = 100;
 	const yearOptions = Array.from({ length: maxYears }, (_, i) => ({
-    	label: String(new Date().getFullYear() - i),
-    	value: new Date().getFullYear() - i
+    	label: String(placeholder!.year - i),
+    	value: placeholder!.year - i
   	}));
  
 	const monthFormat = new Intl.DateTimeFormat('en-UK', {month: 'short'});
@@ -32,20 +39,21 @@
 		}
 	});
 
-  $: defaultYear = placeholder
-    ? {
-        value: placeholder.year,
-        label: String(placeholder.year)
-      }
-    : undefined;
+	$: defaultYear = {
+			value: placeholder!.year,
+			label: String(placeholder!.year)
+		}
+	
+	$: defaultMonth = {
+			value: placeholder!.month,
+			label: monthFormat.format(placeholder!.toDate(getLocalTimeZone()))
+		}
  
-  $: defaultMonth = placeholder
-    ? {
-        value: placeholder.month,
-        label: monthFormat.format(placeholder.toDate(getLocalTimeZone()))
-      }
-    : undefined;
- 
+	let nowTime = value ? toCalendarDateTime(value) : now(getLocalTimeZone());  
+	$: time = new Time(
+			nowTime.hour, 
+			nowTime.minute,
+		);
   
 </script>
 
@@ -98,7 +106,7 @@
 	on:keydown
 	let:months
 	let:weekdays
-	
+
 >
 	<Calendar.Header>
 		<Calendar.PrevButton />
@@ -132,3 +140,25 @@
 		{/each}
 	</Calendar.Months>
 </CalendarPrimitive.Root>
+{#if includeTime}
+	<Separator />
+	<div class="flex flex-row gap-2 items-center justify-between w-full p-2">
+		<div class="flex flex-row gap-2 items-center">
+			<Clock size=14/>
+			<span>Time</span>
+		</div>
+		<div class="flex flex-row gap-2 items-center">
+			<Input class="w-12" value={time.hour} on:input={(e) => {
+				time = time.set({hour: Number(e.target?.value)})
+				if (!value) { return }
+				dispatch('timeChanged', time);
+			}}/>
+			<span>:</span>
+			<Input class="w-12" value={time.minute} on:input={(e) => {
+				time = time.set({minute: Number(e.target?.value)})
+				if (!value) { return }
+				dispatch('timeChanged', time);
+			}}/>
+		</div>
+	</div>
+{/if}

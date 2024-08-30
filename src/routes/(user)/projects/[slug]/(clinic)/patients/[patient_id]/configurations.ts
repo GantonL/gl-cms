@@ -7,7 +7,7 @@ import type { EventDispatcher } from "svelte";
 import { createRender } from "svelte-headless-table";
 import ActionsMenu from "$lib/components/actions-menu/actions-menu.svelte";
 import type { Image } from "$lib/models/image";
-import { DateFormatter, getLocalTimeZone, parseDate } from "@internationalized/date";
+import { DateFormatter, getLocalTimeZone, parseDateTime } from "@internationalized/date";
 import { ScrollArea } from "$lib/components/ui/scroll-area";
 
 export const emptyTreatmentsResultsConfiguration: EmptyResultsConfiguration = {
@@ -62,7 +62,7 @@ export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicTreat
             dataPath: 'date',
             cell: ({ value }) => {
                 const dateFormatter = new DateFormatter('en-UK', { dateStyle: "full", timeStyle: 'short' });
-                const parsedDate = parseDate(value);
+                const parsedDate = parseDateTime(value);
                 return dateFormatter.format(parsedDate.toDate(getLocalTimeZone()));
             },
         },
