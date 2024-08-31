@@ -59,10 +59,14 @@ export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicTreat
         },
         {
             header: 'Last modified',
-            dataPath: 'date',
+            dataPath: (patient) => patient,
             cell: ({ value }) => {
                 const dateFormatter = new DateFormatter('en-UK', { dateStyle: "full", timeStyle: 'short' });
-                const parsedDate = parseDateTime(value);
+                let dateTime = value.date;
+                if (value.time) {
+                    dateTime = value.date.concat(`T${value.time}`);
+                }
+                const parsedDate = parseDateTime(dateTime);
                 return dateFormatter.format(parsedDate.toDate(getLocalTimeZone()));
             },
         },
@@ -90,7 +94,7 @@ export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicTreat
         },
         {
         header: 'Actions',
-        dataPath: (product) => product,
+        dataPath: (patient) => patient,
         cell: (c) => {
             const render = createRender(ActionsMenu, { 
             configuration: { 

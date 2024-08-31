@@ -9,7 +9,7 @@
 	import { toast } from "svelte-sonner";
 	import * as AlertDialog from "$lib/components/ui/alert-dialog";
 	import { Button } from "$lib/components/ui/button";
-	import { ArrowRight, AlertTriangle, ImagePlus, LoaderCircle, Pencil, PencilOff, Pill, NotebookPen, Stethoscope, File, Image } from "lucide-svelte";
+	import { ArrowRight, AlertTriangle, ImagePlus, LoaderCircle, Pencil, PencilOff, Pill, NotebookPen, Stethoscope, File, Image, MessageSquare } from "lucide-svelte";
 	import { goto } from "$app/navigation";
 	import type { ClinicPatient, ClinicTreatmentHistoryItem } from "$lib/models/clinic";
   import * as Tabs from "$lib/components/ui/tabs";
@@ -259,47 +259,65 @@
     avatarInput.value = '';
   }
 
+  function openChat() {
+    if (!patient.phone) { return; }
+    let link = 'https://wa.me/972';
+    const phoneNumber = patient.phone.split('-').join('');
+    link+=phoneNumber;
+    window.open(link, '_blank');
+  }
+
 </script>
 <Card.Root>
   <Card.Header>
-    <div class="flex flex-row gap-2 items-center">
-      {#if patient.id}
-      <Tooltip.Root>
-        <Tooltip.Trigger>
-          <form id="set-avatar" method="POST" action="?/set-avatar" enctype="multipart/form-data" use:enhance>
-            <label for="avatar">
-              <Avatar.Root class="border rounded-full w-24 h-24 cursor-pointer">
-                {#if avatarUpdateInProgress}
-                  <div class="flex h-full w-full items-center justify-center">
-                    <LoaderCircle class="animate-spin" size=24 />
-                  </div>
-                {:else}
-                  <Avatar.Image src={patient.avatar?.url} alt="Avatar" />
-                  <Avatar.Fallback><ImagePlus size=24 class="text-muted-foreground"/></Avatar.Fallback>
-                {/if}
-              </Avatar.Root>
-            </label>
-            <input type="file" id="avatar" name="avatar" bind:this={avatarInput} bind:files={avatarFileList} hidden on:change={onChangeAvatar} />
-          </form>
-        </Tooltip.Trigger>
-        <Tooltip.Content>Change avatar</Tooltip.Content>
-      </Tooltip.Root>
-      {/if}
-      <div class="flex flex-col gap-2">
-        <Card.Title>
-          <h1>
-            {#if !patient.id}
-              Create patient
-            {:else}
-              {patient.first_name} {patient.sur_name}
-            {/if}
-          </h1>
-        </Card.Title>
-        {#if patient.id && patient.personal_id}
-          <Card.Description>
-            {patient.personal_id}
-          </Card.Description>
+    <div class="flex flex-row gap-2 items-start justify-between">
+      <div class="flex flex-row gap-2 items-center">
+        {#if patient.id}
+          <Tooltip.Root>
+            <Tooltip.Trigger>
+              <form id="set-avatar" method="POST" action="?/set-avatar" enctype="multipart/form-data" use:enhance>
+                <label for="avatar">
+                  <Avatar.Root class="border rounded-full w-24 h-24 cursor-pointer">
+                    {#if avatarUpdateInProgress}
+                      <div class="flex h-full w-full items-center justify-center">
+                        <LoaderCircle class="animate-spin" size=24 />
+                      </div>
+                    {:else}
+                      <Avatar.Image src={patient.avatar?.url} class="object-cover" alt="Avatar" />
+                      <Avatar.Fallback><ImagePlus size=24 class="text-muted-foreground"/></Avatar.Fallback>
+                    {/if}
+                  </Avatar.Root>
+                </label>
+                <input type="file" id="avatar" name="avatar" bind:this={avatarInput} bind:files={avatarFileList} hidden on:change={onChangeAvatar} />
+              </form>
+            </Tooltip.Trigger>
+            <Tooltip.Content>Change avatar</Tooltip.Content>
+          </Tooltip.Root>
         {/if}
+        <div class="flex flex-col gap-2">
+          <Card.Title>
+            <h1>
+              {#if !patient.id}
+                Create patient
+              {:else}
+                {patient.first_name} {patient.sur_name}
+              {/if}
+            </h1>
+          </Card.Title>
+          {#if patient.id}
+            {#if patient.personal_id}
+              <Card.Description>
+                {patient.personal_id}
+              </Card.Description>
+            {/if}
+          {/if}
+        </div>
+      </div>
+      <div class="flex flex-col items-start">
+        <Button variant="secondary" class="flex flex-row items-center gap-2" on:click={openChat}>
+          <MessageSquare size=16/>
+          <span class="hidden sm:block">Open chat</span>
+        </Button>
       </div>
     </div>
   </Card.Header>

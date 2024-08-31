@@ -4,7 +4,7 @@
 	import { cn } from "$lib/utils.js";
 	import * as Select from '$lib/components/ui/select';
 	import { Input } from '$lib/components/ui/input';
-	import { CalendarDate, getLocalTimeZone, now, Time, toCalendarDateTime, today } from "@internationalized/date";
+	import { CalendarDate, getLocalTimeZone, now, Time, toCalendarDateTime, today, type AnyTime } from "@internationalized/date";
 	import { Clock } from "lucide-svelte";
 	import Separator from "../separator/separator.svelte";
 	import { createEventDispatcher } from "svelte";
@@ -16,6 +16,7 @@
 	type $$Events = CalendarPrimitive.Events & { timeChanged: CustomEventHandler };
 
 	export let value: $$Props["value"] = undefined;
+	export let time: AnyTime | undefined = undefined;
 	export let placeholder: $$Props["placeholder"] = today(getLocalTimeZone());
 	export let weekdayFormat: $$Props["weekdayFormat"] = "short";
 	
@@ -49,8 +50,8 @@
 			label: monthFormat.format(placeholder!.toDate(getLocalTimeZone()))
 		}
  
-	let nowTime = value ? toCalendarDateTime(value) : now(getLocalTimeZone());  
-	$: time = new Time(
+	let nowTime = time ?? now(getLocalTimeZone());  
+	$: timeValue = new Time(
 			nowTime.hour, 
 			nowTime.minute,
 		);
@@ -63,9 +64,8 @@
 		selected={defaultYear}
 		onSelectedChange={(v) => {
 			if (!v) return;
-			if (value) {
-				value = value.set({year: v.value})
-			}
+			placeholder = placeholder?.set({year: v.value});
+			value = value?.set({year: v.value});
 		}}
 	>
 		<Select.Trigger>
@@ -82,9 +82,8 @@
 		selected={defaultMonth}
 		onSelectedChange={(v) => {
 			if (!v) return;
-			if (value) {
-				value = value.set({month: v.value})
-			}
+			placeholder = placeholder?.set({month: v.value});
+			value = value?.set({month: v.value});
 		}}
 	>
 		<Select.Trigger>
@@ -148,16 +147,14 @@
 			<span>Time</span>
 		</div>
 		<div class="flex flex-row gap-2 items-center">
-			<Input class="w-12" value={time.hour} on:input={(e) => {
-				time = time.set({hour: Number(e.target?.value)})
-				if (!value) { return }
-				dispatch('timeChanged', time);
+			<Input class="w-12" value={timeValue.hour} on:input={(e) => {
+				timeValue = timeValue.set({hour: Number(e.target?.value)})
+				dispatch('timeChanged', timeValue);
 			}}/>
 			<span>:</span>
-			<Input class="w-12" value={time.minute} on:input={(e) => {
-				time = time.set({minute: Number(e.target?.value)})
-				if (!value) { return }
-				dispatch('timeChanged', time);
+			<Input class="w-12" value={timeValue.minute} on:input={(e) => {
+				timeValue = timeValue.set({minute: Number(e.target?.value)})
+				dispatch('timeChanged', timeValue);
 			}}/>
 		</div>
 	</div>

@@ -32,6 +32,7 @@ export type PatientFileFormSchema = typeof patientFileFormSchema;
 
 export const patientTreatmentFormSchema = z.object({
   date: z.string(),
+  time: z.string().optional(),
   documentation: z.string(),
   notes: z.string().optional(),
   price: z.number({coerce: true}).min(0).optional(),
