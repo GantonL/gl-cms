@@ -4,6 +4,7 @@ import { getUser } from "$lib/server/users.db";
 import { error, json } from "@sveltejs/kit";
 import type { RequestEvent } from "../$types";
 import { getPatientTreatmentsHistory } from "$lib/server/clinic.db";
+import { getLocalTimeZone, parseDateTime } from "@internationalized/date";
 
 export async function GET(event: RequestEvent) {
   const autheticatedUser = await getAuthenticatedUser(event);
@@ -24,6 +25,13 @@ export async function GET(event: RequestEvent) {
     error(401, 'Unauthorized');
   }
   const treatmentsHistory = await getPatientTreatmentsHistory(project, patientId);
+  treatmentsHistory.sort((a, b) => {
+    const dateTimeA = a.date.concat(`T${a.time}`); 
+    const dateTimeB = b.date.concat(`T${b.time}`);
+    const dateTimeAComp = new Date(parseDateTime(dateTimeA).toDate(getLocalTimeZone())).getTime();
+    const dateTimeBComp = new Date(parseDateTime(dateTimeB).toDate(getLocalTimeZone())).getTime();
+    return dateTimeBComp - dateTimeAComp;
+  });
   return json({
     treatmentsHistory
   });

@@ -153,7 +153,7 @@
   
   function onTreatmentAdded(newTreatment: ClinicTreatmentHistoryItem) {
     editCreateTreatmentDialogOpened = false;
-    patientTreatmentsHistory.push(newTreatment);
+    patientTreatmentsHistory.unshift(newTreatment);
     patientTreatmentsHistory = patientTreatmentsHistory;
   }
 

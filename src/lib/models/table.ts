@@ -10,6 +10,7 @@ export interface TableColumn<T> {
   cell?: DataLabel<T>;
   class?: string;
   hidden?: boolean;
+  plugins?: Partial<{[x: string]: unknown}>
 }
 
 interface TableQueryParams<T> {
