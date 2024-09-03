@@ -60,8 +60,9 @@ const config = {
 		}
 	},
 	plugins: [
-    require('@tailwindcss/typography'),
-  ],
+		require('@tailwindcss/typography'),
+		require('tailwindcss-flip'),
+	],
 };
 
 export default config;

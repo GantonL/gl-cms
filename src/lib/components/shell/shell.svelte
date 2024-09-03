@@ -7,6 +7,7 @@
 	import { ArrowUp } from 'lucide-svelte';
 	import NavigationMenu from '../navigation-menu/navigation-menu.svelte';
 	import { writable } from 'svelte/store';
+	import { direction } from '$lib/client/stores';
   const mainContentScrollEvent = writable<Event>();
 
   export let navigationPath: string = '';
@@ -32,7 +33,7 @@
   }
 
 </script>
-<div class="h-[calc(100vh-0.75rem)] overflow-hidden">
+<div class="h-[calc(100vh-0.75rem)] overflow-hidden" dir={$direction}>
   <Header />
   <div class="flex flex-row h-[calc(100%-3.55rem)] overflow-hidden">
     <aside>
