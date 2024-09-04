@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
+	import { t } from "$lib/i18n/translations";
 	import type { NavigationLink } from "$lib/models/navigation-link";
 	import * as Tooltip from "../ui/tooltip";
 
@@ -21,7 +22,7 @@
   </Tooltip.Trigger>
   <Tooltip.Content>
     {#if !expanded}
-      {navLink.label}
+      {$t(navLink.label)}
     {/if}
   </Tooltip.Content>
 </Tooltip.Root>

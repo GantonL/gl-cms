@@ -29,7 +29,7 @@ const NavigationItemsConfiguration: NavigationLink[] = [
 
 const settings: NavigationLink = 
   {
-    label: 'Settings',
+    label: 'common.settings',
     path: 'settings',
     link: '',
     icon: Settings,
@@ -117,5 +117,5 @@ export const projectItemsConfiguration: Record<ProjectType, NavigationLink[]> = 
 }
 
 export const MoreNavigationItems: NavigationLink[] = [
-  // extra navigation items to add
+  settings
 ];

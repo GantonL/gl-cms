@@ -21,6 +21,13 @@
           })
         ] : 
         [];
+
+  $: moreItems = [
+    ...MoreNavigationItems.map<NavigationLink>((item) => {
+        item.link = `/${item.path}`;
+        return item;
+      }),
+  ]
   
   let expanded = false;
 </script>
@@ -29,10 +36,6 @@
     {#each items as navItem}
       <NavigationItem navLink={navItem} active={navItem.link === currentPath || currentPath.includes(navItem.link)} {expanded}/>
     {/each}
-    {#each MoreNavigationItems as navItem}
-    <Separator />
-    <NavigationItem navLink={navItem} active={navItem.link === currentPath} {expanded}/>
-    {/each}
     {:else }
     <div class="border rounded-md bg-muted text-muted-foreground flex flex-col items-center justify-center gap-2 p-2 w-full">
       <HeartCrack />
@@ -40,6 +43,10 @@
     </div>
     {/if}
     <div class="flex-grow"></div>
+    {#each moreItems as navItem}
+    <Separator />
+    <NavigationItem navLink={navItem} active={navItem.link === currentPath} {expanded}/>
+    {/each}
     <Button name="Toggle menu items labels" aria-label="Toggle menu items labels" variant="outline" class="w-full" on:click={() => expanded = !expanded} >
       {#if expanded}
         <ChevronsLeft size=16/>

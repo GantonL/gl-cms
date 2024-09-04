@@ -1,3 +1,9 @@
 {
-    
+    "locales": {
+        "he": "עברית",
+        "en": "English"
+    },
+    "settings": "Settings",
+    "language": "Language",
+    "language_settings_description": "Choose your favorite language"
 }
