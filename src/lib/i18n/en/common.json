@@ -80,5 +80,14 @@
     "404_error_description": "This page probably doesn't exist.",
     "something_went_wrong": "Something went wrong.",
     "error_code": "Error code",
-    "details": "Details"
+    "details": "Details",
+    "name": "Name",
+    "email": "Email",
+    "project": "Project",
+    "submit": "Submit",
+    "user_delete_success": "User deleted successfuly",
+    "user_delete_failed": "Failed to delete user",
+    "project_select_placeholder": "Select a project to assign",
+    "unauthorized": "Unauthorized",
+    "forbidden": "Forbidden"
 }

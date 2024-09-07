@@ -9,6 +9,7 @@
   } from "sveltekit-superforms";
   import { zodClient } from "sveltekit-superforms/adapters";
   import * as Select from "$lib/components/ui/select";
+	import { t } from "$lib/i18n/translations";
 
   export let data: {
     form: SuperValidated<Infer<FormSchema>>
@@ -26,7 +27,7 @@
     <div class="grid items-center gap-4">
       <Form.Field {form} name="name">
         <Form.Control let:attrs>
-          <Form.Label>Name</Form.Label>
+          <Form.Label>{$t('common.name')}</Form.Label>
           <Input {...attrs} bind:value={$formData.name} />
         </Form.Control>
         <Form.FieldErrors />
@@ -35,7 +36,7 @@
     <div class="grid items-center gap-4">
       <Form.Field {form} name="email">
         <Form.Control let:attrs>
-          <Form.Label>Email</Form.Label>
+          <Form.Label>{$t('common.email')}</Form.Label>
           <Input {...attrs} bind:value={$formData.email} />
         </Form.Control>
         <Form.FieldErrors />
@@ -44,7 +45,7 @@
     <div class="grid items-center gap-4">
       <Form.Field {form} name="role">
         <Form.Control let:attrs>
-          <Form.Label>Role</Form.Label>
+          <Form.Label>{$t('common.role')}</Form.Label>
           <Input {...attrs} bind:value={$formData.role} />
         </Form.Control>
         <Form.FieldErrors />
@@ -53,12 +54,12 @@
     <div class="grid items-center gap-4">
       <Form.Field {form} name="projects">
         <Form.Control let:attrs>
-          <Form.Label>Project</Form.Label>
+          <Form.Label>{$t('common.project')}</Form.Label>
           <Select.Root
             onSelectedChange={(v) => v && ($formData.projects = [`${v.value}`])}
           >
             <Select.Trigger {...attrs}>
-              <Select.Value placeholder="Select a project to assign" />
+              <Select.Value placeholder={$t('common.project_select_placeholder')} />
             </Select.Trigger>
             <Select.Content>
               {#each data.projects as project}
@@ -72,5 +73,5 @@
       </Form.Field>
     </div>
   </div>
-  <Form.Button>Submit</Form.Button>
+  <Form.Button>{$t('common.submit')}</Form.Button>
 </form>

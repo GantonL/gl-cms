@@ -80,5 +80,14 @@
     "404_error_description": "עמוד המבוקש ככל הנראה לא קיים",
     "something_went_wrong": "משהו השתבש.",
     "error_code": "קוד תקלה",
-    "details": "פרטים"
+    "details": "פרטים",
+    "name": "שם",
+    "email": "דואר אלקטרוני",
+    "project": "פרויקט",
+    "submit": "שליחה",
+    "user_delete_success": "מחיקת משתמש בוצעה בהצלחה",
+    "user_delete_failed": "מחיקת משתמש נכשלה",
+    "project_select_placeholder": "בחירת פרויקט",
+    "unauthorized": "גישה לא מורשת",
+    "forbidden": "גישה אסורה"
 }

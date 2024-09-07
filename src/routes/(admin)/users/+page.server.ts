@@ -7,15 +7,16 @@ import { zod } from "sveltekit-superforms/adapters";
 import { formSchema } from "./schema";
 import type { UserRole } from "$lib/enums/user-role";
 import { getProjects } from "$lib/server/projects.db";
+import { t } from "$lib/i18n/translations";
 
 export const load: PageServerLoad = async (event) => {
   const autheticatedUser = await getAuthenticatedUser(event);
   if (!autheticatedUser) {
-    error(401, 'Unauthorized');
+    error(401, t.get('common.unauthorized'));
   }
   const isAdmin = await isAdminUser(autheticatedUser.uid);
   if (!isAdmin) {
-    error(403, 'Forbidden');
+    error(403, t.get('common.forbidden'));
   }
   const users = await getUsers();
   const projects = await getProjects();
@@ -24,7 +25,7 @@ export const load: PageServerLoad = async (event) => {
     users: users ?? [],
     projects: projects?.map(p=>p.name) ?? [],
     seo: {
-      title: 'Admin - Users',
+      title: t.get('common.admin') + ' - ' + t.get('common.users')
     }
   }
 }
