@@ -1,3 +1,4 @@
+import { t } from "$lib/i18n/translations";
 import { getUserCookiesPreferences } from "$lib/manage-cookies/manager";
 import type { PageServerLoad } from "./$types";
 
@@ -7,7 +8,7 @@ export const load: PageServerLoad = (event) => {
     cookieBannerOpen,
     cookiePreferences: getUserCookiesPreferences(event),
     seo: {
-      description: 'Free template for your next awesome SvelteKit app with Shadcn UI',
+      description: t.get('common.landing_page_description'),
     }
   }
 }

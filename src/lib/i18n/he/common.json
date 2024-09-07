@@ -72,5 +72,13 @@
     "privacy_policy": "מדיניות פרטיות",
     "privacy_policy_page_description": "מדיניות הפרטיות של האתר",
     "cookie_policy_page_description": "מדיניות העוגיות של האתר",
-    "terms_and_conditions_page_description": "מדיניות האתר"
+    "terms_and_conditions_page_description": "מדיניות האתר",
+    "request_a_demo": "בקשו הדגמה",
+    "landing_page_title": "ברוכים הבאים",
+    "landing_page_description": "מערכת ניהול ייחודית לפרויקטים שלך. נהלו את כל מה שקשור לפרויקטים שלכם מתוכן ועד לקוחות.",
+    "oh_no": "אוי לא!",
+    "404_error_description": "עמוד המבוקש ככל הנראה לא קיים",
+    "something_went_wrong": "משהו השתבש.",
+    "error_code": "קוד תקלה",
+    "details": "פרטים"
 }
