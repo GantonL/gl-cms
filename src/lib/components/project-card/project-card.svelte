@@ -8,6 +8,7 @@
 	import type { Project } from "$lib/models/project";
 	import CreateProjectForm from "../../../routes/(user)/projects/create-project-form.svelte";
 	import { UserPermissions } from "$lib/enums/permission";
+	import { locale, t } from "$lib/i18n/translations";
 
   let projectDeletionDialogState = false;
 
@@ -34,7 +35,7 @@
             >
             <Dialog.Content class="sm:max-w-[425px]">
               <Dialog.Header>
-                <Dialog.Title>Create project</Dialog.Title>
+                <Dialog.Title>{$t('common.create_project')}</Dialog.Title>
               </Dialog.Header>
               {#if form}
                 <CreateProjectForm data={form}/>
@@ -49,7 +50,7 @@
         <Card.Description></Card.Description>
       </Card.Header>
       <Card.Content>
-        <p class="text-sm text-muted-foreground font-italic">Created at: {new Intl.DateTimeFormat('en-US').format(project.created_at)}</p>
+        <p class="text-sm text-muted-foreground font-italic">{$t('common.created_at')}: {new Intl.DateTimeFormat($t(`common.date_format_type.${$locale}`)).format(project.created_at)}</p>
       </Card.Content>
       <Card.Footer>
         <section class="w-full flex fex-row flex-row-reverse">
@@ -61,17 +62,17 @@
                     <Tooltip.Trigger>
                       <Button variant="destructive" size="icon" class="border border-destructive"><Trash size=16/></Button>
                     </Tooltip.Trigger>
-                    <Tooltip.Content>Delete</Tooltip.Content>
+                    <Tooltip.Content>{$t('common.delete')}</Tooltip.Content>
                   </Tooltip.Root>
                 </Dialog.Trigger>
                 <Dialog.Content>
                   <Dialog.Header>
-                    <Dialog.Title>Delete Project</Dialog.Title>
+                    <Dialog.Title>{$t('common.delete_project')}</Dialog.Title>
                   </Dialog.Header>
-                  Are you sure?
+                  {$t('common.are_you_sure')}
                   <Dialog.Footer>
-                    <Button variant="outline" on:click={() => projectDeletionDialogState = false}>CANCEL</Button>
-                    <Button variant="destructive" on:click={onDelete}>DELETE</Button>
+                    <Button variant="outline" on:click={() => projectDeletionDialogState = false}>{$t('common.cancel')}</Button>
+                    <Button variant="destructive" on:click={onDelete}>{$t('common.delete').toUpperCase()}</Button>
                   </Dialog.Footer>
                 </Dialog.Content>
               </Dialog.Root>
@@ -80,13 +81,13 @@
               <Tooltip.Trigger>
                 <Button variant="outline" size="icon" on:click={() => project && dispatch('select', project.id)}><Edit2 size=16/></Button>
               </Tooltip.Trigger>
-              <Tooltip.Content>Edit</Tooltip.Content>
+              <Tooltip.Content>{$t('common.edit')}</Tooltip.Content>
             </Tooltip.Root>
             <Tooltip.Root>
               <Tooltip.Trigger>
                 <Button variant="outline" size="icon" on:click={() => project && dispatch('navigate', project.url)}><ExternalLink size=16/></Button>
               </Tooltip.Trigger>
-              <Tooltip.Content>Open</Tooltip.Content>
+              <Tooltip.Content>{$t('common.open')}</Tooltip.Content>
             </Tooltip.Root>
           </section>
         </section>

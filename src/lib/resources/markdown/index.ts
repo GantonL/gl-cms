@@ -4,16 +4,28 @@ interface MarkdownResource {
 }
 
 export const MarkdownResources: Record<string, MarkdownResource> = {
-  ['site-terms']: {
-    file: import.meta.glob('./site-terms.md', { eager: true }),
-    path: './site-terms.md',
+  ['site-terms-en']: {
+    file: import.meta.glob('./en/site-terms.md', { eager: true }),
+    path: './en/site-terms.md',
   },
-  ['privacy-policy']: {
-    file: import.meta.glob('./privacy-policy.md', { eager: true }),
-    path: './privacy-policy.md',
+  ['privacy-policy-en']: {
+    file: import.meta.glob('./en/privacy-policy.md', { eager: true }),
+    path: './en/privacy-policy.md',
   },
-  ['cookies-policy']: {
-    file: import.meta.glob('./cookies-policy.md', { eager: true }),
-    path: './cookies-policy.md',
+  ['cookies-policy-en']: {
+    file: import.meta.glob('./en/cookies-policy.md', { eager: true }),
+    path: './en/cookies-policy.md',
+  },
+  ['site-terms-he']: {
+    file: import.meta.glob('./he/site-terms.md', { eager: true }),
+    path: './he/site-terms.md',
+  },
+  ['privacy-policy-he']: {
+    file: import.meta.glob('./he/privacy-policy.md', { eager: true }),
+    path: './he/privacy-policy.md',
+  },
+  ['cookies-policy-he']: {
+    file: import.meta.glob('./he/cookies-policy.md', { eager: true }),
+    path: './he/cookies-policy.md',
   }
 };

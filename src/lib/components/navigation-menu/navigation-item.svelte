@@ -17,7 +17,7 @@
       {#if navLink.icon}
         <svelte:component this={navLink.icon} size=16/>
       {/if}
-      <span class:hidden={!expanded} class="leading-none">{navLink.label}</span>
+      <span class:hidden={!expanded} class="leading-none">{$t(navLink.label)}</span>
     </a>
   </Tooltip.Trigger>
   <Tooltip.Content>

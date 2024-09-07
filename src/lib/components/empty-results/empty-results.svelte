@@ -3,6 +3,7 @@
   import { Button } from "$lib/components/ui/button";
   import { createEventDispatcher } from "svelte";
   import { type EmptyResultsConfiguration } from "$lib/models/common";
+	import { t } from "$lib/i18n/translations";
 
   export let configuration: EmptyResultsConfiguration;
   const dispatch = createEventDispatcher();
@@ -16,7 +17,7 @@
   {#if configuration?.action}
     <Button variant="secondary"
       on:click={() => configuration.action && dispatch(configuration.action.event)}>
-      {configuration.action.label}
+      {$t(configuration.action.label)}
     </Button>
   {/if}
 </div>

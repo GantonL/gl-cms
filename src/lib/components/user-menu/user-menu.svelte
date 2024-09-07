@@ -7,6 +7,7 @@
 	import { LoggedInUserMenuConfiguration, LoggedOutUserMenuConfiguration } from "./configurations";
 	import { user } from "$lib/client/stores";
 	import { auth } from "$lib/client/auth";
+	import { t } from "$lib/i18n/translations";
 	  
   function onGroupItemClick(item: UserMenuItem) {
     if (item.onClick) {
@@ -37,7 +38,7 @@
       <div class="bg-secondary/50 text-muted-foreground p-4">
         <DropdownMenu.Label class="font-normal">
           <div class="flex flex-col space-y-1">
-            <p class="text-sm font-bold leading-none">{$user.name || 'Anonymous'}</p>
+            <p class="text-sm font-bold leading-none">{$user.name || $t('common.anonymous')}</p>
             {#if $user?.email}
               <p class="text-xs leading-none text-muted-foreground">{$user.email}</p>
             {/if}
@@ -57,7 +58,7 @@
                 {#if groupItem.icon}
                   <svelte:component this={groupItem.icon} size=16/>
                 {/if}
-                {groupItem.label}
+                {$t(groupItem.label ?? '')}
               </a>
             </DropdownMenu.Item>
           {/each}

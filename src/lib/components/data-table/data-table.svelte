@@ -19,6 +19,7 @@
 	import * as Select from "../ui/select";
 	import { page } from "$app/stores";
 	import { addSearchParamToUrl } from "$lib/client/utils";
+	import { t } from "$lib/i18n/translations";
 
   const dispatch = createEventDispatcher();
 
@@ -136,7 +137,7 @@
         return;
       }
       const failure = () => {
-        toast.error('Failed to fetch page data');
+        toast.error(t.get('common.data_fetch_failed'));
         serverFetchInprogress = false;
       };
       const queryParamName = configuration.serverSide.paginationQuery?.paramName; 
@@ -166,7 +167,7 @@
       tableData.update((items => items.filter(i => i[filter.query!.paramValueDataPath!] === value)));
     } else {
       const failure = () => {
-        toast.error('Failed to filter page data');
+        toast.error(t.get('common.data_filtering_failed'));
         serverFetchInprogress = false;
         filterInProgress = false;
       };
@@ -198,7 +199,7 @@
 
 {#if configuration?.filters}
   <div class="flex flex-col gap-2 border rounded-md mb-2 p-2">
-    <Label>Filters</Label>
+    <Label>{$t('common.filters')}</Label>
     <div class="flex flex-row flex-wrap gap-2">
       {#each configuration?.filters as filter}
         {#if filter.type === 'select' && !!filter.options}
@@ -282,19 +283,19 @@
   {/if}
 </div>
 <div class="flex flex-row items-center justify-between">
-  <span class="text-muted-foreground">{$pageIndex + 1} out of {$pageCount} pages</span>
-  <div class="flex items-center justify-end space-x-4 py-4">
+  <span class="text-muted-foreground">{$pageIndex + 1} {$t('common.out_of')} {$pageCount} {$t('common.pages')}</span>
+  <div class="flex items-center justify-end py-4 gap-4">
     <Button
       variant="outline"
       size="sm"
       on:click={() => paginateNextOrPrevious($pageIndex - 1)}
-      disabled={!$hasPreviousPage || serverFetchInprogress}>Previous</Button
+      disabled={!$hasPreviousPage || serverFetchInprogress}>{$t('common.previous')}</Button
     >
     <Button
       variant="outline"
       size="sm"
       disabled={!$hasNextPage || serverFetchInprogress}
-      on:click={() => paginateNextOrPrevious($pageIndex + 1)}>Next</Button
+      on:click={() => paginateNextOrPrevious($pageIndex + 1)}>{$t('common.next')}</Button
     >
   </div>
 </div>

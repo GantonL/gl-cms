@@ -7,7 +7,7 @@ import { LogIn, LogOut } from "lucide-svelte";
 export const LoggedOutUserMenuConfiguration: UserMenuItem[] = [
   {
     group: [
-      { label: 'Login', icon: LogIn, link: '/login' },
+      { label: 'common.login', icon: LogIn, link: '/login' },
     ]
   }
 ];
@@ -15,7 +15,7 @@ export const LoggedOutUserMenuConfiguration: UserMenuItem[] = [
 export const LoggedInUserMenuConfiguration: UserMenuItem[] = [
   {
     group: [
-      { label: 'Logout', icon: LogOut, link: '/login',
+      { label: 'common.logout', icon: LogOut, link: '/login',
        onClick: (auth: Auth) => {
         setAuth();
         user.set(undefined);

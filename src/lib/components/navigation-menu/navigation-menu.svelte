@@ -4,9 +4,10 @@
   import { Separator } from "../ui/separator";
   import { MoreNavigationItems, ItemsConfiguration, projectItemsConfiguration } from "./configuration";
 	import NavigationItem from "./navigation-item.svelte";
-	import { currentProject, user } from "$lib/client/stores";
+	import { currentProject, direction, user } from "$lib/client/stores";
 	import { ProjectType } from "$lib/enums/projects";
 	import type { NavigationLink } from "$lib/models/navigation-link";
+	import { t } from "$lib/i18n/translations";
 
   export let currentPath: string;
   
@@ -39,7 +40,7 @@
     {:else }
     <div class="border rounded-md bg-muted text-muted-foreground flex flex-col items-center justify-center gap-2 p-2 w-full">
       <HeartCrack />
-      <span class="prose prose-sm text-center max-w-24 text-muted-foreground">Menu is not available</span>
+      <span class="prose prose-sm text-center max-w-24 text-muted-foreground">{$t('common.menu_not_available')}</span>
     </div>
     {/if}
     <div class="flex-grow"></div>
@@ -47,7 +48,7 @@
     <Separator />
     <NavigationItem navLink={navItem} active={navItem.link === currentPath} {expanded}/>
     {/each}
-    <Button name="Toggle menu items labels" aria-label="Toggle menu items labels" variant="outline" class="w-full" on:click={() => expanded = !expanded} >
+    <Button name="Toggle menu items labels" aria-label="Toggle menu items labels" variant="outline" class="w-full {$direction === 'rtl' ? 'rotate-180' : ''}" on:click={() => expanded = !expanded} >
       {#if expanded}
         <ChevronsLeft size=16/>
       {:else}

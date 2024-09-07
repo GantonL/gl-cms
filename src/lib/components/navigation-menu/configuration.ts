@@ -5,7 +5,7 @@ import { ProjectType } from "$lib/enums/projects";
 
 const sharedItemsConfiguration: NavigationLink[] = [
   { 
-    label: 'Projects', 
+    label: 'common.projects', 
     icon: HandMetal, 
     path: 'projects',
     link: ''
@@ -14,7 +14,7 @@ const sharedItemsConfiguration: NavigationLink[] = [
 
 const AdminItemsConfiguration: NavigationLink[] = [
   { 
-    label: 'Users', 
+    label: 'common.users', 
     icon: Users, 
     path: 'users',
     link: ''
@@ -36,56 +36,56 @@ const settings: NavigationLink =
   };
 const storeSettings: NavigationLink = 
   {
-    label: 'Settings',
+    label: 'common.settings',
     path: 'store-settings',
     link: '',
     icon: Settings,
   };
 const products: NavigationLink = 
   {
-    label: 'Products',
+    label: 'common.products',
     path: 'products',
     link: '',
     icon: Barcode
   };
 const categories: NavigationLink = 
   {
-    label: 'Categories',
+    label: 'common.categories',
     path: 'categories',
     link: '',
     icon: Grid2X2
   };
 const clients: NavigationLink = 
   {
-    label: 'Clients',
+    label: 'common.clients',
     path: 'clients',
     link: '',
     icon: SquareUser
   };
 const orders: NavigationLink = 
   {
-    label: 'Orders',
+    label: 'common.orders',
     path: 'orders',
     link: '',
     icon: ShoppingCart
   };
 const contact: NavigationLink = 
   {
-    label: 'Contact',
+    label: 'common.contact',
     path: 'contact',
     link: '',
     icon: Phone
   };
 const patients: NavigationLink = 
 {
-  label: 'Patients',
+  label: 'common.patients',
   path: 'patients',
   link: '',
   icon: ContactRound
 }
 const clinicSettings: NavigationLink = 
 {
-  label: 'Settings',
+  label: 'common.settings',
   path: 'clinic-settings',
   link: '',
   icon: Settings,

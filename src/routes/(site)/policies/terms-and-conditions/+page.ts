@@ -1,9 +1,10 @@
+import { locale, t } from "$lib/i18n/translations";
 import { MarkdownResources } from "$lib/resources/markdown";
 import type { PageLoad } from "./$types"
 
 export const load: PageLoad = async () => {
-  const title = "Terms & Conditions";
-  const resourceId = 'site-terms';
+  const title = t.get('common.terms_and_conditions');
+  const resourceId = `site-terms-${locale.get()}`;
   const file = MarkdownResources[resourceId].file;
   const content = await file[MarkdownResources[resourceId].path].default;  
   return {
@@ -11,7 +12,7 @@ export const load: PageLoad = async () => {
     content,
     seo: {
       title,
-      description: 'Terms & Conditions of this application',
+      description: t.get('common.terms_and_conditions_page_description'),
     }
   }
 }

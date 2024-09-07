@@ -8,6 +8,7 @@
 	import NavigationMenu from '../navigation-menu/navigation-menu.svelte';
 	import { writable } from 'svelte/store';
 	import { direction } from '$lib/client/stores';
+	import { t } from '$lib/i18n/translations';
   const mainContentScrollEvent = writable<Event>();
 
   export let navigationPath: string = '';
@@ -44,7 +45,7 @@
         <slot />
       </div>
       <Footer />
-      <div class="bottom-16 right-6 z-50" class:hidden={!scrolled} class:fixed={scrolled}>
+      <div class="bottom-16 {$direction === 'rtl' ? 'left-6' : 'right-6'} z-50" class:hidden={!scrolled} class:fixed={scrolled}>
         <Tooltip.Root>
           <Tooltip.Trigger>
             <Button variant="outline" class="rounded-full w-12 h-12" on:click={() => scrollable.scroll({ top: 0, behavior: 'smooth' })} >
@@ -52,7 +53,7 @@
             </Button>
           </Tooltip.Trigger>
           <Tooltip.Content>
-            Scroll to top
+            {$t('common.scroll_to_top')}
           </Tooltip.Content>
         </Tooltip.Root>
       </div>

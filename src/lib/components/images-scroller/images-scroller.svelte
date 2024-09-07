@@ -5,6 +5,8 @@
 	import { ScrollArea } from "../ui/scroll-area";
 	import { createEventDispatcher } from "svelte";
 	import * as AlertDialog from "../ui/alert-dialog";
+	import { locale, t } from "$lib/i18n/translations";
+	import { direction } from "$lib/client/stores";
 
     type scrollableImage = Image & {month?: number, displayDate?: string, deleteInProgress?: boolean;};   
     export let images: scrollableImage[];
@@ -21,10 +23,10 @@
         });
         let previousMonth = 0;
         images = images.map((image, index) => {
-            const month = Number(new Intl.DateTimeFormat("en-UK", {'month': 'numeric'}).format(image.date));
+            const month = Number(new Intl.DateTimeFormat(t.get(`common.date_format_type.${$locale}`), {'month': 'numeric'}).format(image.date));
             let displayDate;
             if (((index > 0) && (month !== previousMonth)) || index === 0) {
-                displayDate = new Intl.DateTimeFormat("en-UK", {'month': "short", 'year': 'numeric'}).format(image.date)
+                displayDate = new Intl.DateTimeFormat(t.get(`common.date_format_type.${$locale}`), {'month': "short", 'year': 'numeric'}).format(image.date)
             }
             previousMonth = month;
             return {
@@ -42,17 +44,17 @@
             {disabled}
             on:click={() => {dispatch('create')}}>
             <Plus size=16/>
-            <span>Add image</span>
+            <span>{$t('common.add_image')}</span>
         </Button>
         <Button variant="outline" class="flex flex-row items-center gap-2 w-fit" 
             {disabled}
             on:click={() => {editMode = !editMode}}>
             {#if editMode}
                 <PencilOff size=16/>
-                <span>Cancel edit</span>
+                <span>{$t('common.cancel_edit')}</span>
             {:else}
                 <Pencil size=16/>
-                <span>Edit</span>
+                <span>{$t('common.edit')}</span>
             {/if}
         </Button>
     </div>
@@ -81,22 +83,22 @@
 </div>
 
 <AlertDialog.Root bind:open={deleteImageDialogOpened}>
-<AlertDialog.Content>
-    <AlertDialog.Header>
-    <AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
-    <AlertDialog.Description>
-        This action cannot be undone. This will permanently delete the selected image.
-    </AlertDialog.Description>
-    </AlertDialog.Header>
-    <AlertDialog.Footer>
-    <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-    <AlertDialog.Action class="bg-destructive text-destructive-foreground hover:bg-destructive/80"
-        on:click={() => {
-            dispatch('delete', deleteCandidate);
-            deleteCandidate.deleteInProgress = true
-            images = images
-        }}
-    >DELETE</AlertDialog.Action>
-    </AlertDialog.Footer>
-</AlertDialog.Content>
+    <AlertDialog.Content>
+        <AlertDialog.Header>
+            <AlertDialog.Title>{$t('common.confirm_dialog_title')}</AlertDialog.Title>
+            <AlertDialog.Description>
+                {$t('common.delete_image_confirmation_description')}
+            </AlertDialog.Description>
+        </AlertDialog.Header>
+        <AlertDialog.Footer>
+            <AlertDialog.Cancel>{$t('common.cancel')}</AlertDialog.Cancel>
+            <AlertDialog.Action class="bg-destructive text-destructive-foreground hover:bg-destructive/80"
+                on:click={() => {
+                    dispatch('delete', deleteCandidate);
+                    deleteCandidate.deleteInProgress = true
+                    images = images
+                }}
+            >{$t('common.delete').toUpperCase()}</AlertDialog.Action>
+        </AlertDialog.Footer>
+    </AlertDialog.Content>
 </AlertDialog.Root>

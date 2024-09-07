@@ -3,7 +3,7 @@ import type { ComponentType } from "svelte";
 
 export interface NavigationLink {
   label: string;
-  path: string;
   link: string;
+  path?: string;
   icon?: ComponentType<Icon>;
 }
