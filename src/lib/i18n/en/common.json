@@ -92,5 +92,18 @@
     "forbidden": "Forbidden",
     "continue_with_google": "Continue with Google",
     "invalid_user": "Invalid user",
-    "user_deletion_failed": "User deletion failed"
+    "user_deletion_failed": "User deletion failed",
+    "manage_cookie_preferences": "Manage cookie preferences",
+    "manage_cookie_preferences_description": "When you visit any of our websites, it may store or retrieve information on your browser, mostly in the form of cookies. This information might be about you, your preferences or your device and is mostly used to make the site work as you expect it to. The information does not usually directly identify you, but it can give you a more personalized web experience. Because we respect your right to privacy, you can choose not to allow some types of cookies. Click on the different category headings to find out more and manage your preferences. Please note, blocking some types of cookies may impact your experience of the site and the services we are able to offer.",
+    "accepted": "Accepted",
+    "essential": "Essential",
+    "essential_cookie_description": "We use these essential cookies to perform essential website functions and to provide the services. These cookies enable us to improve performance and user experience. These cookies are necessary for the website to work.",
+    "analytics": "Analytics",
+    "analytics_cookie_description": "We allow third parties to use analytics cookies to understand how you use the website so we can make it better. Analytics cookies are used to gather information about the pages you visit.",
+    "advertising": "Advertising",
+    "advertising_cookie_description": "We and third parties use advertising cookies to show you new ads based on ads you have already seen. Cookies also track which ads you click or purchases you make after clicking an ad. This is done to show you ads that are more relevant to you and for business purposes with our advertising partners.",
+    "save_changes": "Save changes",
+    "reject_all": "Reject all",
+    "preference_changes_saved": "Preferences changes saved",
+    "optional_cookies_rejected": "Optional cookies rejected"
 }

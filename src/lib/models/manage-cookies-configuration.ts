@@ -1,7 +1,6 @@
 export interface CookieCategory {
   name: 'essential' | 'analytics' | 'advertising',
   optional: boolean,
-  description: string;
   accepted: boolean;
   cookies?: string[],
 }
