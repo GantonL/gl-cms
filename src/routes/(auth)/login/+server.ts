@@ -4,6 +4,7 @@ import { getAuthenticatedUser } from "$lib/server/auth";
 import { createUser, deleteUser, getUser, updateUser } from "$lib/server/users.db";
 import type { User } from "$lib/models/user";
 import { json, type RequestEvent } from "@sveltejs/kit"
+import { t } from "$lib/i18n/translations";
 
 export async function POST(event: RequestEvent) {
   const body = await event.request.formData();
@@ -15,7 +16,7 @@ export async function POST(event: RequestEvent) {
     if (authenticatedUser?.email) {
       user = await getUser(authenticatedUser.email);
       if (!user) {
-        return json({ success: false, error: {code: 403, message: 'Invalid user'} });
+        return json({ success: false, error: {code: 403, message: t.get('invalid_user')} });
       }
       const updateUserObject: Partial<Pick<User, 'image'>> = {};
       if (user.id !== authenticatedUser.uid) {
@@ -25,7 +26,7 @@ export async function POST(event: RequestEvent) {
         if (userCreated) {
           const deleteOldUser = await deleteUser(oldId);
           if (!deleteOldUser) {
-            return json({ success: false, error: {code: 418, message: 'Failed to recreate user path'} });
+            return json({ success: false, error: {code: 418, message: t.get('common.user_deletion_failed')} });
           }
         }
       }

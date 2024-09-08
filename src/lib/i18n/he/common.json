@@ -64,8 +64,8 @@
     "anonymous": "אנונימי",
     "admin": "מנהל",
     "user": "משתמש",
-    "login": "כניסה",
-    "logout": "יציאה",
+    "login": "התחברות",
+    "logout": "התנתקות",
     "Currency": {
         "ILS": "ש\"ח"
     },
@@ -89,5 +89,8 @@
     "user_delete_failed": "מחיקת משתמש נכשלה",
     "project_select_placeholder": "בחירת פרויקט",
     "unauthorized": "גישה לא מורשת",
-    "forbidden": "גישה אסורה"
+    "forbidden": "גישה אסורה",
+    "continue_with_google": "המשיכו עם גוגל",
+    "invalid_user": "משתמש לא תקף",
+    "user_deletion_failed": "מחיקת משתמש נכשלה"
 }

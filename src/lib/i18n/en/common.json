@@ -89,5 +89,8 @@
     "user_delete_failed": "Failed to delete user",
     "project_select_placeholder": "Select a project to assign",
     "unauthorized": "Unauthorized",
-    "forbidden": "Forbidden"
+    "forbidden": "Forbidden",
+    "continue_with_google": "Continue with Google",
+    "invalid_user": "Invalid user",
+    "user_deletion_failed": "User deletion failed"
 }

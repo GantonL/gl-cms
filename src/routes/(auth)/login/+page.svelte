@@ -6,6 +6,7 @@
 	import { auth, setAuth } from "$lib/client/auth";
 	import { user } from "$lib/client/stores";
 	import { LoaderCircle } from "lucide-svelte";
+	import { t } from "$lib/i18n/translations";
 
   let authenticationInProgress = false;
 
@@ -28,7 +29,7 @@
   
 </script>
 <div class="flex flex-col items-center gap-4 border rounded-lg p-4">
-  <h1 class="text-2xl">Login</h1>
+  <h1 class="text-2xl">{$t('common.login')}</h1>
   <Separator />
   <Button class="w-full" disabled={authenticationInProgress} variant="default" on:click={() => continueWithGoogle(auth())}>
     <span class="inline-flex items-center gap-2">
@@ -37,7 +38,7 @@
       {:else}
         <img src="images/google_icon.svg" alt="Google icon" width="24" height="24" />
       {/if}
-       Continue with Google
+      {$t('common.continue_with_google')}
     </span>
   </Button>
 </div>
