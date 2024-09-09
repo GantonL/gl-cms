@@ -107,5 +107,8 @@
     "project_deletion_failed": "מחיקת פרויקט נכשלה",
     "type": "סוג",    
     "url": "כתובת",
-    "optional": "רשות"
+    "optional": "רשות",
+    "dashboard": "מידע מסוכם",
+    "unknown_project": "פרויקט לא מוכר",
+    "not_assigned_to_project_error": "גישה נידחתה, פרויקט זה איננו משוייך אליך"
 }

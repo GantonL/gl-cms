@@ -107,5 +107,8 @@
     "project_deletion_failed": "Failed to delete project",
     "type": "Type",
     "url": "URL",
-    "optional": "Optional"
+    "optional": "Optional",
+    "dashboard": "Dashboard",
+    "unknown_project": "Unknown project",
+    "not_assigned_to_project_error": "Access denied, you are not assigned to this project"
 }
