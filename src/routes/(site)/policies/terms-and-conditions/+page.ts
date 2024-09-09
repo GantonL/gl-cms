@@ -12,7 +12,7 @@ export const load: PageLoad = async () => {
     content,
     seo: {
       title,
-      description: t.get('common.terms_and_conditions_page_description'),
+      description: t.get('seo.terms_and_conditions_page_description'),
     }
   }
 }

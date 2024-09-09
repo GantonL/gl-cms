@@ -12,7 +12,7 @@ export const load: PageLoad = async () => {
     content,
     seo: {
       title,
-      description: t.get('common.privacy_policy_page_description'),
+      description: t.get('seo.privacy_policy_page_description'),
     }
   }
 }
