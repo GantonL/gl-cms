@@ -102,5 +102,10 @@
     "save_changes": "Save changes",
     "reject_all": "Reject all",
     "preference_changes_saved": "Preferences changes saved",
-    "optional_cookies_rejected": "Optional cookies rejected"
+    "optional_cookies_rejected": "Optional cookies rejected",
+    "project_deleted_successfuly": "Project deleted successfuly",
+    "project_deletion_failed": "Failed to delete project",
+    "type": "Type",
+    "url": "URL",
+    "optional": "Optional"
 }

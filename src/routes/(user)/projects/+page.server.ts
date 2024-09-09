@@ -8,11 +8,12 @@ import type { PageServerLoad } from "./$types";
 import { getUser } from "$lib/server/users.db";
 import { UserPermissions } from "$lib/enums/permission";
 import type { ProjectType } from "$lib/enums/projects";
+import { t } from "$lib/i18n/translations";
 
 export const load: PageServerLoad = async (event) => {
   const autheticatedUser = await getAuthenticatedUser(event);
   if (!autheticatedUser) {
-    error(401, 'Unauthorized');
+    error(401, t.get('common.unauthorized'));
   }
   const isAdmin = await isAdminUser(autheticatedUser.uid);
   let names: string[] | undefined;
@@ -29,7 +30,7 @@ export const load: PageServerLoad = async (event) => {
     projects,
     permissions,
     seo: {
-      title: 'Projects',
+      title: t.get('common.projects'),
     }
   }
 }

@@ -1,6 +1,7 @@
 <script lang="ts">
   import * as Form from "$lib/components/ui/form";
   import { Input } from "$lib/components/ui/input";
+	import { t } from "$lib/i18n/translations";
   import { formSchema, type FormSchema } from "./schema";
   import {
     type SuperValidated,
@@ -22,7 +23,7 @@
     <div class="grid items-center gap-4">
       <Form.Field {form} name="name">
         <Form.Control let:attrs>
-          <Form.Label>Name</Form.Label>
+          <Form.Label>{$t('common.name')}</Form.Label>
           <Input {...attrs} bind:value={$formData.name} />
         </Form.Control>
         <Form.FieldErrors />
@@ -31,7 +32,7 @@
     <div class="grid items-center gap-4">
       <Form.Field {form} name="type">
         <Form.Control let:attrs>
-          <Form.Label>Type</Form.Label>
+          <Form.Label>{$t('common.type')}</Form.Label>
           <Input {...attrs} bind:value={$formData.type} />
         </Form.Control>
         <Form.FieldErrors />
@@ -40,12 +41,12 @@
     <div class="grid items-center gap-4">
       <Form.Field {form} name="url">
         <Form.Control let:attrs>
-          <Form.Label>URL <span class="text-sm text-muted-foreground">(Optional)</span></Form.Label>
+          <Form.Label>{$t('common.url')} <span class="text-sm text-muted-foreground">({$t('common.optional')})</span></Form.Label>
           <Input {...attrs} bind:value={$formData.url} />
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>
     </div>
   </div>
-  <Form.Button>Submit</Form.Button>
+  <Form.Button>{$t('common.submit')}</Form.Button>
 </form>

@@ -2,6 +2,7 @@
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
 	import ProjectCard from "$lib/components/project-card/project-card.svelte";
+	import { t } from "$lib/i18n/translations";
 	import type { User } from "$lib/models/user";
 	import { toast } from "svelte-sonner";
 
@@ -13,12 +14,12 @@
       fetch(`/projects/${projectId}`, { method: 'DELETE' }).then((res) => {
         res?.json()?.then(_ => {
           if (_.success) {
-            toast.success('Project deleted successfuly');
+            toast.success(t.get('common.project_deleted_successfuly'));
             const deletedUserIndex = projects.findIndex((u: User) => u.id === projectId);
             projects.splice(deletedUserIndex, 1);
             projects = projects;
           } else {
-            toast.error('Failed to delete project');
+            toast.error(t.get('common.project_deletion_failed'));
           }
           deleting[projectId] = false;
         }) 
@@ -34,7 +35,7 @@
   $: permissions = $page.data.permissions;
 </script>
  
-<h1 class="text-xl">Projects</h1>
+<h1 class="text-xl">{$t('common.projects')}</h1>
 <div class="grid grid-cols-3 gap-4">
   {#if permissions?.length}
     <ProjectCard project={null} form={$page.data.form} {permissions}/>

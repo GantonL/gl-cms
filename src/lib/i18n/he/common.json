@@ -102,5 +102,10 @@
     "save_changes": "שמירת שינויים",
     "reject_all": "דחיית כל העוגיות",
     "preference_changes_saved": "שינויי העדפות נשמרו",
-    "optional_cookies_rejected": "עוגיות לא הכרחיות נדחו"
+    "optional_cookies_rejected": "עוגיות לא הכרחיות נדחו",
+    "project_deleted_successfuly": "פרויקט נמחק בהצלחה",
+    "project_deletion_failed": "מחיקת פרויקט נכשלה",
+    "type": "סוג",    
+    "url": "כתובת",
+    "optional": "רשות"
 }
