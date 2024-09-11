@@ -127,5 +127,18 @@
     "patients_search_placholder": "Name, ID or Email...",
     "has_notes": "Has notes",
     "takes_medications": "Takes medications",
-    "has_medical_condition": "Has medical condition"
+    "has_medical_condition": "Has medical condition",
+    "invalid_file_data": "Invalid file data",
+    "failed_to_updload_patient_avatar": "Failed to updload patient avatar",
+    "failed_to_update_patient_avatar": "Failed to update patient avatar",
+    "failed_to_updload_patient_file": "Failed to updload patient file",
+    "failed_to_update_patient_file": "Failed to update patient file",
+    "patient_avatar_updated_successfuly": "Patient avatar updated successfuly",
+    "failed_to_delete_patient": "Failed to delete patient",
+    "successfuly_deleted_patient": "Successfuly deleted patient",
+    "treatement_successfully_deleted": "Successfully deleted treatement",
+    "failed_to_delete_treatment": "Failed to delete treatment",
+    "failed_to_delete_patient_file": "Failed to delete patient file",
+    "successfuly_deleted_patient_file": "Successfuly deleted patient file",
+    "change_avatar": "Change avatar"
 }

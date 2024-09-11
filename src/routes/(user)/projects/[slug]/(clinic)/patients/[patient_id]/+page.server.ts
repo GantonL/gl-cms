@@ -77,17 +77,17 @@ export const actions: Actions = {
   'set-avatar': async (event) => {
     const formData = Object.fromEntries(await event.request.formData());
     if (!(formData.avatar as File).name) {
-      return fail(403, { type: 'avatar', error: true, message: 'Invalid file data'})
+      return fail(403, { type: 'avatar', error: true, message: 'common.invalid_file_data'})
     }
     const { avatar } = formData as { avatar: File };
     const patientId = event.params.patient_id;
     const uploadedAvatar = await uploadAvatar(currentProject, patientId, avatar);
     if (uploadedAvatar === undefined) {
-      return fail(403, { type: 'avatar', error: true, message: 'Failed to updload patient avatar'});
+      return fail(403, { type: 'avatar', error: true, message: 'commn.failed_to_updload_patient_avatar'});
     }
     const updateRes = await updatePatient(currentProject, patientId, { avatar: uploadedAvatar });
     if (!updateRes) {
-      return fail(403, { type: 'avatar', error: true, message: 'Failed to update patient avatar data' });
+      return fail(403, { type: 'avatar', error: true, message: 'common.failed_to_update_patient_avatar' });
     }
     return { type: 'avatar', success: true };
   },
@@ -107,11 +107,11 @@ export const actions: Actions = {
     const path = `${ClinicStorageDirectories.Files}/${patientId}/${form.data.file.name}`;
     const uploadedFile = await uploadFile(currentProject, path, form.data.file, form.data.date);
     if (uploadedFile === undefined) {
-      return fail(403, { type: 'file', error: true, message: 'Failed to updload patient file'});
+      return fail(403, { type: 'file', error: true, message: 'common.failed_to_updload_patient_file'});
     }
     const updateRes = await addPatientFiles(currentProject, patientId, [uploadedFile]);
     if (!updateRes) {
-      return fail(403, { type: 'file', error: true, message: 'Failed to update patient avatar data' });
+      return fail(403, { type: 'file', error: true, message: 'common.failed_to_update_patient_file' });
     }
     return withFiles({ form });
   },
@@ -131,11 +131,11 @@ export const actions: Actions = {
     const path = `${ClinicStorageDirectories.PatientsImages}/${patientId}/${form.data.file.name}`;
     const uploadedFile = await uploadFile(currentProject, path, form.data.file, form.data.date);
     if (uploadedFile === undefined) {
-      return fail(403, { type: 'file', error: true, message: 'Failed to updload patient file'});
+      return fail(403, { type: 'file', error: true, message: 'common.failed_to_updload_patient_file'});
     }
     const updateRes = await addPatientImages(currentProject, patientId, [uploadedFile]);
     if (!updateRes) {
-      return fail(403, { type: 'file', error: true, message: 'Failed to update patient avatar data' });
+      return fail(403, { type: 'file', error: true, message: 'common.failed_to_update_patient_file' });
     }
     return withFiles({ form });
   },

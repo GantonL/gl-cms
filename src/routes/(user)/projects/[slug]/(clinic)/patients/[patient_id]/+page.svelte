@@ -27,6 +27,7 @@
 	import type { Image as PateintImage } from "$lib/models/image";
 	import { ClinicStorageDirectories } from "$lib/enums/storage";
 	import CreateEditPatientTreatmentForm from "./create-edit-patient-treatment-form.svelte";
+	import { locale, t } from "$lib/i18n/translations";
 
   let createEditForm: SuperValidated<Infer<PatientFormSchema>>;
   let deletePatientOpened = false;
@@ -61,9 +62,9 @@
              avatarUpdateInProgress = false;
           }
           if (form?.error) {
-            toast.error(form.message);
+            toast.error(t.get(form.message));
           } else if (form.success) {
-            toast.success('Patient avatar updated successfuly')
+            toast.success(t.get('common.patient_avatar_updated_successfuly'));
           }
           break;
         case 'treatment': 
@@ -75,7 +76,7 @@
             ...form.form!.data,
           }
           if (form?.error) {
-            toast.error(form.message);
+            toast.error(t.get(form.message));
           }
           break;
         default:
@@ -85,7 +86,7 @@
     }
 
   $: if (patient.date_of_birth) {
-        const dateFormatter = new DateFormatter('en-UK', { dateStyle: "long" });
+        const dateFormatter = new DateFormatter(t.get(`common.date_format_type.${locale.get()}`), { dateStyle: "long" });
         const parsedDate = parseDate(patient.date_of_birth);
         const dob = dateFormatter.format(parsedDate.toDate(getLocalTimeZone()));
         const years = today(getLocalTimeZone()).year - parsedDate.year;
@@ -122,23 +123,23 @@
     deletionInProgress = true;
     const body = new FormData();
     body.append('id', patient.id);
-    const errMsg = `failed to delete patient`;
+    const errMsg = `common.failed_to_delete_patient`;
     fetch(`/projects/${project.id}/patients/${patient.id}`, { method: 'DELETE', body })
       .then((res) => {
         res?.json().then((res) => {
           if (res?.success) {
-            toast.success(`Successfuly deleted patient`);
+            toast.success(t.get('common.successfuly_deleted_patient'));
             goto(`../patients`);
           } else {
-            toast.error(errMsg);
+            toast.error(t.get(errMsg));
           }
           deletionInProgress = false;
         }, () => {
-          toast.error(errMsg);
+          toast.error(t.get(errMsg));
           deletionInProgress = false;
         });
       }, () => {
-        toast.error(errMsg);
+        toast.error(t.get(errMsg));
         deletionInProgress = false;
       });
   }
@@ -176,9 +177,9 @@
             const indexToRemove = patientTreatmentsHistory.findIndex((i) => i.id === id);
             patientTreatmentsHistory.splice(indexToRemove, 1);
             patientTreatmentsHistory = patientTreatmentsHistory;
-            toast.success('Treatement was successfully deleted');
+            toast.success(t.get('common.treatement_successfully_deleted'));
           } else {
-            toast.error('Failed to delete treatment');
+            toast.error(t.get('commmon.failed_to_delete_treatment'));
           }
         })
       });
@@ -209,12 +210,12 @@
     body.append('path', event.detail.path);
     body.append('url', event.detail.url);
     body.append('date', event.detail.date);
-    const errMsg = `failed to delete patient file`;
+    const errMsg = `common.failed_to_delete_patient_file`;
     fetch(`/projects/${project.id}/patients/${patient.id}/files`, { method: 'DELETE', body })
       .then((res) => {
         res?.json().then((res) => {
           if (res?.success) {
-            toast.success(`Successfuly deleted patient file`);
+            toast.success(t.get('common.successfuly_deleted_patient_file'));
             const indexHandler = (file: PateintImage) => file.path === event.detail.path && file.url === event.detail.url && file.date === event.detail.date;
             const mainSegment = event.detail.path.split('/')[0];
             let key: keyof Pick<ClinicPatient, 'files' | 'images'>;
@@ -226,15 +227,15 @@
             patient[key!]?.splice(patient[key!]!.findIndex(indexHandler), 1);
             patient[key!] = patient[key!];
           } else {
-            toast.error(errMsg);
+            toast.error(t.get(errMsg));
           }
           deleteFileInProgress = false;
         }, () => {
-          toast.error(errMsg);
+          toast.error(t.get(errMsg));
           deleteFileInProgress = false;
         });
       }, () => {
-        toast.error(errMsg);
+        toast.error(t.get(errMsg));
         deleteFileInProgress = false;
       });
   }
@@ -291,14 +292,14 @@
                 <input type="file" id="avatar" name="avatar" bind:this={avatarInput} bind:files={avatarFileList} hidden on:change={onChangeAvatar} />
               </form>
             </Tooltip.Trigger>
-            <Tooltip.Content>Change avatar</Tooltip.Content>
+            <Tooltip.Content>{$t('common.change_avatar')}</Tooltip.Content>
           </Tooltip.Root>
         {/if}
         <div class="flex flex-col gap-2">
           <Card.Title>
             <h1>
               {#if !patient.id}
-                Create patient
+                {$t('common.create_patient')}
               {:else}
                 {patient.first_name} {patient.sur_name}
               {/if}
@@ -316,7 +317,7 @@
       <div class="flex flex-col items-start">
         <Button variant="secondary" class="flex flex-row items-center gap-2" on:click={openChat}>
           <MessageSquare size=16/>
-          <span class="hidden sm:block">Open chat</span>
+          <span class="hidden sm:block">{$t('common.open_chat')}</span>
         </Button>
       </div>
     </div>
@@ -327,7 +328,7 @@
         <Card.Header>
           <div class="flex flex-row justify-between">
             <div class="flex flex-col gap-2">
-              <Card.Title>Details</Card.Title>
+              <Card.Title>{$t('common.details')}</Card.Title>
               <Card.Description>General information about this patient</Card.Description>
             </div>
             <Button variant={editPersonlInformation ? 'secondary' : 'default'} class="flex flex-row items-center gap-2"

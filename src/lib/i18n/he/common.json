@@ -127,5 +127,18 @@
     "patients_search_placholder": "שם, תעודת זהות או דוא\"ל...",
     "has_notes": "ישנן הערות",
     "takes_medications": "לוקח/ת תרופות",
-    "has_medical_condition": "קיים מצב רפואי כלשהו"
+    "has_medical_condition": "קיים מצב רפואי כלשהו",
+    "invalid_file_data": "קובץ לא תקין",
+    "failed_to_updload_patient_avatar": "העלאת אווטאר למטופל נכשלה",
+    "failed_to_update_patient_avatar": "עדכון אווטאר למטופל נכשל",
+    "failed_to_updload_patient_file": "העלאת קובץ למטופל נכשלה",
+    "failed_to_update_patient_file": "עדכון קובץ למטופל נכשל",
+    "patient_avatar_updated_successfuly": "אווטאר למטופל עודכן בהצלחה",
+    "failed_to_delete_patient": "מחיקת מטופל נכשלה",
+    "successfuly_deleted_patient": "מטופל נמחק בהצלחה",
+    "treatement_successfully_deleted": "טיפול נמחק בהצלחה",
+    "failed_to_delete_treatment": "מחיקת טיפול נכשלה",
+    "failed_to_delete_patient_file": "מחיקת קןבץ למטופל נכשלה",
+    "successfuly_deleted_patient_file": "קובץ מטופל נמחק בהצלחה",
+    "change_avatar": "החלפת אווטאר"
 }
