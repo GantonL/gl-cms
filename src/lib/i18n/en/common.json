@@ -110,5 +110,22 @@
     "optional": "Optional",
     "dashboard": "Dashboard",
     "unknown_project": "Unknown project",
-    "not_assigned_to_project_error": "Access denied, you are not assigned to this project"
+    "not_assigned_to_project_error": "Access denied, you are not assigned to this project",
+    "patients_fetch_failed": "Failed to fetch patients",
+    "coppied_to_clipboard": "Coppied to clipboard",
+    "copy_failed": "Copy failed",
+    "patients_search_failed": "Patients search failed",
+    "project_not_found": "Project not found",
+    "no_patients_found": "No patients found",
+    "create_patient": "Create patient",
+    "copy_ID": "Copy ID",
+    "open_chat": "Open chat",
+    "ID": "ID",
+    "birth_date": "Birth date",
+    "important_notes": "Important notes",
+    "actions": "Actions",
+    "patients_search_placholder": "Name, ID or Email...",
+    "has_notes": "Has notes",
+    "takes_medications": "Takes medications",
+    "has_medical_condition": "Has medical condition"
 }

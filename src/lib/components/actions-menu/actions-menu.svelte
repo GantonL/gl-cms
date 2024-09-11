@@ -3,6 +3,7 @@
 	import { type ActionItem, type ActionMenuConfiguration } from "$lib/models/menu-item";
 	import { createEventDispatcher } from "svelte";
 	import { Button } from "../ui/button";
+	import { t } from "$lib/i18n/translations";
 	
   const dispatch = createEventDispatcher();
 
@@ -17,7 +18,7 @@
   <DropdownMenu.Root>
     <DropdownMenu.Trigger asChild let:builder>
       <Button variant="ghost" builders={[builder]} size="icon" class="relative h-8 w-8 p-0">
-        <span class={configuration.trigger.labelClass}>{configuration.trigger.label}</span>
+        <span class={configuration.trigger.labelClass}>{$t(configuration.trigger.label)}</span>
         {#if configuration.trigger.icon}
           <svelte:component 
             this={configuration.trigger.icon}
@@ -43,7 +44,7 @@
                   {#if groupItem.icon}
                     <svelte:component this={groupItem.icon} size=16/>
                   {/if}
-                  {groupItem.label}
+                  {$t(groupItem.label ?? '')}
                 </button>
               </DropdownMenu.Item>
             {/each}

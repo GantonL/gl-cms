@@ -8,6 +8,7 @@
 	import { onMount } from "svelte";
 	import { goto } from "$app/navigation";
 	import type { ClinicPatient } from "$lib/models/clinic";
+	import { t } from "$lib/i18n/translations";
 
   let patients: ClinicPatient[] = [];
   let fetchingPatients = false;
@@ -30,7 +31,7 @@
     
   function getFirstPagePatients() {
     fetchingPatients = true;
-    const failureMessage = 'Failed to fetch patients:';
+    const failureMessage = `${t.get('common.patients_fetch_failed')}:`;
     const failure = (error: any) => toast.error(`${failureMessage} ${error?.message || ''}`);
     let additionalSearchParams = '';
     if ($page.url.searchParams.size > 0) {
@@ -57,15 +58,15 @@
   function copy(patient: ClinicPatient) {
     navigator.clipboard.writeText(String(patient.id))
       .then(() => {
-        toast.success('Coppied to clipboard')
+        toast.success(t.get('common.coppied_to_clipboard'))
       })
       .catch((error) => {
-        toast.error('Failed to copy: ', error)
+        toast.error(`${t.get('copy_failed')}: ${error}`)
       })
   }
 
   function onSearch(searchPhrase: string) {
-    const failureMessage = 'Patients search failed:';
+    const failureMessage = `${t.get('patients_search_failed')}:`;
     const failure = (error: any) => toast.error(`${failureMessage} ${error?.message || ''}`);
     activeSearchPhrase = !!searchPhrase;
     fetch(`${getDataRoute}?pageSize=${tableConfiguration?.pageSize}&q=${searchPhrase}&count=true`, { method: 'GET' })

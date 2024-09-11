@@ -110,5 +110,22 @@
     "optional": "רשות",
     "dashboard": "מידע מסוכם",
     "unknown_project": "פרויקט לא מוכר",
-    "not_assigned_to_project_error": "גישה נידחתה, פרויקט זה איננו משוייך אליך"
+    "not_assigned_to_project_error": "גישה נידחתה, פרויקט זה איננו משוייך אליך",
+    "patients_fetch_failed": "הבאת נתוני מטופלים נכשלה",
+    "coppied_to_clipboard": "הועתק ללוח",
+    "copy_failed": "העתקה נכשלה",
+    "patients_search_failed": "חיפוש מטופלים נכשל",
+    "project_not_found": "פרויקט לא נמצא",
+    "no_patients_found": "לא נמצאו מטופלים",
+    "create_patient": "יצירת מטופל",
+    "copy_ID": "העתקת תעודת זהות",
+    "open_chat": "פתיחת צ'אט",
+    "ID": "תעודת זהות",
+    "birth_date": "תאריך לידה",
+    "important_notes": "הערות חשובות",
+    "actions": "פעולות",
+    "patients_search_placholder": "שם, תעודת זהות או דוא\"ל...",
+    "has_notes": "ישנן הערות",
+    "takes_medications": "לוקח/ת תרופות",
+    "has_medical_condition": "קיים מצב רפואי כלשהו"
 }

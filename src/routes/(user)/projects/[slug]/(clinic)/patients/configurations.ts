@@ -9,12 +9,13 @@ import { createRender } from "svelte-headless-table";
 import GLAvatar from "$lib/components/gl-avatar/gl-avatar.svelte";
 import { DateFormatter, getLocalTimeZone, parseDate, today } from "@internationalized/date";
 import PatientTableIndications from './patient-table-indications.svelte';
+import { locale, t } from "$lib/i18n/translations";
 
 export const emptyResultsConfiguration: EmptyResultsConfiguration = {
   icon: CircleOff,
-  label: 'No patients found',
+  label: t.get('common.no_patients_found'),
   action: {
-    label: 'Create patient',
+    label: t.get('common.create_patient'),
     event: 'create',
   }
 }
@@ -24,12 +25,12 @@ const rowActions: ActionMenuConfiguration<ClinicPatient> = {
     {
       group: [
         {
-          label: 'Copy ID',
+          label: 'common.copy_ID',
           icon: Copy,
           event: 'copy'
         },
         {
-          label: 'Open chat',
+          label: 'common.open_chat',
           icon: MessageSquare,
           event: 'open'
         },
@@ -38,7 +39,7 @@ const rowActions: ActionMenuConfiguration<ClinicPatient> = {
     {
       group: [
         {
-          label: 'Edit',
+          label: 'common.edit',
           icon: Edit,
           event: 'edit',
         }
@@ -62,18 +63,18 @@ export const tableConfiguration: TableConfiguration<ClinicPatient> = {
           }
         },
         {
-          header: 'Name',
+          header: t.get('common.name'),
           dataPath: 'full_name'
         },
         {
-          header: 'ID',
+          header: t.get('common.ID'),
           dataPath: 'personal_id'
         },
         {
-          header: 'Birth date',
+          header: t.get('common.birth_date'),
           dataPath: 'date_of_birth',
           cell: ({ value }) => {
-            const dateFormatter = new DateFormatter('en-UK', { dateStyle: "long" });
+            const dateFormatter = new DateFormatter(t.get(`common.date_format_type.${locale.get()}`), { dateStyle: "long" });
             const parsedDate = parseDate(value);
             const dob = dateFormatter.format(parsedDate.toDate(getLocalTimeZone()));
             const years = today(getLocalTimeZone()).year - parsedDate.year;
@@ -81,14 +82,14 @@ export const tableConfiguration: TableConfiguration<ClinicPatient> = {
           },
         },
         {
-          header: "Indications",
+          header: t.get('common.important_notes'),
           dataPath: (patient) => patient,
           cell: (p) => {
             return createRender(PatientTableIndications, { indications: {...p.value} })
           }
         },
         {
-          header: 'Actions',
+          header: t.get('common.actions'),
           dataPath: (patient) => patient,
           cell: (p) => {
             const render = createRender(ActionsMenu, { configuration: { ...rowActions, data: p.value } });
@@ -104,11 +105,11 @@ export const tableConfiguration: TableConfiguration<ClinicPatient> = {
       ],
       pageSize: 10,
       createItemButton: {
-        label: 'Create patient',
+        label: 'common.create_patient',
         class: 'self-end'
       },
       search: {
-        placeholder: 'Name, ID or Email...'
+        placeholder: 'common.patients_search_placholder'
       },
       clickableRows: true,
 };

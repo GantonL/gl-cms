@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { t } from "$lib/i18n/translations";
 	import type { ClinicPatient } from "$lib/models/clinic";
 	import { AlertTriangle, NotebookPen, Pill } from "lucide-svelte";
 
@@ -8,19 +9,19 @@
     {#if indications.medical_condition}
         <div class="flex flex-row gap-2 items-center">
             <AlertTriangle size=14 class="text-destructive"/>
-            <span>Has medical condition</span>
+            <span>{$t('common.has_medical_condition')}</span>
         </div>
     {/if}
     {#if indications.medications}
         <div class="flex flex-row gap-2 items-center">
             <Pill size=14/>
-            <span>Takes medications</span>
+            <span>{$t('common.takes_medications')}</span>
         </div>
     {/if}
     {#if indications.notes}
         <div class="flex flex-row gap-2 items-center">
             <NotebookPen size=14/>
-            <span>Has notes</span>
+            <span>{$t('common.has_notes')}</span>
         </div>
     {/if}
 </div>

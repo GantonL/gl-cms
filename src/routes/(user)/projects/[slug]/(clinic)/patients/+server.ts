@@ -5,21 +5,22 @@ import { error, json } from "@sveltejs/kit";
 import type { RequestEvent } from "../../$types";
 import type { ClinicPatient } from "$lib/models/clinic";
 import { getPatients, getPatientsCount } from "$lib/server/clinic.db";
+import { t } from "$lib/i18n/translations";
 
 export async function GET(event: RequestEvent) {
   const autheticatedUser = await getAuthenticatedUser(event);
   if (!autheticatedUser) {
-    error(401, 'Unauthorized');
+    error(401, t.get('common.unauthorized'));
   }
   const projectId = event.params.slug ?? String(event.url.searchParams.get('project') ?? '');
   const project = await getProject(projectId);
   if (project === null) {
-    error(404, 'Project not found')
+    error(404, t.get('common.project_not_found'))
   }
   const isAdmin = await isAdminUser(autheticatedUser.uid);
   const user = await getUser(autheticatedUser.email!);
   if (!isAdmin && !user?.projects?.includes(project!.name)) {
-    error(401, 'Unauthorized');
+    error(401, t.get('common.unauthorized'));
   }
   const pageAfterIndex = Number(event.url.searchParams.get('pageAfterIndex') ?? -1);
   const pageSize = Number(event.url.searchParams.get('pageSize') ?? 10);

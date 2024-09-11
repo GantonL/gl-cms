@@ -213,12 +213,12 @@
                 {#if serverFetchInprogress && filterInProgress}
                   <LoaderCircle class="animate-spin" size=14 />
                 {/if}
-                <Select.Value placeholder={filter.label} />
+                <Select.Value placeholder={$t(filter.label ?? '')} />
               </div>
             </Select.Trigger>
             <Select.Content>
               {#each filter.options as option}              
-                <Select.Item value={option.value} label={option.label} />
+                <Select.Item value={option.value} label={$t(option.label)} />
               {/each}
             </Select.Content>
           </Select.Root>
@@ -229,7 +229,7 @@
 {/if}
 <div class="flex flex-row items-center gap-2 mb-2 w-full">
   {#if configuration?.search}
-    <Input placeholder={configuration?.search?.placeholder ?? ''}
+    <Input placeholder={$t(configuration?.search?.placeholder ?? '')}
       disabled={serverFetchInprogress}
       on:input={debounceSearchPhrase}/>
   {/if}
@@ -242,7 +242,7 @@
       {:else}
         <Plus size=16/>
       {/if}
-      <span>{configuration.createItemButton.label}</span>
+      <span>{$t(configuration.createItemButton.label)}</span>
     </Button>
   {/if}
 </div>
