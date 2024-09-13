@@ -12,7 +12,7 @@
 <div class="border rounded-md p-4 flex flex-col gap-2 items-center justify-center {configuration.class ?? ''}">
   <div class="flex flex-col gap-2 items-center justify-center text-muted-foreground">
     <svelte:component this={configuration?.icon ?? CircleOff} />
-    <span>{configuration.label}</span>
+    <span>{$t(configuration.label)}</span>
   </div>
   {#if configuration?.action}
     <Button variant="secondary"

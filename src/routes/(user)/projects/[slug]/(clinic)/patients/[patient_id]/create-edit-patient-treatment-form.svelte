@@ -19,6 +19,7 @@
     import { cn } from "$lib/utils";
     import { Textarea } from "$lib/components/ui/textarea";
     import { ScrollArea } from "$lib/components/ui/scroll-area";
+	import { locale, t } from "$lib/i18n/translations";
   
     export let data: SuperValidated<Infer<PatientTreatmentFormSchema>>;
     export let action: 'update-treatment' | 'create-treatment';
@@ -66,7 +67,7 @@
   
     updateFormData();
   
-    const dateFormatter = new DateFormatter('en-UK', {
+    const dateFormatter = new DateFormatter(t.get(`common.date_format_type.${locale.get()}`), {
       dateStyle: "long",
     });
   
@@ -80,7 +81,7 @@
       <div class="grid items-center gap-4">
         <Form.Field {form} name="date" class="flex flex-col">
           <Form.Control let:attrs>
-            <Form.Label>Date</Form.Label>
+            <Form.Label>{$t('common.date')}</Form.Label>
             <Popover.Root>
               <Popover.Trigger
                 disabled={submissionInProgress}
@@ -91,7 +92,7 @@
                   !dateValue && "text-muted-foreground"
                 )}
               >
-                {dateValue ? dateFormatter.format(dateValue.toDate(getLocalTimeZone())) : "Pick a date"}
+                {dateValue ? dateFormatter.format(dateValue.toDate(getLocalTimeZone())) : t.get('common.pick_date')}
                 <CalendarDays  class="ml-auto h-4 w-4 opacity-50" />
               </Popover.Trigger>
               <Popover.Content class="w-auto p-0" side="top">
@@ -119,7 +120,7 @@
       <div class="grid items-center gap-4">
         <Form.Field {form} name="documentation">
           <Form.Control let:attrs>
-            <Form.Label>Documentation</Form.Label> 
+            <Form.Label>{$t('common.documentation')}</Form.Label> 
             <Textarea {...attrs} class="min-h-48" bind:value={$formData.documentation} disabled={submissionInProgress} required/>
           </Form.Control>
           <Form.FieldErrors />
@@ -128,7 +129,7 @@
       <div class="grid items-center gap-4">
         <Form.Field {form} name="notes">
           <Form.Control let:attrs>
-            <Form.Label>Notes <span class="text-muted-foreground">(optional)</span></Form.Label> 
+            <Form.Label>{$t('common.notes')} <span class="text-muted-foreground">({$t('common.optional')})</span></Form.Label> 
             <Textarea {...attrs} bind:value={$formData.notes} disabled={submissionInProgress}/>
           </Form.Control>
           <Form.FieldErrors />
@@ -137,7 +138,7 @@
       <div class="grid items-center gap-4">
         <Form.Field {form} name="price">
           <Form.Control let:attrs>
-            <Form.Label>Price</Form.Label> 
+            <Form.Label>{$t('common.price')}</Form.Label> 
             <Input type="number" min=0 {...attrs} bind:value={$formData.price} disabled={submissionInProgress}/>
           </Form.Control>
           <Form.FieldErrors />
@@ -151,10 +152,10 @@
           {#if submissionInProgress}
             <LoaderCircle class="animate-spin" size=16/>       
           {/if}
-          <span>Submit</span>
+          <span>{$t('common.submit')}</span>
         </div>
       </Form.Button>
-      <Button variant="secondary" on:click={() => {dispatch('cancel')}}>Cancel</Button>
+      <Button variant="secondary" on:click={() => {dispatch('cancel')}}>{$t('common.cancel')}</Button>
     </div>
   </form>
   

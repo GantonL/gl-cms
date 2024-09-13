@@ -19,6 +19,7 @@
 	import { buttonVariants } from "$lib/components/ui/button";
 	import { cn } from "$lib/utils";
   import { Textarea } from "$lib/components/ui/textarea";
+	import { locale, t } from "$lib/i18n/translations";
 
   export let data: SuperValidated<Infer<PatientFormSchema>>;
   export let action: 'update' | 'create';
@@ -43,17 +44,17 @@
         if (f?.valid) {
           formData.set(f.data);
           if (action === 'create') {
-            toast.success('Patient was successfuly created');
+            toast.success(t.get('common.patient_created_success'));
             dispatch('created', f.data);
           } else {
-            toast.success('Patient details were successfuly updated');
+            toast.success(t.get('common.patient_details_update_success'));
             dispatch('updated', f.data);
           }
         } else {
           if (f.errors?._errors) {
-            toast.error("Something went wrong.");
+            toast.error(t.get('common.something_went_wrong'));
           } else {
-            toast.error("Some fields are invalid.");
+            toast.error(t.get('common.invalid_fields'));
           }
         }
         submissionInProgress = false;
@@ -66,7 +67,7 @@
 
   updateFormData();
 
-  const dateFormat = 'en-UK';
+  const dateFormat = t.get(`common.date_format_type.${locale.get()}`);
   const dateFormatter = new DateFormatter(dateFormat, {
     dateStyle: "long"
   });
@@ -74,9 +75,9 @@
   $: dateValue = $formData.date_of_birth ? parseDate($formData.date_of_birth) : undefined;
      
   const genders = [
-    {value: 'female', label: 'female'},
-    {value: 'male', label: 'male'},
-    {value: 'other', label: 'other'},
+    {value: 'female', label: t.get('common.female')},
+    {value: 'male', label: t.get('common.male')},
+    {value: 'other', label: t.get('common.other')},
   ]
 
 </script>
@@ -85,7 +86,7 @@
     <div class="grid items-center gap-4">
       <Form.Field {form} name="first_name">
         <Form.Control let:attrs>
-          <Form.Label>First name</Form.Label>
+          <Form.Label>{$t('common.first_name')}</Form.Label>
           <Input {...attrs} bind:value={$formData.first_name} disabled={submissionInProgress}/>
         </Form.Control>
         <Form.FieldErrors />
@@ -94,7 +95,7 @@
     <div class="grid items-center gap-4">
       <Form.Field {form} name="sur_name">
         <Form.Control let:attrs>
-          <Form.Label>Surname</Form.Label>
+          <Form.Label>{$t('common.surname')}</Form.Label>
           <Input {...attrs} bind:value={$formData.sur_name} disabled={submissionInProgress}/>
         </Form.Control>
         <Form.FieldErrors />
@@ -103,7 +104,7 @@
     <div class="grid items-center gap-4">
       <Form.Field {form} name="personal_id">
         <Form.Control let:attrs>
-          <Form.Label>ID</Form.Label>
+          <Form.Label>{$t('common.ID')}</Form.Label>
           <Input {...attrs} bind:value={$formData.personal_id} disabled={submissionInProgress}/>
         </Form.Control>
         <Form.FieldErrors />
@@ -112,7 +113,7 @@
     <div class="grid items-center gap-4">
       <Form.Field {form} name="address">
         <Form.Control let:attrs>
-          <Form.Label>Address</Form.Label>
+          <Form.Label>{$t('common.address')}</Form.Label>
           <Input {...attrs} bind:value={$formData.address} disabled={submissionInProgress}/>
         </Form.Control>
         <Form.FieldErrors />
@@ -121,7 +122,7 @@
     <div class="grid items-center gap-4">
       <Form.Field {form} name="email">
         <Form.Control let:attrs>
-          <Form.Label>Email</Form.Label>
+          <Form.Label>{$t('common.email')}</Form.Label>
           <Input {...attrs} bind:value={$formData.email} disabled={submissionInProgress}/>
         </Form.Control>
         <Form.FieldErrors />
@@ -130,7 +131,7 @@
     <div class="grid items-center gap-4">
       <Form.Field {form} name="phone">
         <Form.Control let:attrs>
-          <Form.Label>Phone number</Form.Label>
+          <Form.Label>{$t('common.phone')}</Form.Label>
           <Input {...attrs} bind:value={$formData.phone} disabled={submissionInProgress}/>
         </Form.Control>
         <Form.FieldErrors />
@@ -139,7 +140,7 @@
     <div class="grid items-center gap-4">
       <Form.Field {form} name="date_of_birth" class="flex flex-col">
         <Form.Control let:attrs>
-          <Form.Label>Date of birth</Form.Label>
+          <Form.Label>{$t('common.date_of_birth')}</Form.Label>
           <Popover.Root>
             <Popover.Trigger
               disabled={submissionInProgress}
@@ -175,7 +176,7 @@
     <div class="grid items-center gap-4">
       <Form.Field {form} name="phone">
         <Form.Control let:attrs>
-          <Form.Label>Gender</Form.Label>
+          <Form.Label>{$t('common.gender')}</Form.Label>
           <Select.Root
             items={genders}
             {...attrs}
@@ -187,11 +188,11 @@
             }}
           >
             <Select.Trigger>
-              <Select.Value placeholder="Gender" />
+              <Select.Value placeholder={$t('common.gender')} />
             </Select.Trigger>
             <Select.Content class="max-h-48 overflow-auto">
               {#each genders as item}
-                <Select.Item value={item.value}>{item.label}</Select.Item>
+                <Select.Item value={item.value}>{$t(item.label)}</Select.Item>
               {/each}
             </Select.Content>
           </Select.Root>
@@ -202,7 +203,7 @@
     <div class="grid items-center gap-4">
       <Form.Field {form} name="refered_by">
         <Form.Control let:attrs>
-          <Form.Label>Refered by</Form.Label>
+          <Form.Label>{$t('common.refered_by')}</Form.Label>
           <Input {...attrs} bind:value={$formData.refered_by} disabled={submissionInProgress}/>
         </Form.Control>
         <Form.FieldErrors />
@@ -211,7 +212,7 @@
     <div class="grid items-center gap-4">
       <Form.Field {form} name="medical_condition">
         <Form.Control let:attrs>
-          <Form.Label>Medical condition</Form.Label> 
+          <Form.Label>{$t('common.medical_condition')}</Form.Label> 
           <Textarea {...attrs} bind:value={$formData.medical_condition} disabled={submissionInProgress}/>
         </Form.Control>
         <Form.FieldErrors />
@@ -220,7 +221,7 @@
     <div class="grid items-center gap-4">
       <Form.Field {form} name="medications">
         <Form.Control let:attrs>
-          <Form.Label>Medications</Form.Label> 
+          <Form.Label>{$t('common.medications')}</Form.Label> 
           <Textarea {...attrs} bind:value={$formData.medications} disabled={submissionInProgress}/>
         </Form.Control>
         <Form.FieldErrors />
@@ -229,7 +230,7 @@
     <div class="grid items-center gap-4">
       <Form.Field {form} name="notes">
         <Form.Control let:attrs>
-          <Form.Label>Notes</Form.Label> 
+          <Form.Label>{$t('common.notes')}</Form.Label> 
           <Textarea {...attrs} bind:value={$formData.notes} disabled={submissionInProgress}/>
         </Form.Control>
         <Form.FieldErrors />
@@ -241,7 +242,7 @@
       {#if submissionInProgress}
         <LoaderCircle class="animate-spin" size=16/>       
       {/if}
-      <span>Submit</span>
+      <span>{$t('common.submit')}</span>
     </div>
   </Form.Button>
 </form>

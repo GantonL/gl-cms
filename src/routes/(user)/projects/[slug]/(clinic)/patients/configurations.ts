@@ -13,9 +13,9 @@ import { locale, t } from "$lib/i18n/translations";
 
 export const emptyResultsConfiguration: EmptyResultsConfiguration = {
   icon: CircleOff,
-  label: t.get('common.no_patients_found'),
+  label: 'common.no_patients_found',
   action: {
-    label: t.get('common.create_patient'),
+    label: 'common.create_patient',
     event: 'create',
   }
 }

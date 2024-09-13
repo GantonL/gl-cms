@@ -9,12 +9,13 @@ import ActionsMenu from "$lib/components/actions-menu/actions-menu.svelte";
 import type { Image } from "$lib/models/image";
 import { DateFormatter, getLocalTimeZone, parseDateTime } from "@internationalized/date";
 import { ScrollArea } from "$lib/components/ui/scroll-area";
+import { locale, t } from "$lib/i18n/translations";
 
 export const emptyTreatmentsResultsConfiguration: EmptyResultsConfiguration = {
     icon: CircleOff,
-    label: 'No treatments found',
+    label: 'common.no_treatments_found',
     action: {
-        label: 'Add treatment',
+        label: 'common.add_treatment',
         event: 'create',
     }
 };
@@ -24,18 +25,18 @@ export const treatmentsTableRowActions: ActionMenuConfiguration<ClinicTreatmentH
       {
         group: [
           {
-            label: 'Payment',
+            label: t.get('common.payment'),
             icon: HandCoins,
             event: 'payment',
             disabled: true,
           },
           {
-            label: 'Edit',
+            label: t.get('common.edit'),
             icon: Edit,
             event: 'edit',
           },
           {
-            label: 'Delete',
+            label: t.get('common.delete'),
             icon: Trash2,
             event: 'delete',
             class: 'bg-destructive/10 text-destructive'
@@ -58,10 +59,10 @@ export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicTreat
             hidden: true,
         },
         {
-            header: 'Last modified',
+            header: t.get('common.last_modified'),
             dataPath: (patient) => patient,
             cell: ({ value }) => {
-                const dateFormatter = new DateFormatter('en-UK', { dateStyle: "full", timeStyle: 'short' });
+                const dateFormatter = new DateFormatter(t.get(`common.date_format_type.${locale.get()}`), { dateStyle: "full", timeStyle: 'short' });
                 let dateTime = value.date;
                 if (value.time) {
                     dateTime = value.date.concat(`T${value.time}`);
@@ -71,7 +72,7 @@ export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicTreat
             },
         },
         {
-            header: 'Documentation',
+            header: t.get('common.documentation'),
             dataPath: 'documentation',
             cell: ({value}) => {
                 const render = createRender(ScrollArea, {class: 'flex flex-col overflow-y-auto max-h-[150px] whitespace-pre-wrap'}); 
@@ -80,7 +81,7 @@ export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicTreat
             }
         },
         {
-            header: 'Notes',
+            header: t.get('common.notes'),
             dataPath: 'notes',
             cell: ({value}) => {
                 const render = createRender(ScrollArea, {class: 'flex flex-col overflow-y-auto max-h-[150px] whitespace-pre-wrap'}); 
@@ -89,11 +90,11 @@ export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicTreat
             }
         },
         {
-            header: 'Price',
+            header: t.get('common.price'),
             dataPath: 'price',
         },
         {
-        header: 'Actions',
+        header: t.get('common.actions'),
         dataPath: (patient) => patient,
         cell: (c) => {
             const render = createRender(ActionsMenu, { 
@@ -115,7 +116,7 @@ export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicTreat
     ],
     pageSize: 10,
     createItemButton: {
-        label: 'Add treatment',
+        label: 'common.add_treatment',
         class: 'self-end'
     },
     clickableRows: true,
@@ -123,18 +124,18 @@ export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicTreat
 
 export const emptyImagesResultsConfiguration: EmptyResultsConfiguration = {
     icon: ImageOff,
-    label: 'No images found',
+    label: 'common.no_images_found',
     action: {
-        label: 'Add image',
+        label: 'common.add_image',
         event: 'create',
     }
 };
 
 export const emptyFilesResultsConfiguration: EmptyResultsConfiguration = {
     icon: File,
-    label: 'No files found',
+    label: 'common.no_files_found',
     action: {
-        label: 'Add file',
+        label: 'common.add_file',
         event: 'create',
     }
 };
@@ -144,12 +145,12 @@ export const filesTableRowActions: ActionMenuConfiguration<Image> = {
       {
         group: [
           {
-            label: 'View',
+            label: t.get('common.view'),
             icon: Eye,
             event: 'view',
           },
           {
-            label: 'Delete',
+            label: t.get('common.delete'),
             icon: Trash2,
             event: 'delete',
             class: 'bg-destructive/10 text-destructive'
@@ -168,15 +169,15 @@ export const filesTableRowActions: ActionMenuConfiguration<Image> = {
 export const filesTableConfiguration: TableConfiguration<Image> = {
     columns: (dispatch: EventDispatcher<Record<string, string>>) => [
         {
-            header: 'Last modified',
+            header: t.get('common.last_modified'),
             dataPath: 'date',
             cell: ({ value }) => {
-                const formatted = new Intl.DateTimeFormat("en-UK").format(value);
+                const formatted = new Intl.DateTimeFormat(t.get(`common.date_format_type.${locale.get()}`)).format(value);
                 return formatted;
             },
         },
         {
-            header: 'name',
+            header: t.get('common.name'),
             dataPath: 'path',
             cell: ({value}) => {
                 const pathSegments = value.split('/');
@@ -184,7 +185,7 @@ export const filesTableConfiguration: TableConfiguration<Image> = {
             }
         },
         {
-            header: 'Actions',
+            header: t.get('common.actions'),
             dataPath: (product) => product,
             cell: (c) => {
                 const render = createRender(ActionsMenu, { 
@@ -206,7 +207,7 @@ export const filesTableConfiguration: TableConfiguration<Image> = {
     ],
     pageSize: 10,
     createItemButton: {
-        label: 'Add file',
+        label: 'common.add_file',
         class: 'self-end'
     },
     clickableRows: true,

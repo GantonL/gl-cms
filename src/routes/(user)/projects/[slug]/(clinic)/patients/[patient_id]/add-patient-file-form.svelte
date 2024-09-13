@@ -13,8 +13,9 @@
 	import * as Popover  from "$lib/components/ui/popover";
 	import { cn } from "$lib/utils";
 	import { buttonVariants } from "$lib/components/ui/button";
-	import { DateFormatter, getLocalTimeZone, today, type DateValue } from "@internationalized/date";
+	import { DateFormatter, getLocalTimeZone, today } from "@internationalized/date";
 	import { Calendar } from "$lib/components/ui/calendar";
+	import { locale, t } from "$lib/i18n/translations";
     
   export let action = 'add-file';
 
@@ -47,7 +48,7 @@
   
     updateFormData();
 
-    const dateFormat = 'en-UK';
+    const dateFormat = t.get(`common.date_format_type.${locale.get()}`);
   const dateFormatter = new DateFormatter(dateFormat, {
     dateStyle: "long"
   });
@@ -68,7 +69,7 @@
       <div class="grid items-center gap-4">
         <Form.Field {form} name="date" class="flex flex-col">
           <Form.Control let:attrs>
-            <Form.Label>Date <span class="text-muted-foreground">(optional)</span></Form.Label>
+            <Form.Label>{$t('common.date')} <span class="text-muted-foreground">({$t('common.optional')})</span></Form.Label>
             <Popover.Root>
               <Popover.Trigger
                 disabled={submissionInProgress}
@@ -79,7 +80,7 @@
                   !dateValue && "text-muted-foreground"
                 )}
               >
-                {dateValue ? dateFormatter.format(dateValue.toDate(getLocalTimeZone())) : "Pick a date"}
+                {dateValue ? dateFormatter.format(dateValue.toDate(getLocalTimeZone())) : t.get('common.pick_date')}
                 <CalendarDays  class="ml-auto h-4 w-4 opacity-50" />
               </Popover.Trigger>
               <Popover.Content class="w-auto p-0" side="top">
@@ -109,7 +110,7 @@
             {:else}
                 <UploadCloud size=14 />
             {/if}
-        <span>Upload</span>
+        <span>{$t('common.upload')}</span>
         </div>
     </Form.Button>
   </form>

@@ -329,16 +329,16 @@
           <div class="flex flex-row justify-between">
             <div class="flex flex-col gap-2">
               <Card.Title>{$t('common.details')}</Card.Title>
-              <Card.Description>General information about this patient</Card.Description>
+              <Card.Description>{$t('common.patient_details_description')}</Card.Description>
             </div>
             <Button variant={editPersonlInformation ? 'secondary' : 'default'} class="flex flex-row items-center gap-2"
               on:click={() => {editPersonlInformation = !editPersonlInformation}}>
               {#if editPersonlInformation}
                 <PencilOff size=14/>
-                <span>Cancel edit</span>
+                <span>{$t('common.cancel_edit')}</span>
               {:else}
                 <Pencil size=14/>
-                <span>Edit</span>
+                <span>{$t('common.edit')}</span>
               {/if}
             </Button>
           </div>
@@ -355,27 +355,27 @@
           {:else}
             <div class="flex flex-row flex-wrap gap-6 items-start">
               <div class="flex flex-col">
-                <h3>Email</h3>
+                <h3>{$t('common.email')}</h3>
                 <span class="text-muted-foreground">{patient.email}</span>
               </div>
               <div class="flex flex-col">
-                <h3 class="">Address</h3>
+                <h3 class="">{$t('common.address')}</h3>
                 <span class="text-muted-foreground">{patient.address}</span>
               </div>
               <div class="flex flex-col">
-                <h3 class="">Phone</h3>
+                <h3 class="">{$t('common.phone')}</h3>
                 <span class="text-muted-foreground">{patient.phone}</span>
               </div>
               <div class="flex flex-col">
-                <h3 class="">Birth date</h3>
+                <h3 class="">{$t('common.birth_date')}</h3>
                 <span class="text-muted-foreground">{patientDOB}</span>
               </div>
               <div class="flex flex-col">
-                <h3 class="">Gender</h3>
-                <span class="text-muted-foreground">{patient.gender}</span>
+                <h3 class="">{$t('common.gender')}</h3>
+                <span class="text-muted-foreground">{$t(`common.${patient.gender}`)}</span>
               </div>
               <div class="flex flex-col">
-                <h3 class="">Refered by</h3>
+                <h3 class="">{$t('common.refered_by')}</h3>
                 <span class="text-muted-foreground">{patient.refered_by}</span>
               </div>
             </div>
@@ -386,7 +386,7 @@
                   {#if patient.medical_condition}
                     <AlertTriangle size=14 class="text-destructive"/>
                   {/if}
-                  <span>Medical condition</span>
+                  <span>{$t('common.medical_condition')}</span>
                 </h3>
                 <span class="text-muted-foreground">{patient.medical_condition ?? ''}</span>
               </div>
@@ -395,7 +395,7 @@
                   {#if patient.medications}
                     <Pill size=14/>
                   {/if}
-                  <span>Medications</span>
+                  <span>{$t('common.medications')}</span>
                 </h3>
                 <span class="text-muted-foreground">{patient.medications ?? ''}</span>
               </div>
@@ -404,7 +404,7 @@
                   {#if patient.notes}
                     <NotebookPen size=14/>
                   {/if}
-                  <span>Notes</span>
+                  <span>{$t('common.notes')}</span>
                 </h3>
                 <span class="text-muted-foreground">{patient.notes ?? ''}</span>
               </div>
@@ -415,8 +415,8 @@
       {#if patient?.id}
         <Card.Root class="flex-grow">
           <Card.Header>
-            <Card.Title>Data</Card.Title>
-            <Card.Description>Handle data related to this patient</Card.Description>
+            <Card.Title>{$t('common.data')}</Card.Title>
+            <Card.Description>{$t('common.patient_data_description')}</Card.Description>
           </Card.Header>
           <Card.Content>
             <Tabs.Root value="treatments" class="w-full">
@@ -424,19 +424,19 @@
                 <Tabs.Trigger value="treatments">
                   <div class="flex flex-row items-center gap-2">
                     <Stethoscope size=14 />
-                    <span>Treatments</span>
+                    <span>{$t('common.treatments')}</span>
                   </div>
                 </Tabs.Trigger>
                 <Tabs.Trigger value="files">
                   <div class="flex flex-row items-center gap-2">
                     <File size=14 />
-                    <span>Files</span>
+                    <span>{$t('common.files')}</span>
                   </div>
                 </Tabs.Trigger>
                 <Tabs.Trigger value="images">
                   <div class="flex flex-row items-center gap-2">
                     <Image size=14 />
-                    <span>Images</span>
+                    <span>{$t('common.images')}</span>
                   </div>
                 </Tabs.Trigger>
               </Tabs.List>
@@ -489,7 +489,7 @@
 {#if patient.id}
   <Card.Root class="border-destructive bg-destructive/20 mt-2">
     <Card.Header>
-      <Card.Title class="text-destructive">Danger Zone</Card.Title>
+      <Card.Title class="text-destructive">{$t('common.danger_zone')}</Card.Title>
     </Card.Header>
     <Card.Footer>
       <Button class="w-full flex flex-row gap-2 items-center" disabled={avatarUpdateInProgress || saveInProgress || deletionInProgress} variant='destructive'
@@ -497,7 +497,7 @@
         {#if deletionInProgress}
           <LoaderCircle class="animate-spin"></LoaderCircle>
         {/if}
-        DELETE PATIENT
+        {$t('common.delete_patient').toUpperCase()}
       </Button>
     </Card.Footer>
   </Card.Root>
@@ -506,14 +506,14 @@
 <AlertDialog.Root bind:open={deletePatientOpened}>
   <AlertDialog.Content>
     <AlertDialog.Header>
-      <AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
+      <AlertDialog.Title>{$t('common.confirm_dialog_title')}</AlertDialog.Title>
       <AlertDialog.Description>
-        This action cannot be undone. This will permanently delete patient {patient.personal_id} ({patient.first_name} {patient.sur_name}) and all of its related data.
+        {$t('common.delete_patient_confirmation_description')}
       </AlertDialog.Description>
     </AlertDialog.Header>
     <AlertDialog.Footer>
-      <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-      <AlertDialog.Action class="bg-destructive text-destructive-foreground hover:bg-destructive/80" on:click={() => deletePatient(patient)}>DELETE</AlertDialog.Action>
+      <AlertDialog.Cancel>{$t('common.cancel')}</AlertDialog.Cancel>
+      <AlertDialog.Action class="bg-destructive text-destructive-foreground hover:bg-destructive/80" on:click={() => deletePatient(patient)}>{$t('common.delete').toUpperCase()}</AlertDialog.Action>
     </AlertDialog.Footer>
   </AlertDialog.Content>
 </AlertDialog.Root>
@@ -521,7 +521,7 @@
 <AlertDialog.Root bind:open={changeAvatarDialogOpened}>
   <AlertDialog.Content>
     <AlertDialog.Header>
-      <AlertDialog.Title>Replace the existing patient avatar?</AlertDialog.Title>
+      <AlertDialog.Title>{$t('common.change_patient_avatar_confirmation')}</AlertDialog.Title>
       <AlertDialog.Description>
          <div class="flex flex-row items-center justify-center gap-4 w-full">
           <Avatar.Root class="border rounded-full cursor-pointer">
@@ -536,8 +536,8 @@
       </AlertDialog.Description>
     </AlertDialog.Header>
     <AlertDialog.Footer>
-      <AlertDialog.Cancel on:click={clearAvatarInput}>No</AlertDialog.Cancel>
-      <AlertDialog.Action type="submit" form="set-avatar" on:click={() => { avatarUpdateInProgress = true }}>Yes</AlertDialog.Action>
+      <AlertDialog.Cancel on:click={clearAvatarInput}>{$t('common.no')}</AlertDialog.Cancel>
+      <AlertDialog.Action type="submit" form="set-avatar" on:click={() => { avatarUpdateInProgress = true }}>{$t('common.yes')}</AlertDialog.Action>
     </AlertDialog.Footer>
   </AlertDialog.Content>
 </AlertDialog.Root>
@@ -545,7 +545,7 @@
 <AlertDialog.Root bind:open={addPatientFilesDialogOpened} closeOnOutsideClick={!patientFilesUploadInprogress}>
   <AlertDialog.Content>
     <AlertDialog.Header>
-      <AlertDialog.Title>Add new file</AlertDialog.Title>
+      <AlertDialog.Title>{$t('common.add_new_file')}</AlertDialog.Title>
     </AlertDialog.Header>
     <AddPatientFileForm 
       on:inProgress={() => {patientFilesUploadInprogress = true}}
@@ -556,7 +556,7 @@
 <AlertDialog.Root bind:open={addPatientImagesDialogOpened} closeOnOutsideClick={!patientFilesUploadInprogress}>
   <AlertDialog.Content>
     <AlertDialog.Header>
-      <AlertDialog.Title>Add new image</AlertDialog.Title>
+      <AlertDialog.Title>{$t('common.add_new_iamge')}</AlertDialog.Title>
     </AlertDialog.Header>
     <AddPatientFileForm 
       action="add-image"
@@ -568,7 +568,7 @@
 <AlertDialog.Root bind:open={editCreateTreatmentDialogOpened} closeOnOutsideClick={!updateTreatmentInProgress}>
   <AlertDialog.Content>
     <AlertDialog.Header>
-      <AlertDialog.Title>Treatment</AlertDialog.Title>
+      <AlertDialog.Title>{$t('common.treatment')}</AlertDialog.Title>
     </AlertDialog.Header>
     <CreateEditPatientTreatmentForm
       disabled={avatarUpdateInProgress || saveInProgress || deletionInProgress || updateTreatmentInProgress}
