@@ -186,5 +186,7 @@
     "other": "Other",
     "first_name": "First name",
     "surname": "Surname",
-    "date_of_birth": "Date of birth"
+    "date_of_birth": "Date of birth",
+    "missing_file_url": "Missing file url",
+    "missing_file_date": "Missing file date"
 }

@@ -186,5 +186,7 @@
     "other": "אחר",
     "first_name": "שם פרטי",
     "surname": "שם משפחה",
-    "date_of_birth": "תאריך לידה"
+    "date_of_birth": "תאריך לידה",
+    "missing_file_url": "חסרה כתובת לקובץ",
+    "missing_file_date": "חסר תאריך לקובץ"
 }
