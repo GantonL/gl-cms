@@ -1,4 +1,4 @@
-import { loadTranslations, locale } from "$lib/i18n/translations";
+import { loadTranslations, locale, t } from "$lib/i18n/translations";
 import type { LayoutLoad } from "./$types";
 import { Language } from "./api";
 
@@ -10,5 +10,8 @@ export const load: LayoutLoad = async (event) => {
 	await loadTranslations(choosenLocal);
 	return { 
 		local: choosenLocal,
+		seo: {
+			description: t.get('common.landing_page_description'),
+		}
 	};
 }
