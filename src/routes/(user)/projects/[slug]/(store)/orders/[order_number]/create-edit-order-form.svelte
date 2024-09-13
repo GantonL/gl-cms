@@ -132,14 +132,14 @@
               {...attrs}
               class={cn(
                 buttonVariants({ variant: "outline" }),
-                "w-full justify-start pl-4 text-start font-normal",
+                "w-full justify-start ps-4 text-start font-normal",
                 !$formData.client_id && "text-muted-foreground"
               )}
               disabled={submissionInProgress || disabled || orderWithKnownClient}>
               <span class="truncate w-5/6">
                 {$formData.client_id || 'Select a client'}
               </span>
-              <UserRoundSearch size=14 class="ml-auto h-4 w-4 opacity-50"/>
+              <UserRoundSearch size=14 class="ms-auto h-4 w-4 opacity-50"/>
             </Popover.Trigger>
             <Popover.Content>
               <div class="flex flex-col gap-2 w-full min-h-44">

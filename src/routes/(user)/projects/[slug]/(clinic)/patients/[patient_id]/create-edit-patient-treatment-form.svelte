@@ -88,12 +88,12 @@
                 {...attrs}
                 class={cn(
                   buttonVariants({ variant: "outline" }),
-                  "w-full justify-start pl-4 text-start font-normal",
+                  "w-full justify-start ps-4 text-start font-normal",
                   !dateValue && "text-muted-foreground"
                 )}
               >
                 {dateValue ? dateFormatter.format(dateValue.toDate(getLocalTimeZone())) : t.get('common.pick_date')}
-                <CalendarDays  class="ml-auto h-4 w-4 opacity-50" />
+                <CalendarDays  class="ms-auto h-4 w-4 opacity-50" />
               </Popover.Trigger>
               <Popover.Content class="w-auto p-0" side="top">
                 <Calendar
