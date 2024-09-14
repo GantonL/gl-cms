@@ -1,4 +1,4 @@
 export enum Font {
-    Default = 'default',
-    Monochrome = 'monochrome'
+    Default = 'sans',
+    Monochrome = 'mono'
 }

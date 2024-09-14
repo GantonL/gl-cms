@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { t } from "$lib/i18n/translations";
-	import { Palette } from "lucide-svelte";
+	import { Type } from "lucide-svelte";
 	import * as Card from "../ui/card";
     import * as Select from "../ui/select";
 	import { font } from "$lib/client/stores";
@@ -18,7 +18,7 @@
     <Card.Header>
         <Card.Title>
             <div class="flex flex-row gap-2 items-center">
-                <Palette size=18/>
+                <Type size=18/>
                 <span>{$t('common.font')}</span>
             </div>
         </Card.Title>
@@ -37,7 +37,9 @@
             </Select.Trigger>
             <Select.Content>
                 {#each fonts as option}              
-                    <Select.Item value={option.value}>{$t(option.label)}</Select.Item>
+                    <Select.Item value={option.value}>
+                        <span class={`font-${option.value}`}>{$t(option.label)}</span>
+                    </Select.Item>
                 {/each}
             </Select.Content>
         </Select.Root>

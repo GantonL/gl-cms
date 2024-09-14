@@ -45,7 +45,7 @@
     "@dicebear/core": "^8.0.1",
     "@internationalized/date": "^3.5.4",
     "bits-ui": "^0.21.13",
-    "caniuse-lite": "",
+    "caniuse-lite": "^1.0.30001660",
     "clsx": "^2.1.0",
     "firebase": "^10.11.1",
     "firebase-admin": "^12.1.0",

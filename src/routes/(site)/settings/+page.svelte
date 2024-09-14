@@ -6,8 +6,14 @@
 
 </script>
 <h1 class="text-xl">{$t('common.settings')}</h1>
-<div class="flex flex-col gap-4">
-    <LanguageSetting />
-	<ThemeSetting />
-	<FontSetting />
+<div class="flex flex-row flex-wrap gap-4">
+    <div class="min-w-60 flex-grow">
+		<LanguageSetting />
+	</div>
+	<div class="min-w-60 flex-grow">
+		<ThemeSetting />
+	</div>
+	<div class="min-w-60 flex-grow">
+		<FontSetting />
+	</div>
 </div>

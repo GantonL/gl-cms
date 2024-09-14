@@ -41,7 +41,7 @@
 
 <ModeWatcher defaultMode='dark'/>
 <SEO title={pageTitle} description={pageDescription} slug={path}/>
-<div class="bg-background w-full h-full p-1 font-mono overflow-hidden">
+<div class="bg-background w-full h-full p-1 overflow-hidden">
   <div class="border rounded-lg h-full overflow-hidden">
 		<Shell navigationPath={path}>
 			<slot />
