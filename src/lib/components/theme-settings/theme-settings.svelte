@@ -5,14 +5,11 @@
     import * as Select from "../ui/select";
 	import { theme } from "$lib/client/stores";
 	import { changeTheme } from "$lib/theme/theme";
-	import { themes } from "$lib/configurations/theme";
+	import { themes, themeStorageKey } from "$lib/configurations/theme";
 	import type { Themes } from "$lib/enums/theme";
-	import { Theme } from "../../../routes/api";
 
     function onChangeTheme(newTheme: Themes) {
-        const formData = new FormData();
-        formData.append('color-theme', newTheme);
-        fetch(Theme, {method: 'POST', body: formData});
+        localStorage.setItem(themeStorageKey, newTheme);
         changeTheme(newTheme);
     }
     $: currentTheme = themes.find(t => t.value === $theme);

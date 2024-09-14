@@ -11,7 +11,7 @@
 	import { locale } from '$lib/i18n/translations';
 	import { direction } from '$lib/client/stores';
 	import type { SupportedLocales } from '$lib/types/language';
-	import { changeTheme } from '$lib/theme/theme';
+	import { changeTheme, getTheme } from '$lib/theme/theme';
 	
 	$: path = $page.url.pathname;
 	initializeAuthentication(path);
@@ -33,7 +33,7 @@
 	beforeUpdate(() => {
 		updateDirection($page.data.locale);
 		locale.subscribe((selectedLocale) => {updateDirection(selectedLocale as SupportedLocales)});
-		changeTheme($page.data.theme);
+		changeTheme(getTheme());
 	})
 </script>
 

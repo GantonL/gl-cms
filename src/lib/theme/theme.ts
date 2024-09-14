@@ -1,6 +1,6 @@
 import { theme } from "$lib/client/stores";
-import { themes } from "$lib/configurations/theme";
-import type { Themes } from "$lib/enums/theme";
+import { themes, themeStorageKey } from "$lib/configurations/theme";
+import { Themes } from "$lib/enums/theme";
 
 function getThemeClass(theme: Themes):`theme-${Themes}` {
     return `theme-${theme}`;
@@ -14,4 +14,8 @@ export const changeTheme = (newTheme: Themes) => {
             document.documentElement.classList.remove(getThemeClass(t.value));
         }
     });
+}
+
+export const getTheme = (): Themes => {
+    return localStorage.getItem(themeStorageKey) as Themes ?? Themes.Default;
 }
