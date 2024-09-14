@@ -192,5 +192,6 @@
     "default": "Default",
     "theme": "Theme",
     "theme_settings_description": "Choose your favorite theme",
-    "grass": "Grass"
+    "grass": "Grass",
+    "time": "Time"
 }

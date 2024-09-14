@@ -8,6 +8,7 @@
 	import { Clock } from "lucide-svelte";
 	import Separator from "../separator/separator.svelte";
 	import { createEventDispatcher } from "svelte";
+	import { t } from "$lib/i18n/translations";
 
 	const dispatch = createEventDispatcher();
 
@@ -144,9 +145,9 @@
 	<div class="flex flex-row gap-2 items-center justify-between w-full p-2">
 		<div class="flex flex-row gap-2 items-center">
 			<Clock size=14/>
-			<span>Time</span>
+			<span>{$t('common.time')}</span>
 		</div>
-		<div class="flex flex-row gap-2 items-center">
+		<div class="flex flex-row gap-2 items-center" dir="ltr">
 			<Input class="w-12" value={timeValue.hour} on:input={(e) => {
 				timeValue = timeValue.set({hour: Number(e.target?.value)})
 				dispatch('timeChanged', timeValue);

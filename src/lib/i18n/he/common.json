@@ -192,5 +192,6 @@
     "default": "ברירת מחדל",
     "theme": "ערכת נושא",
     "theme_settings_description": "בחירת ערכת נושא המועדפת",
-    "grass": "דשא"
+    "grass": "דשא",
+    "time": "זמן"
 }
