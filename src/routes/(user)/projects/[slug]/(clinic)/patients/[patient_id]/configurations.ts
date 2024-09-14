@@ -25,18 +25,18 @@ export const treatmentsTableRowActions: ActionMenuConfiguration<ClinicTreatmentH
       {
         group: [
           {
-            label: t.get('common.payment'),
+            label: 'common.payment',
             icon: HandCoins,
             event: 'payment',
             disabled: true,
           },
           {
-            label: t.get('common.edit'),
+            label: 'common.edit',
             icon: Edit,
             event: 'edit',
           },
           {
-            label: t.get('common.delete'),
+            label: 'common.delete',
             icon: Trash2,
             event: 'delete',
             class: 'bg-destructive/10 text-destructive'
@@ -145,12 +145,12 @@ export const filesTableRowActions: ActionMenuConfiguration<Image> = {
       {
         group: [
           {
-            label: t.get('common.view'),
+            label: 'common.view',
             icon: Eye,
             event: 'view',
           },
           {
-            label: t.get('common.delete'),
+            label: 'common.delete',
             icon: Trash2,
             event: 'delete',
             class: 'bg-destructive/10 text-destructive'

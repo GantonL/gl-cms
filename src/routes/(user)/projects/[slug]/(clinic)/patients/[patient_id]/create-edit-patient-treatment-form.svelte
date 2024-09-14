@@ -74,7 +74,7 @@
     const nowDateTime = now(getLocalTimeZone());
     $: timeValue = $formData.time ? new Time(parseTime($formData.time).hour, parseTime($formData.time).minute) : new Time(nowDateTime.hour, nowDateTime.minute);
     $: dateValue = $formData.date ? parseDate($formData.date) : undefined;
-       
+    
   </script>
   <form method="POST" action={`?/${action}`} enctype="multipart/form-data" use:enhance>
     <ScrollArea class="flex flex-col gap-4 overflow-y-auto max-h-[80vh]">
