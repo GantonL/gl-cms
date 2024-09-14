@@ -188,5 +188,9 @@
     "surname": "שם משפחה",
     "date_of_birth": "תאריך לידה",
     "missing_file_url": "חסרה כתובת לקובץ",
-    "missing_file_date": "חסר תאריך לקובץ"
+    "missing_file_date": "חסר תאריך לקובץ",
+    "default": "ברירת מחדל",
+    "theme": "ערכת נושא",
+    "theme_settings_description": "בחירת ערכת נושא המועדפת",
+    "grass": "דשא"
 }

@@ -188,5 +188,9 @@
     "surname": "Surname",
     "date_of_birth": "Date of birth",
     "missing_file_url": "Missing file url",
-    "missing_file_date": "Missing file date"
+    "missing_file_date": "Missing file date",
+    "default": "Default",
+    "theme": "Theme",
+    "theme_settings_description": "Choose your favorite theme",
+    "grass": "Grass"
 }
