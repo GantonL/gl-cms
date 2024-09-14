@@ -12,6 +12,7 @@
 	import { direction } from '$lib/client/stores';
 	import type { SupportedLocales } from '$lib/types/language';
 	import { changeTheme, getTheme } from '$lib/theme/theme';
+	import { changeFont, getFont } from '$lib/font/font';
 	
 	$: path = $page.url.pathname;
 	initializeAuthentication(path);
@@ -34,6 +35,7 @@
 		updateDirection($page.data.locale);
 		locale.subscribe((selectedLocale) => {updateDirection(selectedLocale as SupportedLocales)});
 		changeTheme(getTheme());
+		changeFont(getFont());
 	})
 </script>
 

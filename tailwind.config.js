@@ -57,6 +57,7 @@ const config = {
 			fontFamily: {
 				sans: ['Graphik', 'sans-serif', ...fontFamily.sans],
 				serif: ['Merriweather', 'serif'],
+				monochrome: [fontFamily.monochrome],
 			}
 		}
 	},

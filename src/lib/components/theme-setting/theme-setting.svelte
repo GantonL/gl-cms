@@ -24,20 +24,22 @@
         </Card.Title>
         <Card.Description>{$t('common.theme_settings_description')}</Card.Description>
     </Card.Header>
-    <Select.Root 
-        selected={currentTheme && {value: currentTheme.value, label: t.get(currentTheme.label)}}
-        onSelectedChange={(v) => {
-                if (!v) { return; }
-                onChangeTheme(v.value)
-            }
-        }>
-        <Select.Trigger>
-            <Select.Value />
-        </Select.Trigger>
-        <Select.Content>
-            {#each themes as option}              
-                <Select.Item value={option.value}>{$t(option.label)}</Select.Item>
-            {/each}
-        </Select.Content>
-    </Select.Root>
+    <div class="px-4 pb-4">
+        <Select.Root 
+            selected={currentTheme && {value: currentTheme.value, label: t.get(currentTheme.label)}}
+            onSelectedChange={(v) => {
+                    if (!v) { return; }
+                    onChangeTheme(v.value)
+                }
+            }>
+            <Select.Trigger>
+                <Select.Value />
+            </Select.Trigger>
+            <Select.Content>
+                {#each themes as option}              
+                    <Select.Item value={option.value}>{$t(option.label)}</Select.Item>
+                {/each}
+            </Select.Content>
+        </Select.Root>
+    </div>
 </Card.Root>

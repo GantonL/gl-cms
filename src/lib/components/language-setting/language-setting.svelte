@@ -21,20 +21,22 @@
         </Card.Title>
         <Card.Description>{$t('common.language_settings_description')}</Card.Description>
     </Card.Header>
-    <Select.Root 
-        selected={{value: $locale, label: $t(`common.locales.${$locale}`)}}
-        onSelectedChange={(v) => {
-                if (!v) { return; }
-                onLocaleChanged(v.value)
-            }
-        }>
-        <Select.Trigger>
-            <Select.Value />
-        </Select.Trigger>
-        <Select.Content>
-            {#each $locales as localeOption}              
-                <Select.Item value={localeOption} label={$t(`common.locales.${localeOption}`)} />
-            {/each}
-        </Select.Content>
-    </Select.Root>
+    <div class="px-4 pb-4">
+        <Select.Root
+            selected={{value: $locale, label: $t(`common.locales.${$locale}`)}}
+            onSelectedChange={(v) => {
+                    if (!v) { return; }
+                    onLocaleChanged(v.value)
+                }
+            }>
+            <Select.Trigger>
+                <Select.Value />
+            </Select.Trigger>
+            <Select.Content>
+                {#each $locales as localeOption}              
+                    <Select.Item value={localeOption} label={$t(`common.locales.${localeOption}`)} />
+                {/each}
+            </Select.Content>
+        </Select.Root>
+    </div>
 </Card.Root>

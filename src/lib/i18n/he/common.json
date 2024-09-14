@@ -193,5 +193,8 @@
     "theme": "ערכת נושא",
     "theme_settings_description": "בחירת ערכת נושא המועדפת",
     "grass": "דשא",
-    "time": "זמן"
+    "time": "זמן",
+    "font": "גופן",
+    "font_settings_description": "בחירת הגופן המועדף",
+    "monochrome": "מונוכרומטי"
 }
