@@ -116,6 +116,3 @@ export const projectItemsConfiguration: Record<ProjectType, NavigationLink[]> = 
   ],
 }
 
-export const MoreNavigationItems: NavigationLink[] = [
-  settings
-];
