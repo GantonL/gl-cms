@@ -196,5 +196,8 @@
     "time": "Time",
     "font": "Font",
     "font_settings_description": "Choose your favorite font",
-    "monochrome": "Monochrome"
+    "monochrome": "Monochrome",
+    "clinic_settings": "Clinic settings",
+    "treatment_documentation_template": "Treament documention template",
+    "treatment_documentation_template_description": "Define a template for your treatment documentation, for every new treatment creation"
 }

@@ -196,5 +196,8 @@
     "time": "זמן",
     "font": "גופן",
     "font_settings_description": "בחירת הגופן המועדף",
-    "monochrome": "מונוכרומטי"
+    "monochrome": "מונוכרומטי",
+    "clinic_settings": "הגדרות קליניקה",
+    "treatment_documentation_template": "תבנית לתיעוד טיפול",
+    "treatment_documentation_template_description": "הגדרת תבנית לתיעוד טיפול שתוצג בכל יצירה של טיפול חדש"
 }

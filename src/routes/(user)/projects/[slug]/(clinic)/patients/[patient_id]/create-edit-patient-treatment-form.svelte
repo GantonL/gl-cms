@@ -12,14 +12,14 @@
     import { CalendarDays, LoaderCircle } from "lucide-svelte";
     import { toast } from "svelte-sonner";
     import { createEventDispatcher } from "svelte";
-    import { DateFormatter, getLocalTimeZone, now, parseDate, parseDateTime, parseTime, Time, toCalendarDateTime } from "@internationalized/date";
+    import { DateFormatter, getLocalTimeZone, now, parseDate, parseTime, Time } from "@internationalized/date";
     import * as Popover from "$lib/components/ui/popover";
     import { Calendar } from "$lib/components/ui/calendar";
     import { Button, buttonVariants } from "$lib/components/ui/button";
     import { cn } from "$lib/utils";
     import { Textarea } from "$lib/components/ui/textarea";
     import { ScrollArea } from "$lib/components/ui/scroll-area";
-	import { locale, t } from "$lib/i18n/translations";
+	  import { locale, t } from "$lib/i18n/translations";
   
     export let data: SuperValidated<Infer<PatientTreatmentFormSchema>>;
     export let action: 'update-treatment' | 'create-treatment';
@@ -31,7 +31,6 @@
     const dispatch = createEventDispatcher();
     let submissionInProgress = false;
   
-    
     function updateFormData() {
       form = superForm(data.data, {
         dataType: 'json',
