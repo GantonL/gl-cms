@@ -1,12 +1,12 @@
 <script lang="ts">
 	import type { Image } from "$lib/models/image";
-	import { Pencil, PencilOff, Plus, Trash } from "lucide-svelte";
+	import { Pencil, PencilOff, Plus, Trash, DownloadCloud } from "lucide-svelte";
 	import { Button } from "../ui/button";
 	import { ScrollArea } from "../ui/scroll-area";
 	import { createEventDispatcher } from "svelte";
 	import * as AlertDialog from "../ui/alert-dialog";
 	import { locale, t } from "$lib/i18n/translations";
-	import { direction } from "$lib/client/stores";
+	import { currentProject } from "$lib/client/stores";
 
     type scrollableImage = Image & {month?: number, displayDate?: string, deleteInProgress?: boolean;};   
     export let images: scrollableImage[];
@@ -35,6 +35,16 @@
                 displayDate,
             }
         })
+    }
+
+    async function saveAs(uri: string) {
+      const data = await (await fetch(uri)).arrayBuffer();
+      const buffer = Buffer.from(data).toString('base64')
+      const downloadLink = document.createElement("a")
+      downloadLink.href = `date:image/png;base64,${buffer}`
+      downloadLink.download = `${$currentProject?.name ?? 'gl-project'}-image.png`;
+      downloadLink.click();
+      document.removeChild(downloadLink)
     }
 
 </script>
@@ -66,7 +76,7 @@
                         <span class="m-auto">{image.displayDate}</span>
                     </div>
                 {/if}
-                <figure class="w-48 relative" class:blur-sm={image.deleteInProgress}>
+                <figure class="w-48 relative group" class:blur-sm={image.deleteInProgress}>
                     <img src={image.url} class="object-cover border rounded-md shadow-md" loading="lazy" alt="Figure in a scroll area"/>
                     <Button variant="ghost" size="icon" class="bg-destructive/70 absolute bottom-1 right-1 {editMode ? 'flex' : 'hidden'}" 
                         {disabled}
@@ -75,6 +85,13 @@
                             deleteCandidate = image
                         }}>
                         <Trash size=16 />
+                    </Button>
+                    <Button variant="secondary" size="icon" class="absolute top-1 right-1 hidden group-hover:flex" 
+                        {disabled}
+                        on:click={() => {
+                            saveAs(image.url)
+                        }}>
+                        <DownloadCloud size=16 />
                     </Button>
                 </figure>
             {/each}
