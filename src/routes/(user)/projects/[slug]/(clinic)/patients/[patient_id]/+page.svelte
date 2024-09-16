@@ -28,6 +28,7 @@
 	import { ClinicStorageDirectories } from "$lib/enums/storage";
 	import CreateEditPatientTreatmentForm from "./create-edit-patient-treatment-form.svelte";
 	import { locale, t } from "$lib/i18n/translations";
+	import type { Project } from "$lib/models/project";
 
   let createEditForm: SuperValidated<Infer<PatientFormSchema>>;
   let deletePatientOpened = false;
@@ -54,7 +55,7 @@
   export let form: ActionData;
 
   $: patient = $page.data.patient as ClinicPatient;
-  $: project = $page.data.project;
+  $: project = $page.data.project as Project;
   $: if (form) {
       switch (form?.type) {
         case 'avatar':
@@ -148,6 +149,7 @@
     selectedTreatment = undefined;
     superValidate(zod(patientTreatmentFormSchema)).then((form) => {
       selectedTreatmentForm = form;
+      form.data.documentation = project.settings?.clinic?.treatment_documentation_template ?? '';
       editCreateTreatmentDialogOpened = true;
     });
   }
