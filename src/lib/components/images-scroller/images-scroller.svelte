@@ -1,12 +1,11 @@
 <script lang="ts">
 	import type { Image } from "$lib/models/image";
-	import { Pencil, PencilOff, Plus, Trash, DownloadCloud } from "lucide-svelte";
+	import { Pencil, PencilOff, Plus, Trash, ExternalLink } from "lucide-svelte";
 	import { Button } from "../ui/button";
 	import { ScrollArea } from "../ui/scroll-area";
 	import { createEventDispatcher } from "svelte";
 	import * as AlertDialog from "../ui/alert-dialog";
 	import { locale, t } from "$lib/i18n/translations";
-	import { currentProject } from "$lib/client/stores";
 
     type scrollableImage = Image & {month?: number, displayDate?: string, deleteInProgress?: boolean;};   
     export let images: scrollableImage[];
@@ -37,14 +36,12 @@
         })
     }
 
-    async function saveAs(uri: string) {
-      const data = await (await fetch(uri)).arrayBuffer();
-      const buffer = Buffer.from(data).toString('base64')
-      const downloadLink = document.createElement("a")
-      downloadLink.href = `date:image/png;base64,${buffer}`
-      downloadLink.download = `${$currentProject?.name ?? 'gl-project'}-image.png`;
-      downloadLink.click();
-      document.removeChild(downloadLink)
+    async function openImage(url: string) {
+        const downloadLink = document.createElement("a")
+        downloadLink.href = url;
+        downloadLink.target = "_blank";
+        downloadLink.click();
+        document.removeChild(downloadLink)
     }
 
 </script>
@@ -88,10 +85,8 @@
                     </Button>
                     <Button variant="secondary" size="icon" class="absolute top-1 right-1 hidden group-hover:flex" 
                         {disabled}
-                        on:click={() => {
-                            saveAs(image.url)
-                        }}>
-                        <DownloadCloud size=16 />
+                        on:click={() => openImage(image.url)}>
+                        <ExternalLink size=16 />
                     </Button>
                 </figure>
             {/each}
