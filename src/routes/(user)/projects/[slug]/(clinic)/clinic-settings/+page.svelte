@@ -7,7 +7,18 @@
 	import Button from "$lib/components/ui/button/button.svelte";
 
   let updateInProgress = false;
-  let treatment_documentation_template = $page.data.treatment_documentation_template;
+  const settings = $page.data?.settings ?? {};
+
+  function saveTreatmentDocumentationTemplate() {
+    updateInProgress = true;
+    const body = new FormData();
+    body.set('settings', JSON.stringify(settings))
+    fetch(`/projects/${$page.data.project.id}/clinic-settings`, {method: 'POST', body})
+    .then((res) => {
+        console.log(res)
+        updateInProgress = false;
+      });
+  }
 
 </script>
 <h1>{$t('common.clinic_settings')}</h1>
@@ -24,8 +35,10 @@
         <Card.Description>{$t('common.treatment_documentation_template_description')}</Card.Description>
       </Card.Header>
       <div class="px-4 pb-4 flex flex-col gap-2">
-        <Textarea class="min-h-60" bind:value={treatment_documentation_template}/>
-        <Button class="w-fit flex flex-row items-center gap-2" disabled={updateInProgress}>
+        <Textarea class="min-h-60" bind:value={settings.treatment_documentation_template}/>
+        <Button class="w-fit flex flex-row items-center gap-2"
+          on:click={saveTreatmentDocumentationTemplate}
+          disabled={updateInProgress}>
           {#if updateInProgress}
             <LoaderCircle size=16 class="animate-spin"/>
           {/if}

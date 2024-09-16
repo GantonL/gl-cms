@@ -30,3 +30,7 @@ export interface ClinicTreatmentHistoryItem {
     notes?: string;
     price?: number;
 }
+
+export interface ClinicSettings {
+    treatment_documentation_template?: string;
+}

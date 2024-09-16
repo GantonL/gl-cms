@@ -67,7 +67,7 @@ export const deleteProject = async (id: Project['id']): Promise<boolean> => {
 }
 
 
-export const updateProject = async (id: Project['id'], data: Partial<Pick<Project, 'url'>>): Promise<boolean> => {
+export const updateProject = async (id: Project['id'], data: Partial<Pick<Project, 'url' | 'settings'>> & Record<string, unknown>): Promise<boolean> => {
   try {
     const db = getFirestore(app());
     const query = await db.collection(Collections.Projects).where('id', '==', id).get();
