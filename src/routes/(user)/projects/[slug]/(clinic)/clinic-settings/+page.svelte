@@ -35,7 +35,7 @@
         <Card.Description>{$t('common.treatment_documentation_template_description')}</Card.Description>
       </Card.Header>
       <div class="px-4 pb-4 flex flex-col gap-2">
-        <Textarea class="min-h-60" bind:value={settings.treatment_documentation_template}/>
+        <Textarea class="min-h-60" bind:value={settings.treatment_documentation_template} disabled={updateInProgress}/>
         <Button class="w-fit flex flex-row items-center gap-2"
           on:click={saveTreatmentDocumentationTemplate}
           disabled={updateInProgress}>
