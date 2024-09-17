@@ -43,17 +43,17 @@
           if (f?.valid) {
             formData.set(f.data);
             if (action === 'create-treatment') {
-              toast.success('Treatment was successfuly created');
+              toast.success(t.get('common.treatment_create_success'));
               dispatch('created', f.data);
             } else {
-              toast.success('Treatment was successfuly updated');
+              toast.success(t.get('common.treatment_updated_success'));
               dispatch('updated', f.data);
             }
           } else {
             if (f.errors?._errors) {
-              toast.error("Something went wrong.");
+              toast.error(t.get('common.something_went_wrong'));
             } else {
-              toast.error("Some fields are invalid.");
+              toast.error(t.get('common.invalid_fields'));
             }
           }
           submissionInProgress = false;

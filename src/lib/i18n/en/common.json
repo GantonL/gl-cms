@@ -199,5 +199,7 @@
     "monochrome": "Monochrome",
     "clinic_settings": "Clinic settings",
     "treatment_documentation_template": "Treament documention template",
-    "treatment_documentation_template_description": "Define a template for your treatment documentation, for every new treatment creation"
+    "treatment_documentation_template_description": "Define a template for your treatment documentation, for every new treatment creation",
+    "treatment_create_success": "Treatment was successfully created",
+    "treatment_updated_success": "Treatment was successfully updated"
 }

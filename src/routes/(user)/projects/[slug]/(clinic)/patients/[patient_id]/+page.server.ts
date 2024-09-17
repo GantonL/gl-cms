@@ -151,13 +151,16 @@ export const actions: Actions = {
     if (!patientId) {
       return fail(400, { form });
     }
+    form.data.notes = form.data.notes && form.data.notes !== 'undefined' ? form.data.notes : '';
+    form.data.documentation = form.data.documentation && form.data.documentation !== 'undefined' ? form.data.documentation : '';
+    form.data.price = String(form.data.price) !== 'undefined' ? form.data.price : 0;
     const treatment: ClinicTreatmentHistoryItem | undefined = await createPatientTreatment(currentProject!, {
       patient_id: patientId,
       date: form.data.date!,
       time: form.data.time!,
-      documentation: form.data.documentation && form.data.documentation !== 'undefined' ? form.data.documentation : '',
-      notes: form.data.notes && form.data.notes !== 'undefined' ? form.data.notes : '',
-      price: String(form.data.price) !== 'undefined' ? form.data.price : 0,
+      documentation: form.data.documentation,
+      notes: form.data.notes,
+      price: form.data.price,
     });
     if (treatment === undefined) {
       return fail(400, {form});

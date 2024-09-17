@@ -199,5 +199,7 @@
     "monochrome": "מונוכרומטי",
     "clinic_settings": "הגדרות קליניקה",
     "treatment_documentation_template": "תבנית לתיעוד טיפול",
-    "treatment_documentation_template_description": "הגדרת תבנית לתיעוד טיפול שתוצג בכל יצירה של טיפול חדש"
+    "treatment_documentation_template_description": "הגדרת תבנית לתיעוד טיפול שתוצג בכל יצירה של טיפול חדש",
+    "treatment_create_success": "טיפול נוצר בהצלחה",
+    "treatment_updated_success": "טיפול עודכן בהצלחה"
 }
