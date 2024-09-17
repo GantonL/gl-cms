@@ -155,9 +155,9 @@ export const actions: Actions = {
       patient_id: patientId,
       date: form.data.date!,
       time: form.data.time!,
-      documentation: form.data.documentation,
-      notes: form.data.notes,
-      price: form.data.price,
+      documentation: form.data.documentation && form.data.documentation !== 'undefined' ? form.data.documentation : '',
+      notes: form.data.notes && form.data.notes !== 'undefined' ? form.data.notes : '',
+      price: String(form.data.price) !== 'undefined' ? form.data.price : 0,
     });
     if (treatment === undefined) {
       return fail(400, {form});

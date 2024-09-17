@@ -20,7 +20,7 @@
 	import * as Tooltip from "$lib/components/ui/tooltip";
 	import { enhance } from "$app/forms";
 	import type { ActionData } from "./$types";
-	import { DateFormatter, getLocalTimeZone, parseDate, today } from "@internationalized/date";
+	import { DateFormatter, getLocalTimeZone, parseDate, parseDateTime, today } from "@internationalized/date";
 	import { Separator } from "$lib/components/ui/separator";
 	import AddPatientFileForm from "./add-patient-file-form.svelte";
 	import ImagesScroller from "$lib/components/images-scroller/images-scroller.svelte";
@@ -157,7 +157,13 @@
   function onTreatmentAdded(newTreatment: ClinicTreatmentHistoryItem) {
     editCreateTreatmentDialogOpened = false;
     patientTreatmentsHistory.unshift(newTreatment);
-    patientTreatmentsHistory = patientTreatmentsHistory;
+    patientTreatmentsHistory = patientTreatmentsHistory.sort((a, b) => {
+      const dateTimeA = a.date.concat(`T${a.time}`); 
+      const dateTimeB = b.date.concat(`T${b.time}`);
+      const dateTimeAComp = new Date(parseDateTime(dateTimeA).toDate(getLocalTimeZone())).getTime();
+      const dateTimeBComp = new Date(parseDateTime(dateTimeB).toDate(getLocalTimeZone())).getTime();
+      return dateTimeBComp - dateTimeAComp;
+    });
   }
 
   function onEditTreatment(treatment: ClinicTreatmentHistoryItem) {
