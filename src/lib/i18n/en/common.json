@@ -201,5 +201,8 @@
     "treatment_documentation_template": "Treament documention template",
     "treatment_documentation_template_description": "Define a template for your treatment documentation, for every new treatment creation",
     "treatment_create_success": "Treatment was successfully created",
-    "treatment_updated_success": "Treatment was successfully updated"
+    "treatment_updated_success": "Treatment was successfully updated",
+    "treatments_types": "Treatments types",
+    "treatments_types_description": "Define various treatments types to choose from when creating or editing a treatment",
+    "create_treatment_type": "Create treatment type"
 }

@@ -31,6 +31,11 @@ export interface ClinicTreatmentHistoryItem {
     price?: number;
 }
 
+interface TreatmentType {
+    name: string;
+}
+
 export interface ClinicSettings {
     treatment_documentation_template?: string;
+    treatments_types?: TreatmentType[];
 }

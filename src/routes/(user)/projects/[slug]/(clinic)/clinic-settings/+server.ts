@@ -16,6 +16,9 @@ export async function POST(event: RequestEvent) {
     if (settings.treatment_documentation_template !== undefined) {
       updateObject.treatment_documentation_template = settings.treatment_documentation_template;
     }
+    if (settings.treatments_types !== undefined) {
+      updateObject.treatments_types = settings.treatments_types;
+    }
   }
   if (!Object.keys(updateObject).length) {
     return error(400, {message: 'Missing data'});
