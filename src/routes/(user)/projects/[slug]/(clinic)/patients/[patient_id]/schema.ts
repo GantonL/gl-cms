@@ -34,7 +34,7 @@ export const patientTreatmentFormSchema = z.object({
   date: z.string(),
   time: z.string().optional(),
   documentation: z.string(),
-  notes: z.string().optional(),
+  type: z.string().optional(),
   price: z.number({coerce: true}).min(0).optional(),
   // Added upon changes from non-form origin
   id: z.string().optional(),

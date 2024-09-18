@@ -27,7 +27,7 @@ export interface ClinicTreatmentHistoryItem {
     documentation: string;
     date: string;
     time?: string; // bounded to date
-    notes?: string;
+    type?: string;
     price?: number;
 }
 

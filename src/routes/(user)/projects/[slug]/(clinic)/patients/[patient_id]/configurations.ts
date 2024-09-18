@@ -81,12 +81,10 @@ export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicTreat
             }
         },
         {
-            header: t.get('common.notes'),
-            dataPath: 'notes',
+            header: t.get('common.type'),
+            dataPath: 'type',
             cell: ({value}) => {
-                const render = createRender(ScrollArea, {class: 'flex flex-col overflow-y-auto max-h-[150px] whitespace-pre-wrap'}); 
-                render.slot(value);
-                return render;
+                return value ?? '';
             }
         },
         {

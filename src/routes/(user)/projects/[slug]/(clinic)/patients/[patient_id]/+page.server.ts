@@ -151,7 +151,7 @@ export const actions: Actions = {
     if (!patientId) {
       return fail(400, { form });
     }
-    form.data.notes = form.data.notes && form.data.notes !== 'undefined' ? form.data.notes : '';
+    form.data.type = form.data.type && form.data.type !== 'undefined' ? form.data.type : '';
     form.data.documentation = form.data.documentation && form.data.documentation !== 'undefined' ? form.data.documentation : '';
     form.data.price = String(form.data.price) !== 'undefined' ? form.data.price : 0;
     const treatment: ClinicTreatmentHistoryItem | undefined = await createPatientTreatment(currentProject!, {
@@ -159,7 +159,7 @@ export const actions: Actions = {
       date: form.data.date!,
       time: form.data.time!,
       documentation: form.data.documentation,
-      notes: form.data.notes,
+      type: form.data.type,
       price: form.data.price,
     });
     if (treatment === undefined) {
@@ -180,11 +180,15 @@ export const actions: Actions = {
     if (!patientId) {
       return fail(400, { form });
     }
-    const treatmentUpdated: boolean = await updatePatientTreatment(currentProject!, patientId, {
+    const treatmentId = form.data.id;
+    if (!treatmentId) {
+      return fail(400, { form });
+    }
+    const treatmentUpdated: boolean = await updatePatientTreatment(currentProject!, patientId, treatmentId, {
       date: form.data.date!,
       time: form.data.time! ?? '',
       documentation: form.data.documentation && form.data.documentation !== 'undefined' ? form.data.documentation : '',
-      notes: form.data.notes && form.data.notes !== 'undefined' ? form.data.notes : '',
+      type: form.data.type && form.data.type !== 'undefined' ? form.data.type : '',
       price: String(form.data.price) !== 'undefined' ? form.data.price : 0,
     });
     if (!treatmentUpdated) {

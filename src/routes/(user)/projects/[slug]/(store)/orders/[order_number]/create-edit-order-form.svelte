@@ -122,7 +122,7 @@
 
 </script>
 <form method="POST" action={`?/${action}`} enctype="multipart/form-data" use:enhance>
-  <div class="grid gap-4">
+  <div class="grid gap-4 px-4">
     <div class="grid items-center gap-4">
       <Form.Field {form} name="client_id">
         <Form.Control let:attrs>

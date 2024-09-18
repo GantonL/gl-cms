@@ -20,6 +20,9 @@
     import { Textarea } from "$lib/components/ui/textarea";
     import { ScrollArea } from "$lib/components/ui/scroll-area";
 	  import { locale, t } from "$lib/i18n/translations";
+	  import * as Select from "$lib/components/ui/select";
+	import { page } from "$app/stores";
+	import type { ClinicSettings } from "$lib/models/clinic";
   
     export let data: SuperValidated<Infer<PatientTreatmentFormSchema>>;
     export let action: 'update-treatment' | 'create-treatment';
@@ -73,7 +76,17 @@
     const nowDateTime = now(getLocalTimeZone());
     $: timeValue = $formData.time ? new Time(parseTime($formData.time).hour, parseTime($formData.time).minute) : new Time(nowDateTime.hour, nowDateTime.minute);
     $: dateValue = $formData.date ? parseDate($formData.date) : undefined;
-    
+    $: types = ($page.data?.project?.settings?.clinic as ClinicSettings)?.treatments_types?.map((t) => {
+          return {
+            value: t.name,
+            label: t.name, 
+          }
+        }) ?? [];
+    $: selectedType = $formData.type ? {
+      value: $formData.type,
+      label: $formData.type,
+    } : undefined;
+
   </script>
   <form method="POST" action={`?/${action}`} enctype="multipart/form-data" use:enhance>
     <ScrollArea class="flex flex-col gap-4 overflow-y-auto max-h-[80vh]">
@@ -117,19 +130,33 @@
         </Form.Field>
       </div>
       <div class="grid items-center gap-4">
-        <Form.Field {form} name="documentation">
+        <Form.Field {form} name="type">
           <Form.Control let:attrs>
-            <Form.Label>{$t('common.documentation')}</Form.Label> 
-            <Textarea {...attrs} class="min-h-48" bind:value={$formData.documentation} disabled={submissionInProgress} required/>
+            <Form.Label>{$t('common.type')} <span class="text-muted-foreground">({$t('common.optional')})</span></Form.Label> 
+            <Select.Root
+              selected={selectedType}
+              disabled={submissionInProgress || disabled}
+              onSelectedChange={(v) => v && ($formData.type = `${v.value}`)}
+            >
+              <Select.Trigger {...attrs}>
+                <Select.Value placeholder={$t('common.type')} />
+              </Select.Trigger>
+              <Select.Content>
+                {#each types as type}
+                  <Select.Item value={type.value} label={type.label} />                
+                {/each}
+              </Select.Content>
+            </Select.Root>
+            <input hidden bind:value={$formData.type} name={attrs.name} />
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>
       </div>
       <div class="grid items-center gap-4">
-        <Form.Field {form} name="notes">
+        <Form.Field {form} name="documentation">
           <Form.Control let:attrs>
-            <Form.Label>{$t('common.notes')} <span class="text-muted-foreground">({$t('common.optional')})</span></Form.Label> 
-            <Textarea {...attrs} bind:value={$formData.notes} disabled={submissionInProgress}/>
+            <Form.Label>{$t('common.documentation')}</Form.Label> 
+            <Textarea {...attrs} class="min-h-48" bind:value={$formData.documentation} disabled={submissionInProgress} required/>
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>
