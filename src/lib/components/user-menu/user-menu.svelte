@@ -20,11 +20,11 @@
 
 <DropdownMenu.Root>
   <DropdownMenu.Trigger asChild let:builder>
-    <Button name="User Menu" aria-label="User Menu" variant="default" builders={[builder]} class="relative aspect-square rounded-full">
+    <Button name="User Menu" aria-label="User Menu" variant={$user ? 'default' : 'secondary'} builders={[builder]} size="icon">
       {#if $user}
         <span class="text-lg font-semibold">{$user.name.slice(0,1)}</span>
       {:else}
-        <User />
+        <User size=20/>
       {/if}
     </Button>
   </DropdownMenu.Trigger>

@@ -15,10 +15,10 @@
 	import { changeFont, getFont } from '$lib/font/font';
 	
 	$: path = $page.url.pathname;
-	initializeAuthentication(path);
+	initializeAuthentication();
 	
 	$: pageTitle = $page?.data?.seo?.title;
-  	$: pageDescription = $page?.data?.seo?.description;
+	$: pageDescription = $page?.data?.seo?.description;
 	$: cookieBannerOpen = $page?.data?.cookieBannerOpen;
 	$: preferences = $page?.data?.cookiePreferences;
 

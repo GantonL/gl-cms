@@ -27,7 +27,7 @@ export const auth = () => {
   return getAuth(app());
 }
 
-export const initializeAuthentication = (currentNavigationPath?: string) => {
+export const initializeAuthentication = () => {
   const authentication = auth();
   setPersistence(authentication, browserLocalPersistence);
   onAuthStateChanged(authentication, (currentUser: User | null) => {
@@ -37,9 +37,9 @@ export const initializeAuthentication = (currentNavigationPath?: string) => {
           authRes.json().then((res) => {
             if (res?.success) {
               user.set(res.user);
-              goto(currentNavigationPath || '/');
             } else {
               user.set(undefined);
+              goto('/login')
             }
           })
         });
