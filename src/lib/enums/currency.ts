@@ -1,3 +1,3 @@
-export enum Currency {
+export enum CurrencyType {
     ILS = 'ILS',
 }

@@ -2,6 +2,7 @@
 	import { ScrollArea as ScrollAreaPrimitive } from "bits-ui";
 	import { Scrollbar } from "./index.js";
 	import { cn } from "$lib/utils.js";
+	import { direction } from "$lib/client/stores";
 
 	type $$Props = ScrollAreaPrimitive.Props & {
 		orientation?: "vertical" | "horizontal" | "both";
@@ -16,7 +17,7 @@
 	export let scrollbarYClasses: string = "";
 </script>
 
-<ScrollAreaPrimitive.Root {...$$restProps} class={cn("relative overflow-hidden", className)}>
+<ScrollAreaPrimitive.Root dir={$direction} {...$$restProps} class={cn("relative overflow-hidden", className)}>
 	<ScrollAreaPrimitive.Viewport class="h-full w-full rounded-[inherit]">
 		<ScrollAreaPrimitive.Content>
 			<slot />

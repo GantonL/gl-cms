@@ -1,4 +1,4 @@
-import { Currency } from "$lib/enums/currency";
+import { CurrencyType } from "$lib/enums/currency";
 import type { PaymentStatus } from "$lib/models/payment";
 import type { StoreOrderStatus } from "$lib/models/store";
 import { z } from "zod";
@@ -19,7 +19,7 @@ export const formSchema = z.object({
   client_id: z.string(),
   shipping_option: z.string().default('delivery').refine(so => so === 'delivery' || so === 'pickup'),
   status: z.string().default('approved').refine((status) => orderStatuses.includes(status as StoreOrderStatus)),
-  currency: z.string().default(Currency.ILS).refine((currency) => Object.keys(Currency).includes(currency)),
+  currency: z.string().default(CurrencyType.ILS).refine((currency) => Object.keys(CurrencyType).includes(currency)),
   payment_status: z.string().default('awaiting').refine((ps) => paymentStatuses.includes(ps as PaymentStatus)),
   additional_discount: z.number({coerce: true, message: 'Must be between 0 to 100'}).optional().refine((discount) => typeof discount === 'number' && (discount >= 0 && discount <= 100)),
 });

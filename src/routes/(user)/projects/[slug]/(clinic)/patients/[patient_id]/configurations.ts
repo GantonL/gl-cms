@@ -10,6 +10,7 @@ import type { Image } from "$lib/models/image";
 import { DateFormatter, getLocalTimeZone, parseDateTime } from "@internationalized/date";
 import { ScrollArea } from "$lib/components/ui/scroll-area";
 import { locale, t } from "$lib/i18n/translations";
+import Currency from "$lib/components/currency/currency.svelte";
 
 export const emptyTreatmentsResultsConfiguration: EmptyResultsConfiguration = {
     icon: CircleOff,
@@ -72,6 +73,13 @@ export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicTreat
             },
         },
         {
+            header: t.get('common.type'),
+            dataPath: 'type',
+            cell: ({value}) => {
+                return value ?? '';
+            }
+        },
+        {
             header: t.get('common.documentation'),
             dataPath: 'documentation',
             cell: ({value}) => {
@@ -81,15 +89,13 @@ export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicTreat
             }
         },
         {
-            header: t.get('common.type'),
-            dataPath: 'type',
-            cell: ({value}) => {
-                return value ?? '';
-            }
-        },
-        {
             header: t.get('common.price'),
             dataPath: 'price',
+            cell: ({value}) => {
+                const render = createRender(Currency); 
+                render.slot(value);
+                return render;
+            }
         },
         {
         header: t.get('common.actions'),

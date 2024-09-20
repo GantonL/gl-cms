@@ -6,6 +6,6 @@ import { writable } from "svelte/store";
 
 export const user = writable<User | null | undefined>();
 export const currentProject = writable<Pick<Project, 'name' | 'type' | 'id'> | null | undefined>();
-export const direction = writable('rtl');
+export const direction = writable<'rtl' | 'ltr' | undefined>('rtl');
 export const theme = writable(Themes.Default);
 export const font = writable(Font.Default);
