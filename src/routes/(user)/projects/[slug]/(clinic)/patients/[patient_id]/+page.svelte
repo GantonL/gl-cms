@@ -292,7 +292,7 @@
                         <LoaderCircle class="animate-spin" size=24 />
                       </div>
                     {:else}
-                      <Avatar.Image src={patient.avatar?.url} class="object-cover" alt="Avatar" />
+                      <Avatar.Image src={patient.avatar?.url} class="object-cover overflow-clip-margin-unset" alt="Avatar" />
                       <Avatar.Fallback><ImagePlus size=24 class="text-muted-foreground"/></Avatar.Fallback>
                     {/if}
                   </Avatar.Root>

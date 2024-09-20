@@ -7,10 +7,11 @@
   export let url = '';
   export let fallback = '?';
   export let style = dicebearCollections.avataaars;
+  export let imageClass: string = '';
   const dataUri = url.length > 0 ? url : (seed.length > 0 ? createAvatar(style, {seed}).toDataUriSync() : '');
 
 </script>
 <Avatar.Root class="border rounded-full">
-  <Avatar.Image src={dataUri} alt="GL avatar" />
+  <Avatar.Image src={dataUri} alt="GL avatar" class={imageClass} />
   <Avatar.Fallback>{(fallback).split(' ')[0].charAt(0).toUpperCase()}</Avatar.Fallback>
 </Avatar.Root>

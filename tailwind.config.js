@@ -1,4 +1,5 @@
 import { fontFamily } from "tailwindcss/defaultTheme";
+import plugin from 'tailwindcss/plugin';
 
 /** @type {import('tailwindcss').Config} */
 const config = {
@@ -63,6 +64,13 @@ const config = {
 	plugins: [
 		require('@tailwindcss/typography'),
 		require('tailwindcss-flip'),
+		plugin(function ({addUtilities}) {
+      addUtilities({
+        '.overflow-clip-margin-unset': {
+					'overflow-clip-margin': 'unset;'		
+				}
+      })
+    })
 	],
 };
 

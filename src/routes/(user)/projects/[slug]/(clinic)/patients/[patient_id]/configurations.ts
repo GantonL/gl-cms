@@ -63,7 +63,7 @@ export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicTreat
             header: t.get('common.last_modified'),
             dataPath: (patient) => patient,
             cell: ({ value }) => {
-                const dateFormatter = new DateFormatter(t.get(`common.date_format_type.${locale.get()}`), { dateStyle: 'long', timeStyle: 'short' });
+                const dateFormatter = new DateFormatter(t.get(`common.date_format_type.${locale.get()}`), { dateStyle: 'short', timeStyle: 'short' });
                 let dateTime = value.date;
                 if (value.time) {
                     dateTime = value.date.concat(`T${value.time}`);

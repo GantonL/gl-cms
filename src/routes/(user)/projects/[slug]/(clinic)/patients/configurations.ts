@@ -59,7 +59,7 @@ export const tableConfiguration: TableConfiguration<ClinicPatient> = {
         {
           dataPath: 'avatar',
           cell: (item) => {
-            return createRender(GLAvatar, { url: item.value?.url });
+            return createRender(GLAvatar, { url: item.value?.url, imageClass: 'object-cover overflow-clip-margin-unset' });
           }
         },
         {
