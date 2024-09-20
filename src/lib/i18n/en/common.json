@@ -204,5 +204,6 @@
     "treatment_updated_success": "Treatment was successfully updated",
     "treatments_types": "Treatments types",
     "treatments_types_description": "Define various treatments types to choose from when creating or editing a treatment",
-    "create_treatment_type": "Create treatment type"
+    "create_treatment_type": "Create treatment type",
+    "forms": "Forms"
 }

@@ -204,5 +204,6 @@
     "treatment_updated_success": "טיפול עודכן בהצלחה",
     "treatments_types": "סוגי טיפולים",
     "treatments_types_description": "הגדרת סוגי טיפולים לבחירה בעת יצירה או עריכה של טיפול",
-    "create_treatment_type": "יצירת סוג טיפול"
+    "create_treatment_type": "יצירת סוג טיפול",
+    "forms": "טפסים"
 }

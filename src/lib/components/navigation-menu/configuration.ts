@@ -1,6 +1,6 @@
 import type { NavigationLink } from "$lib/models/navigation-link";
 import { UserRole } from "$lib/enums/user-role";
-import { Barcode, ContactRound, Grid2X2, HandMetal, Phone, Settings, ShoppingCart, SquareUser, Users } from "lucide-svelte";
+import { Barcode, ContactRound, FileSignature, Grid2X2, HandMetal, Phone, Settings, ShoppingCart, SquareUser, Users } from "lucide-svelte";
 import { ProjectType } from "$lib/enums/projects";
 
 const sharedItemsConfiguration: NavigationLink[] = [
@@ -91,6 +91,14 @@ const clinicSettings: NavigationLink =
   icon: Settings,
 };
 
+const clinicForms: NavigationLink = 
+{
+  label: 'common.forms',
+  path: 'clinic-forms',
+  link: '',
+  icon: FileSignature,
+};
+
 export const ItemsConfiguration: Record<UserRole, NavigationLink[]> = {
   [UserRole.Admin]: AdminItemsConfiguration,
   [UserRole.User]: NavigationItemsConfiguration,
@@ -112,6 +120,7 @@ export const projectItemsConfiguration: Record<ProjectType, NavigationLink[]> = 
   ],
   [ProjectType.Clinic]: [
     patients,
+    clinicForms,
     clinicSettings,
   ],
 }
