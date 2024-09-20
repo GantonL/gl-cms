@@ -89,8 +89,8 @@
 
   </script>
   <form method="POST" action={`?/${action}`} enctype="multipart/form-data" use:enhance>
-    <ScrollArea class="flex flex-col gap-4 overflow-y-auto max-h-[80vh]">
-      <div class="grid items-center gap-4">
+    <ScrollArea class="flex flex-col gap-4 max-h-[80vh]">
+      <div class="grid items-center gap-4 px-2">
         <Form.Field {form} name="date" class="flex flex-col">
           <Form.Control let:attrs>
             <Form.Label>{$t('common.date')}</Form.Label>
@@ -129,7 +129,7 @@
           </Form.Control>
         </Form.Field>
       </div>
-      <div class="grid items-center gap-4">
+      <div class="grid items-center gap-4 px-2">
         <Form.Field {form} name="type">
           <Form.Control let:attrs>
             <Form.Label>{$t('common.type')} <span class="text-muted-foreground">({$t('common.optional')})</span></Form.Label> 
@@ -152,7 +152,7 @@
           <Form.FieldErrors />
         </Form.Field>
       </div>
-      <div class="grid items-center gap-4">
+      <div class="grid items-center gap-4 px-2">
         <Form.Field {form} name="documentation">
           <Form.Control let:attrs>
             <Form.Label>{$t('common.documentation')}</Form.Label> 
@@ -161,7 +161,7 @@
           <Form.FieldErrors />
         </Form.Field>
       </div>
-      <div class="grid items-center gap-4">
+      <div class="grid items-center gap-4 px-2">
         <Form.Field {form} name="price">
           <Form.Control let:attrs>
             <Form.Label>{$t('common.price')}</Form.Label> 
@@ -170,7 +170,6 @@
           <Form.FieldErrors />
         </Form.Field>
       </div>
-
     </ScrollArea>
     <div class="flex flex-row gap-2 items-center">
       <Form.Button disabled={submissionInProgress || disabled}>
