@@ -20,17 +20,12 @@
 
 <DropdownMenu.Root>
   <DropdownMenu.Trigger asChild let:builder>
-    <Button name="User Menu" aria-label="User Menu" variant="ghost" builders={[builder]} class="relative aspect-square rounded-full">
-      <Avatar.Root>
-        <Avatar.Image src={$user?.image} alt={$user?.name} />
-        <Avatar.Fallback>
-          {#if $user}
-            <UserRoundCheck />
-          {:else}
-            <User />
-          {/if}
-        </Avatar.Fallback>
-      </Avatar.Root>
+    <Button name="User Menu" aria-label="User Menu" variant="default" builders={[builder]} class="relative aspect-square rounded-full">
+      {#if $user}
+        <span class="text-lg font-semibold">{$user.name.slice(0,1)}</span>
+      {:else}
+        <User />
+      {/if}
     </Button>
   </DropdownMenu.Trigger>
   <DropdownMenu.Content class="w-48" align="end">
