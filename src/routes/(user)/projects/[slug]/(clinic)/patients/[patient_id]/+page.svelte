@@ -29,6 +29,7 @@
 	import CreateEditPatientTreatmentForm from "./create-edit-patient-treatment-form.svelte";
 	import { locale, t } from "$lib/i18n/translations";
 	import type { Project } from "$lib/models/project";
+	import Currency from "$lib/components/currency/currency.svelte";
 
   let createEditForm: SuperValidated<Infer<PatientFormSchema>>;
   let deletePatientOpened = false;
@@ -51,6 +52,8 @@
   let selectedTreatmentForm: SuperValidated<Infer<PatientTreatmentFormSchema>>;
   let selectedTreatment: ClinicTreatmentHistoryItem | undefined;
   let deleteTreatmentInProgress = false;
+  let totalPayments: number | undefined;
+  let fetchingPaymentsHistory = false;
 
   export let form: ActionData;
 
@@ -76,6 +79,7 @@
             ...patientTreatmentsHistory[treatmentToUpdateIndex],
             ...form.form!.data,
           }
+          updateTotalPayments();
           if (form?.error) {
             toast.error(t.get(form.message));
           }
@@ -106,12 +110,15 @@
   }
 
   function initializePatientTreatmentHistory() {
+    fetchingPaymentsHistory = true;
     if (!patient.id) { return; };
     fetch(`/projects/${project.id}/patients/${patient.id}/treatments`, { method: 'GET' })
       .then((res) => {
         res?.json().then((res) => {
-          patientTreatmentsHistory = res.treatmentsHistory;  
+          patientTreatmentsHistory = res.treatmentsHistory;
+          updateTotalPayments();
         })
+      .finally(() => fetchingPaymentsHistory = false)
       });
   }
     
@@ -276,6 +283,15 @@
     window.open(link, '_blank');
   }
 
+  function updateTotalPayments() {
+    totalPayments = patientTreatmentsHistory.reduce((acc, curr) => {
+      if (curr.payment_status === 'received') {
+        acc+=curr.price ?? 0;
+      }
+      return acc;
+    }, 0)
+  }
+
 </script>
 <Card.Root>
   <Card.Header>
@@ -322,11 +338,21 @@
           {/if}
         </div>
       </div>
-      <div class="flex flex-col items-start">
+      <div class="flex flex-col items-start gap-2">
         <Button variant="secondary" class="flex flex-row items-center gap-2" on:click={openChat}>
           <MessageSquare size=16/>
           <span class="hidden sm:block">{$t('common.open_chat')}</span>
         </Button>
+        <div class="py-2 px-4 flex flex-row gap-2 items-center bg-primary text-primary-foreground rounded-md">
+          <span>{$t('common.total_payments')}:</span>
+          <Currency >
+            {#if fetchingPaymentsHistory}
+              <LoaderCircle size=14 class="animate-spin space-x-2"/>
+            {:else}
+              {totalPayments}
+            {/if}
+          </Currency>
+        </div>
       </div>
     </div>
   </Card.Header>

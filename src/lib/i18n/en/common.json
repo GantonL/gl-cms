@@ -216,5 +216,6 @@
         "in_process": "In process",
         "partial": "Partial",
         "received": "Received"
-    }
+    },
+    "total_payments": "Total payments"
 }

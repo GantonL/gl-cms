@@ -215,5 +215,6 @@
         "in_process": "בתהליך עיבוד",
         "partial": "חלקי",
         "received": "התקבל"
-    }
+    },
+    "total_payments": "תשלומים"
 }
