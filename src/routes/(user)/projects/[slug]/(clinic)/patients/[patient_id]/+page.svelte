@@ -54,6 +54,7 @@
   let deleteTreatmentInProgress = false;
   let totalPayments: number | undefined;
   let fetchingPaymentsHistory = false;
+  let selectedPatientDataTab: string | undefined = 'treatments';
 
   export let form: ActionData;
 
@@ -338,21 +339,11 @@
           {/if}
         </div>
       </div>
-      <div class="flex flex-col items-start gap-2">
+      <div class="flex flex-col items-end gap-2">
         <Button variant="secondary" class="flex flex-row items-center gap-2" on:click={openChat}>
           <MessageSquare size=16/>
           <span class="hidden sm:block">{$t('common.open_chat')}</span>
         </Button>
-        <div class="py-2 px-4 flex flex-row gap-2 items-center bg-primary text-primary-foreground rounded-md">
-          <span>{$t('common.total_payments')}:</span>
-          <Currency >
-            {#if fetchingPaymentsHistory}
-              <LoaderCircle size=14 class="animate-spin space-x-2"/>
-            {:else}
-              {totalPayments}
-            {/if}
-          </Currency>
-        </div>
       </div>
     </div>
   </Card.Header>
@@ -449,11 +440,27 @@
       {#if patient?.id}
         <Card.Root class="flex-grow">
           <Card.Header>
-            <Card.Title>{$t('common.data')}</Card.Title>
-            <Card.Description>{$t('common.patient_data_description')}</Card.Description>
+            <div class="flex flex-row items-start justify-between">
+              <div class="flex flex-col gap-2">
+                <Card.Title>{$t('common.data')}</Card.Title>
+                <Card.Description>{$t('common.patient_data_description')}</Card.Description>
+              </div>
+              {#if selectedPatientDataTab === 'treatments'}
+                <div class="py-2 px-4 flex flex-row gap-2 items-center bg-primary text-primary-foreground rounded-md">
+                  <span>{$t('common.total_payments')}:</span>
+                  <Currency >
+                    {#if fetchingPaymentsHistory}
+                      <LoaderCircle size=14 class="animate-spin space-x-2"/>
+                    {:else}
+                      {totalPayments}
+                    {/if}
+                  </Currency>
+                </div>
+              {/if}
+            </div>
           </Card.Header>
           <Card.Content>
-            <Tabs.Root value="treatments" class="w-full">
+            <Tabs.Root value={selectedPatientDataTab} class="w-full" onValueChange={(v) => selectedPatientDataTab = v}>
               <Tabs.List>
                 <Tabs.Trigger value="treatments">
                   <div class="flex flex-row items-center gap-2">
