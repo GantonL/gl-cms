@@ -4,8 +4,8 @@
   export let type: CurrencyType = CurrencyType.ILS;
 
 </script>
-<span class="flex flex-row gap-2 items-center" dir="ltr">
-  <slot />
+<span class="flex flex-row items-center" dir="ltr">
+  <span><slot /></span>
   {#if type === CurrencyType.ILS}
     {@html '&#8362;'}
   {/if}

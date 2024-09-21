@@ -205,5 +205,8 @@
     "treatments_types": "סוגי טיפולים",
     "treatments_types_description": "הגדרת סוגי טיפולים לבחירה בעת יצירה או עריכה של טיפול",
     "create_treatment_type": "יצירת סוג טיפול",
-    "forms": "טפסים"
+    "forms": "טפסים",
+    "naviagte_to": "ניווט אל",
+    "enter": "כניסה",
+    "edit_project": "עריכת פרויקט"
 }

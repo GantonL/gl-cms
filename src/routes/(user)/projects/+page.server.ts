@@ -2,8 +2,8 @@ import { getAuthenticatedUser, isAdminUser } from "$lib/server/auth";
 import { error, fail, type Actions } from "@sveltejs/kit";
 import { superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
-import { formSchema } from "./schema";
-import { createProject, getProjects } from "$lib/server/projects.db";
+import { editFormSchema, formSchema } from "./schema";
+import { createProject, getProjects, updateProject } from "$lib/server/projects.db";
 import type { PageServerLoad } from "./$types";
 import { getUser } from "$lib/server/users.db";
 import { UserPermissions } from "$lib/enums/permission";
@@ -36,23 +36,46 @@ export const load: PageServerLoad = async (event) => {
 }
 
 export const actions: Actions = {
-  default: async (event) => {
+  create: async (event) => {
     const form = await superValidate(event, zod(formSchema));
     if (!form.valid) {
       return fail(400, {
         form,
       });
     }
-    const userCreated = await createProject({
+    const projectCreated = await createProject({
       name: form.data.name,
       url: form.data.url,
       type: form.data.type as ProjectType,
     });
-    if (!userCreated) {
+    if (!projectCreated) {
       return fail(400, {form});
     }
     return {
       form,
     };
   },
+  edit: async (event) => {
+    const form = await superValidate(event, zod(editFormSchema));
+    if (!form.valid) {
+      return fail(400, {
+        form,
+      });
+    }
+    if (!form.data.id) {
+      return fail(400, {
+        form,
+      });  
+    }
+    const projectUpdated = await updateProject(form.data.id!, {
+      display_name: form.data.display_name,
+      url: form.data.url,
+    });
+    if (!projectUpdated) {
+      return fail(400, {form});
+    }
+    return {
+      form,
+    };
+  }
 };

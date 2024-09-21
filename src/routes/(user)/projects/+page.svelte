@@ -46,7 +46,7 @@
       inProcess={deleting[project.id]}
       {permissions}
       on:delete={(event) => deleteProject(event)}
-      on:select={(event) => selectProject(event)}
+      on:enter={(event) => selectProject(event)}
       on:navigate={(event) => window.open(event.detail, '_blank')}/>
   {/each}
 </div>

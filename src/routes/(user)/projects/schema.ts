@@ -10,3 +10,13 @@ export const formSchema = z.object({
 });
  
 export type FormSchema = typeof formSchema;
+
+export const editFormSchema = z.object({
+  display_name: z.string().min(3),
+  url: z.string().optional(),
+
+  // for indentification on update
+  id: z.string().optional(),
+});
+
+export type EditFormSchema = typeof editFormSchema;
