@@ -90,10 +90,18 @@ export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicTreat
         },
         {
             header: t.get('common.price'),
-            dataPath: 'price',
+            dataPath: (patient) => patient,
             cell: ({value}) => {
-                const render = createRender(Currency); 
-                render.slot(value);
+                let price = value.price;
+                let styleClass = ''
+                if (value.payment_status === '' || value.payment_status === undefined || value.payment_status === 'awaiting') {
+                    price = `-${price}`;
+                    styleClass = 'text-destructive'
+                } else if (value.payment_status === 'received') {
+                    styleClass = 'text-green-500'
+                }
+                const render = createRender(Currency, {styleClass});
+                render.slot(price);
                 return render;
             }
         },

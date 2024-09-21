@@ -208,5 +208,13 @@
     "forms": "Forms",
     "navigate_to": "Navigate to",
     "enter": "Enter",
-    "edit_project": "Edit project"
+    "edit_project": "Edit project",
+    "payment_status": "Payment status",
+    "payment_statuses": {
+        "debt": "Debt",
+        "awaiting": "Awaiting",
+        "in_process": "In process",
+        "partial": "Partial",
+        "received": "Received"
+    }
 }

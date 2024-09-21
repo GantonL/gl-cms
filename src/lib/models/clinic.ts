@@ -1,4 +1,5 @@
 import type { Image } from "./image";
+import type { PaymentStatus } from "./payment";
 
 export interface ClinicPatient {
     id: string;
@@ -29,6 +30,7 @@ export interface ClinicTreatmentHistoryItem {
     time?: string; // bounded to date
     type?: string;
     price?: number;
+    payment_status?: PaymentStatus;
 }
 
 interface TreatmentType {

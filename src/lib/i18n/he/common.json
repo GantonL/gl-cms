@@ -208,5 +208,12 @@
     "forms": "טפסים",
     "naviagte_to": "ניווט אל",
     "enter": "כניסה",
-    "edit_project": "עריכת פרויקט"
+    "edit_project": "עריכת פרויקט",
+    "payment_status": "סטטוס תשלום",
+    "payment_statuses": {
+        "awaiting": "בהמתנה",
+        "in_process": "בתהליך עיבוד",
+        "partial": "חלקי",
+        "received": "התקבל"
+    }
 }

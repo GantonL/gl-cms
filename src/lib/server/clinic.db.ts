@@ -236,7 +236,7 @@ export const getPatientTreatmentsHistory = async (project: Project, patient_id: 
   return history;
 }
 
-export const createPatientTreatment = async (project: Project, treatment: Pick<ClinicTreatmentHistoryItem, 'date' | 'time' | 'documentation' | 'type' | 'patient_id' | 'price'>): Promise<ClinicTreatmentHistoryItem | undefined> => {
+export const createPatientTreatment = async (project: Project, treatment: Pick<ClinicTreatmentHistoryItem, 'date' | 'time' | 'documentation' | 'type' | 'patient_id' | 'price' | 'payment_status'>): Promise<ClinicTreatmentHistoryItem | undefined> => {
   const app = getSecondaryApp(project);
   if (!app) { return };
   const treatmentsHistoryCollectionRef = getFirestore(app).collection(ClinicCollections.TreatmentsHistory);
@@ -248,12 +248,13 @@ export const createPatientTreatment = async (project: Project, treatment: Pick<C
     documentation: treatment.documentation ?? '',
     type: treatment.type ?? '',
     price: treatment.price ?? 0,
+    payment_status: treatment.payment_status ?? 'awaiting',
   };
   const addRes = await treatmentsHistoryCollectionRef.add(newTreatment);
   return addRes?.id ? newTreatment : undefined;
 }
 
-export const updatePatientTreatment = async (project: Project, patient_id: string, treatment_id: string, treatment: Pick<ClinicTreatmentHistoryItem, 'date' | 'time' | 'documentation' | 'type' | 'price'>): Promise<boolean> => {
+export const updatePatientTreatment = async (project: Project, patient_id: string, treatment_id: string, treatment: Pick<ClinicTreatmentHistoryItem, 'date' | 'time' | 'documentation' | 'type' | 'price' | 'payment_status'>): Promise<boolean> => {
   const app = getSecondaryApp(project);
   if (!app) { return false };
   const query = await getFirestore(app).collection(ClinicCollections.TreatmentsHistory)

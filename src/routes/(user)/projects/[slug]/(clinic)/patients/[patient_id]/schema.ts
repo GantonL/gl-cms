@@ -1,3 +1,4 @@
+import type { PaymentStatus } from "$lib/models/payment";
 import { z } from "zod";
 
 export const patientFormSchema = z.object({
@@ -36,6 +37,7 @@ export const patientTreatmentFormSchema = z.object({
   documentation: z.string(),
   type: z.string().optional(),
   price: z.number({coerce: true}).min(0).optional(),
+  payment_status: z.string().default('awaiting').optional().refine((ps) => (['awaiting', 'in_process', 'partial', 'received']).includes(ps as PaymentStatus)),
   // Added upon changes from non-form origin
   id: z.string().optional(),
 });

@@ -6,6 +6,7 @@ import { patientFileFormSchema, patientFormSchema, patientTreatmentFormSchema } 
 import type { ClinicPatient, ClinicTreatmentHistoryItem } from "$lib/models/clinic";
 import { addPatientFiles, createPatient, getPatient, updatePatient, uploadAvatar, uploadFile, addPatientImages, createPatientTreatment, updatePatientTreatment } from "$lib/server/clinic.db";
 import { ClinicStorageDirectories } from "$lib/enums/storage";
+import type { PaymentStatus } from "$lib/models/payment";
 
 let currentProject: Project;
 
@@ -154,6 +155,7 @@ export const actions: Actions = {
     form.data.type = form.data.type && form.data.type !== 'undefined' ? form.data.type : '';
     form.data.documentation = form.data.documentation && form.data.documentation !== 'undefined' ? form.data.documentation : '';
     form.data.price = String(form.data.price) !== 'undefined' ? form.data.price : 0;
+    form.data.payment_status = String(form.data.payment_status) !== 'undefined' ? form.data.payment_status : '';
     const treatment: ClinicTreatmentHistoryItem | undefined = await createPatientTreatment(currentProject!, {
       patient_id: patientId,
       date: form.data.date!,
@@ -161,6 +163,7 @@ export const actions: Actions = {
       documentation: form.data.documentation,
       type: form.data.type,
       price: form.data.price,
+      payment_status: form.data.payment_status as PaymentStatus,
     });
     if (treatment === undefined) {
       return fail(400, {form});
@@ -190,6 +193,7 @@ export const actions: Actions = {
       documentation: form.data.documentation && form.data.documentation !== 'undefined' ? form.data.documentation : '',
       type: form.data.type && form.data.type !== 'undefined' ? form.data.type : '',
       price: String(form.data.price) !== 'undefined' ? form.data.price : 0,
+      payment_status: form.data.payment_status && form.data.payment_status !== 'undefined' ? form.data.payment_status as PaymentStatus : 'awaiting',
     });
     if (!treatmentUpdated) {
       return fail(400, {form});

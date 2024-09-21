@@ -23,6 +23,7 @@
 	  import * as Select from "$lib/components/ui/select";
 	import { page } from "$app/stores";
 	import type { ClinicSettings } from "$lib/models/clinic";
+	import type { PaymentStatus } from "$lib/models/payment";
   
     export let data: SuperValidated<Infer<PatientTreatmentFormSchema>>;
     export let action: 'update-treatment' | 'create-treatment';
@@ -86,6 +87,20 @@
       value: $formData.type,
       label: $formData.type,
     } : undefined;
+    $: paymentStatuses = (['awaiting', 'in_process', 'partial', 'received'] as PaymentStatus[])
+        .map((ps) => {
+          return {
+            value: ps,
+            label: t.get(`common.payment_statuses.${ps}`),
+          }
+        });
+    $: selectedPaymentStatus = $formData.payment_status ? {
+      value: $formData.payment_status,
+      label: t.get(`common.payment_statuses.${$formData.payment_status}`),
+    } : {
+      value: 'awaiting',
+      label: t.get(`common.payment_statuses.awaiting`),
+    };
 
   </script>
   <form method="POST" action={`?/${action}`} enctype="multipart/form-data" use:enhance>
@@ -166,6 +181,29 @@
           <Form.Control let:attrs>
             <Form.Label>{$t('common.price')}</Form.Label> 
             <Input type="number" min=0 {...attrs} bind:value={$formData.price} disabled={submissionInProgress}/>
+          </Form.Control>
+          <Form.FieldErrors />
+        </Form.Field>
+      </div>
+      <div class="grid items-center gap-4 px-2">
+        <Form.Field {form} name="payment_status">
+          <Form.Control let:attrs>
+            <Form.Label>{$t('common.payment_status')} <span class="text-muted-foreground">({$t('common.optional')})</span></Form.Label> 
+            <Select.Root
+              selected={selectedPaymentStatus}
+              disabled={submissionInProgress || disabled}
+              onSelectedChange={(v) => v && ($formData.payment_status = `${v.value}`)}
+            >
+              <Select.Trigger {...attrs}>
+                <Select.Value placeholder={$t('common.payment_status')} />
+              </Select.Trigger>
+              <Select.Content>
+                {#each paymentStatuses as type}
+                  <Select.Item value={type.value} label={type.label} />                
+                {/each}
+              </Select.Content>
+            </Select.Root>
+            <input hidden bind:value={$formData.payment_status} name={attrs.name} />
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>
