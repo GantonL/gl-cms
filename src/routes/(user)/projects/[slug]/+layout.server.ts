@@ -22,7 +22,7 @@ export const load: LayoutServerLoad = async (event) => {
   return {
     project,
     seo: {
-      title: project?.name || t.get('common.unknown_project'),
+      title: project?.display_name || project?.name || t.get('common.unknown_project'),
     }
   }
 }

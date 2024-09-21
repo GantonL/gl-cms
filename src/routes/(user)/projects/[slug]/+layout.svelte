@@ -6,6 +6,7 @@
   
   onMount(() => {
     currentProject.set({
+      display_name: project.display_name,
       name: project.name, 
       type: project.type,
       id: project.id,
