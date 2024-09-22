@@ -45,10 +45,10 @@
   }
 </script>
 <div class:blur-sm={inProcess}>
-  <Card.Root class="w-60 h-full">
+  <Card.Root class="w-60 h-full min-h-60 flex flex-col justify-between">
     {#if project === null}
       {#if permissions.includes(UserPermissions.CreateProject)}
-      <div class="flex items-center justify-center w-full h-full">
+      <div class="m-auto">
         <Dialog.Root>
           <Dialog.Trigger>
               <Button variant="ghost" class="w-full h-full"><Plus size=24/></Button>

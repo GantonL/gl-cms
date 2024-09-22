@@ -30,7 +30,7 @@
 </script>
  
 <h1 class="text-xl">{$t('common.users')}</h1>
-<div class="grid grid-cols-3 gap-4">
+<div class="flex flex-row flex-wrap items-center justify-center gap-4">
   <UserCard user={null} form={$page.data.form} {projects}/>
   {#each users as user}
     <UserCard user={user} inProcess={deleting[user.id]} on:delete={(event) => deleteUser(event)}/>

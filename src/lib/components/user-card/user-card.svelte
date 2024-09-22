@@ -17,9 +17,9 @@
   const dispatch = createEventDispatcher();
 </script>
 <div class:blur-sm={inProcess}>
-  <Card.Root class="w-60 h-full">
+  <Card.Root class="w-60 min-h-60 h-full flex flex-col justify-between">
     {#if user === null}
-      <div class="flex items-center justify-center w-full h-full">
+      <div class="m-auto">
         <Dialog.Root>
           <Dialog.Trigger>
             <Button variant="ghost" class="w-full h-full"><UserPlus size=24/></Button>

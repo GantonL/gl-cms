@@ -36,7 +36,7 @@
 </script>
  
 <h1 class="text-xl">{$t('common.projects')}</h1>
-<div class="grid grid-cols-3 gap-4">
+<div class="flex flex-row flex-wrap items-center justify-center gap-4">
   {#if permissions?.length}
     <ProjectCard project={null} form={$page.data.form} {permissions}/>
   {/if}
