@@ -9,11 +9,14 @@
 	import { writable } from 'svelte/store';
 	import { direction } from '$lib/client/stores';
 	import { t } from '$lib/i18n/translations';
+	import MediaQuery from '../media-query/media-query.svelte';
+  
   const mainContentScrollEvent = writable<Event>();
 
   export let navigationPath: string = '';
   let scrollable: HTMLElement;
   let scrolled: boolean = false;
+  let navigationMenuOpened = false;
 
   onNavigate((navigation) => {
     //@ts-ignore
@@ -35,11 +38,15 @@
 
 </script>
 <div class="h-[calc(100vh-0.75rem)] overflow-hidden" dir={$direction}>
-  <Header />
-  <div class="flex flex-row h-[calc(100%-3.55rem)] overflow-hidden">
-    <aside>
-      <NavigationMenu currentPath={navigationPath} />
-    </aside>
+  <Header on:open={(event) => {navigationMenuOpened = event.detail}}/>
+  <div class="flex flex-row h-[calc(100%-3.55rem)] overflow-hidden relative">
+    <MediaQuery query="(min-width: 640px)" let:matches>
+      {#if navigationMenuOpened || matches}
+        <aside>
+          <NavigationMenu currentPath={navigationPath} />
+        </aside>
+      {/if}
+    </MediaQuery>
     <main class="flex flex-col items-center flex-grow relative overflow-y-auto overflow-x-hidden" bind:this={scrollable} on:scroll={(e) => onMainContentScrolled(e)}>
       <div class="flex flex-col items-center gap-8 p-4 flex-auto w-full max-w-[1200px]">
         <slot />
