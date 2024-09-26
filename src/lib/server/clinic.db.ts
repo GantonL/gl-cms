@@ -1,5 +1,5 @@
 import type { Project } from "$lib/models/project";
-import { FieldValue, getFirestore } from "firebase-admin/firestore";
+import { AggregateField, FieldValue, getFirestore } from "firebase-admin/firestore";
 import { getSecondaryApp } from "./secondary.db";
 import type { ClinicPatient, ClinicTreatmentHistoryItem } from "$lib/models/clinic";
 import { ClinicCollections } from "$lib/enums/collections";
@@ -282,4 +282,17 @@ export const deletePatientTreatment = async (project: Project, patient_id: strin
   if (!treatmentDoc?.exists) { return false; };
   const deleteRes = await treatmentDoc.ref.delete();
   return !!deleteRes;
+}
+
+export const getClinicTotalPayments = async (project: Project): Promise<number> => {
+  const app = getSecondaryApp(project);
+  if (!app) { return 0 };
+  const query = await getFirestore(app).collection(ClinicCollections.TreatmentsHistory)
+    .where('payment_status', '==', 'received')
+    .aggregate({
+      totalPayments: AggregateField.sum('price'),
+    })
+    .get();
+  const data = query?.data(); 
+  return data?.totalPayments ?? 0;
 }
