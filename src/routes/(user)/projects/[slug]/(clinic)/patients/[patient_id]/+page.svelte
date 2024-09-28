@@ -52,9 +52,10 @@
   let selectedTreatmentForm: SuperValidated<Infer<PatientTreatmentFormSchema>>;
   let selectedTreatment: ClinicTreatmentHistoryItem | undefined;
   let deleteTreatmentInProgress = false;
-  let totalPayments: number | undefined;
+  let receivedPayments: number | undefined;
   let fetchingPaymentsHistory = false;
   let selectedPatientDataTab: string | undefined = 'treatments';
+  let balanceDue: number | undefined;
 
   export let form: ActionData;
 
@@ -285,10 +286,12 @@
   }
 
   function updateTotalPayments() {
-    totalPayments = patientTreatmentsHistory.reduce((acc, curr) => {
-      if (curr.payment_status === 'received') {
-        acc+=curr.price ?? 0;
-      }
+    receivedPayments = patientTreatmentsHistory.filter(t => t.payment_status === 'received' || t.payment_status === 'partial').reduce((acc, curr) => {
+      acc+=curr.price ?? 0;
+      return acc;
+    }, 0)
+    balanceDue = patientTreatmentsHistory.filter(t => t.payment_status === 'awaiting' || t.payment_status === 'in_process').reduce((acc, curr) => {
+      acc+=curr.price ?? 0;
       return acc;
     }, 0)
   }
@@ -446,15 +449,27 @@
                 <Card.Description>{$t('common.patient_data_description')}</Card.Description>
               </div>
               {#if selectedPatientDataTab === 'treatments'}
-                <div class="py-2 px-4 flex flex-row gap-2 items-center bg-primary text-primary-foreground rounded-md">
-                  <span>{$t('common.total_payments')}:</span>
-                  <Currency >
-                    {#if fetchingPaymentsHistory}
-                      <LoaderCircle size=14 class="animate-spin space-x-2"/>
-                    {:else}
-                      {totalPayments}
-                    {/if}
-                  </Currency>
+                <div class="flex flex-col gap-2 items-end">
+                  <div class="py-2 px-4 flex flex-row gap-2 items-center bg-primary text-primary-foreground rounded-md">
+                    <span>{$t('common.received_payments')}:</span>
+                    <Currency >
+                      {#if fetchingPaymentsHistory}
+                        <LoaderCircle size=14 class="animate-spin space-x-2"/>
+                      {:else}
+                        {receivedPayments}
+                      {/if}
+                    </Currency>
+                  </div>
+                  <div class="py-2 px-4 flex flex-row gap-2 items-center bg-destructive text-destructive-foreground rounded-md">
+                    <span>{$t('common.balance_due')}:</span>
+                    <Currency >
+                      {#if fetchingPaymentsHistory}
+                        <LoaderCircle size=14 class="animate-spin space-x-2"/>
+                      {:else}
+                        -{balanceDue}
+                      {/if}
+                    </Currency>
+                  </div>
                 </div>
               {/if}
             </div>
@@ -482,17 +497,21 @@
                 </Tabs.Trigger>
               </Tabs.List>
               <Tabs.Content value="treatments">
-                {#if patientTreatmentsHistory?.length === 0}
-                  <EmptyResults configuration={emptyTreatmentsResultsConfiguration} on:create={onAddTreatment}/>
+                {#if fetchingPaymentsHistory}
+                  <LoaderCircle class="animate-spin" size=14/>
                 {:else}
-                  <DataTable 
-                    disabled={deleteTreatmentInProgress || deletionInProgress || saveInProgress}
-                    data={patientTreatmentsHistory}
-                    configuration={treatmentsHistoryTableConfiguration} 
-                    on:create={onAddTreatment}
-                    on:edit={(event) => onEditTreatment(event.detail)}
-                    on:rowClicked={(event) => onEditTreatment(event.detail)}
-                    on:delete={(event) => deleteTreatment(event.detail.id)}/>
+                  {#if patientTreatmentsHistory?.length === 0}
+                    <EmptyResults configuration={emptyTreatmentsResultsConfiguration} on:create={onAddTreatment}/>
+                  {:else}
+                    <DataTable 
+                      disabled={deleteTreatmentInProgress || deletionInProgress || saveInProgress}
+                      data={patientTreatmentsHistory}
+                      configuration={treatmentsHistoryTableConfiguration} 
+                      on:create={onAddTreatment}
+                      on:edit={(event) => onEditTreatment(event.detail)}
+                      on:rowClicked={(event) => onEditTreatment(event.detail)}
+                      on:delete={(event) => deleteTreatment(event.detail.id)}/>
+                  {/if}
                 {/if}
               </Tabs.Content>
               <Tabs.Content value="files">

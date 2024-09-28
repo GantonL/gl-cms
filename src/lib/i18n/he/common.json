@@ -217,5 +217,7 @@
         "received": "התקבל"
     },
     "total_payments": "תשלומים",
-    "total_payments_dashboard_description": "סכום כל התשלומים שהתקבלו אי פעם"
+    "total_payments_dashboard_description": "סכום כל התשלומים שהתקבלו אי פעם",
+    "received_payments": "תשלומים שהתקבלו",
+    "balance_due": "יתרה לתשלום"
 }

@@ -39,10 +39,10 @@ export const actions: Actions = {
       date_of_birth: form.data.date_of_birth,
       phone: form.data.phone,
       gender: form.data.gender,
-      refered_by: form.data.refered_by,
-      notes: form.data.notes,
-      medical_condition: form.data.medical_condition,
-      medications: form.data.medications,
+      refered_by: form.data.refered_by ?? '',
+      notes: form.data.notes ?? '',
+      medical_condition: form.data.medical_condition ?? '',
+      medications: form.data.medications ?? '',
     });
     if (patient === undefined) {
       return fail(400, {form});

@@ -218,5 +218,7 @@
         "received": "Received"
     },
     "total_payments": "Total payments",
-    "total_payments_dashboard_description": "A sum of all time received payments"
+    "total_payments_dashboard_description": "A sum of all time received payments",
+    "received_payments": "Received payments",
+    "balance_due": "Blanace due"
 }

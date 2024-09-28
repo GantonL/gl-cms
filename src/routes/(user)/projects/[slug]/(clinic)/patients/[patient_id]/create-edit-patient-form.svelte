@@ -174,7 +174,7 @@
       </Form.Field>
     </div>
     <div class="grid items-center gap-4">
-      <Form.Field {form} name="phone">
+      <Form.Field {form} name="gender">
         <Form.Control let:attrs>
           <Form.Label>{$t('common.gender')}</Form.Label>
           <Select.Root
