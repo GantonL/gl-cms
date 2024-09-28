@@ -38,6 +38,7 @@ export const patientTreatmentFormSchema = z.object({
   type: z.string().optional(),
   price: z.number({coerce: true}).min(0).optional(),
   payment_status: z.string().default('awaiting').optional().refine((ps) => (['awaiting', 'in_process', 'partial', 'received']).includes(ps as PaymentStatus)),
+  paid: z.number({coerce: true}).min(0).optional(),
   // Added upon changes from non-form origin
   id: z.string().optional(),
 });

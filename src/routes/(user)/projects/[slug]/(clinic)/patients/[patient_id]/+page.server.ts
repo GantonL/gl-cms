@@ -155,6 +155,7 @@ export const actions: Actions = {
     form.data.type = form.data.type && form.data.type !== 'undefined' ? form.data.type : '';
     form.data.documentation = form.data.documentation && form.data.documentation !== 'undefined' ? form.data.documentation : '';
     form.data.price = String(form.data.price) !== 'undefined' ? form.data.price : 0;
+    form.data.paid = String(form.data.paid) !== 'undefined' ? form.data.paid : 0;
     form.data.payment_status = String(form.data.payment_status) !== 'undefined' ? form.data.payment_status : '';
     const treatment: ClinicTreatmentHistoryItem | undefined = await createPatientTreatment(currentProject!, {
       patient_id: patientId,
@@ -163,7 +164,8 @@ export const actions: Actions = {
       documentation: form.data.documentation,
       type: form.data.type,
       price: form.data.price,
-      payment_status: form.data.payment_status as PaymentStatus,
+      payment_status: form.data.payment_status as PaymentStatus,      
+      paid: form.data.paid,
     });
     if (treatment === undefined) {
       return fail(400, {form});
@@ -194,6 +196,7 @@ export const actions: Actions = {
       type: form.data.type && form.data.type !== 'undefined' ? form.data.type : '',
       price: String(form.data.price) !== 'undefined' ? form.data.price : 0,
       payment_status: form.data.payment_status && form.data.payment_status !== 'undefined' ? form.data.payment_status as PaymentStatus : 'awaiting',
+      paid: String(form.data.paid) !== 'undefined' ? form.data.paid : 0,
     });
     if (!treatmentUpdated) {
       return fail(400, {form});

@@ -90,9 +90,18 @@ export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicTreat
         },
         {
             header: t.get('common.price'),
+            dataPath: 'price',
+            cell: ({value}) => {
+                const render = createRender(Currency, {});
+                render.slot(value ?? 0);
+                return render;
+            },
+        },
+        {
+            header: t.get('common.paid'),
             dataPath: (patient) => patient,
             cell: ({value}) => {
-                let price = value.price;
+                let price = value.paid ?? 0;
                 let styleClass = ''
                 if (value.payment_status === '' || value.payment_status === undefined || value.payment_status === 'awaiting') {
                     price = `-${price}`;
@@ -103,27 +112,27 @@ export const treatmentsHistoryTableConfiguration: TableConfiguration<ClinicTreat
                 const render = createRender(Currency, {styleClass});
                 render.slot(price);
                 return render;
-            }
+            },
         },
         {
-        header: t.get('common.actions'),
-        dataPath: (patient) => patient,
-        cell: (c) => {
-            const render = createRender(ActionsMenu, { 
-            configuration: { 
-                items: treatmentsTableRowActions.items, 
-                trigger: treatmentsTableRowActions.trigger, 
-                data: c.value
-            } 
-            });
-            ['edit', 'delete'].forEach(eventType => {
-                render.on(eventType, (event) => {
-                    dispatch(event.type, event.detail);
+            header: t.get('common.actions'),
+            dataPath: (patient) => patient,
+            cell: (c) => {
+                const render = createRender(ActionsMenu, { 
+                configuration: { 
+                    items: treatmentsTableRowActions.items, 
+                    trigger: treatmentsTableRowActions.trigger, 
+                    data: c.value
+                } 
+                });
+                ['edit', 'delete'].forEach(eventType => {
+                    render.on(eventType, (event) => {
+                        dispatch(event.type, event.detail);
+                    })
                 })
-            })
-            return render; 
-        },
-        class: 'align-center'
+                return render; 
+            },
+            class: 'align-center'
         }
     ],
     pageSize: 10,

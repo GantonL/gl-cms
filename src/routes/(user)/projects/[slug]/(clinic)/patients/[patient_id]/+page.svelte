@@ -287,11 +287,11 @@
 
   function updateTotalPayments() {
     receivedPayments = patientTreatmentsHistory.filter(t => t.payment_status === 'received' || t.payment_status === 'partial').reduce((acc, curr) => {
-      acc+=curr.price ?? 0;
+      acc+=curr.paid ?? 0;
       return acc;
     }, 0)
-    balanceDue = patientTreatmentsHistory.filter(t => t.payment_status === 'awaiting' || t.payment_status === 'in_process').reduce((acc, curr) => {
-      acc+=curr.price ?? 0;
+    balanceDue = patientTreatmentsHistory.filter(t => t.payment_status === 'awaiting' || t.payment_status === 'in_process' || t.payment_status === 'partial').reduce((acc, curr) => {
+      acc+=((curr.price ?? 0) - (curr.paid ?? 0));
       return acc;
     }, 0)
   }

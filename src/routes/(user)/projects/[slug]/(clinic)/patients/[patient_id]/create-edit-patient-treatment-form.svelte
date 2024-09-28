@@ -208,6 +208,15 @@
           <Form.FieldErrors />
         </Form.Field>
       </div>
+      <div class="grid items-center gap-4 px-2">
+        <Form.Field {form} name="paid">
+          <Form.Control let:attrs>
+            <Form.Label>{$t('common.paid')}</Form.Label> 
+            <Input type="number" min=0 {...attrs} bind:value={$formData.paid} disabled={submissionInProgress}/>
+          </Form.Control>
+          <Form.FieldErrors />
+        </Form.Field>
+      </div>
     </ScrollArea>
     <div class="flex flex-row gap-2 items-center">
       <Form.Button disabled={submissionInProgress || disabled}>

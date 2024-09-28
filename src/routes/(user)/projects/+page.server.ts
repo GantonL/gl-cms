@@ -1,5 +1,5 @@
 import { getAuthenticatedUser, isAdminUser } from "$lib/server/auth";
-import { error, fail, type Actions } from "@sveltejs/kit";
+import { error, fail, redirect, type Actions } from "@sveltejs/kit";
 import { superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
 import { editFormSchema, formSchema } from "./schema";
@@ -25,6 +25,9 @@ export const load: PageServerLoad = async (event) => {
     permissions.push(UserPermissions.DeleteProject);
   }
   const projects = await getProjects(names);
+  if (projects?.length === 1) {
+    redirect(300, `projects/${projects[0].id}`);
+  }
   return {
     form: await superValidate(zod(formSchema)),
     projects,

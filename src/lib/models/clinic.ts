@@ -31,6 +31,7 @@ export interface ClinicTreatmentHistoryItem {
     type?: string;
     price?: number;
     payment_status?: PaymentStatus;
+    paid?: number;
 }
 
 interface TreatmentType {
