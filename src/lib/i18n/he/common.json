@@ -220,5 +220,13 @@
     "total_payments_dashboard_description": "סכום כל התשלומים שהתקבלו אי פעם",
     "received_payments": "תשלומים שהתקבלו",
     "balance_due": "יתרה לתשלום",
-    "paid": "שולם"
+    "paid": "שולם",
+    "forms_types": {
+        "esthephil_agreement": {
+            "title": "הסכמה לטיפול באסטפיל",
+            "description": "טופס הסכמה לטיפול באספטיל עבור מרפאות אסתטיקה"
+        }
+    },
+    "add_to_project": "הוספה לפרויקט",
+    "remove_from_project": "הסרה מהפרויקט"
 }

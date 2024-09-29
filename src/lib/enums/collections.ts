@@ -1,6 +1,7 @@
 export enum Collections {
   Users = 'users',
   Projects = 'projects',
+  Forms = 'forms'
 }
 
 export enum StoreCollections {
