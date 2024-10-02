@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { t } from "$lib/i18n/translations";
-	import { Circle, CircleCheckBig, FileSignature } from "lucide-svelte";
+	import { Minus, Plus, FileSignature } from "lucide-svelte";
 	import { Button } from "../ui/button";
 	import * as Card from "../ui/card";
 	import type { FormType } from "$lib/enums/form-type";
 	import { createEventDispatcher } from "svelte";
-	import * as Tooltip from "../ui/tooltip";
 
   const dispath = createEventDispatcher();
 
@@ -17,7 +16,7 @@
     dispath('checked', check);
   }
 </script>
-<Card.Root class=" max-w-96">
+<Card.Root class="max-w-96 {check ? 'border-2 border-primary' : ''}">
   <Card.Header>
     <div class="flex flex-row justify-between items-start gap-4">
       <div class="flex flex-row gap-4">
@@ -38,24 +37,25 @@
           <Card.Description>{$t(`common.forms_types.${type}.description`)}</Card.Description>
         </div>
       </div>
-      <Tooltip.Root>
-        <Tooltip.Trigger>
-          <Button variant="outline" size="icon" on:click={toggleCheck} class="hover:text-foreground {!check ? 'text-muted' : 'text-primary'}">
-            {#if check}
-              <CircleCheckBig size=20/>
-            {:else}
-              <Circle size=20/>
-            {/if}
-          </Button>
-        </Tooltip.Trigger>
-        <Tooltip.Content>
-          {#if check}
-            {$t('common.remove_from_project')}
-          {:else}
-            {$t('common.add_to_project')}
-          {/if}
-        </Tooltip.Content>
-      </Tooltip.Root>
     </div>
   </Card.Header>
+  <Card.Footer>
+    <div class="flex flex-row gap-2 items-center">
+      <Button variant="secondary">{$t('common.preview')}</Button>
+      <Button variant={check ? 'destructive' : 'default'} on:click={toggleCheck} class="flex flex-row items-center gap-2">
+        {#if check}
+          <Minus size=20/>
+        {:else}
+          <Plus size=20/>
+        {/if}
+        <span>
+          {#if check}
+            {$t('common.remove')}
+          {:else}
+            {$t('common.add')}
+          {/if}
+        </span>
+      </Button>
+    </div>
+  </Card.Footer>
 </Card.Root>

@@ -227,6 +227,7 @@
             "description": "Aesthetics clinic AestheFill agreement form"
         }
     },
-    "add_to_project": "Add to project",
-    "remove_from_project": "Remove from project"
+    "add": "Add",
+    "remove": "Remove",
+    "preview": "Preview"
 }
