@@ -1,3 +1,3 @@
 export enum FormType {
-  EsthephilAgreement = 'esthephil_agreement',
+  AestheFillAgreement = 'aesthefill_agreement',
 }

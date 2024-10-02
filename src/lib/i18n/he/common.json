@@ -221,7 +221,7 @@
     "balance_due": "יתרה לתשלום",
     "paid": "שולם",
     "forms_types": {
-        "esthephil_agreement": {
+        "aesthefill_agreement": {
             "title": "הסכמה לטיפול באסטפיל",
             "description": "טופס הסכמה לטיפול באספטיל עבור מרפאות אסתטיקה"
         }

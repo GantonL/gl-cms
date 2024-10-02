@@ -222,8 +222,8 @@
     "balance_due": "Blanace due",
     "paid": "Paid",
     "forms_types": {
-        "esthephil_agreement": {
-            "title": "Esthephil agreement",
+        "aesthefill_agreement": {
+            "title": "AestheFill agreement",
             "description": "Aesthetics clinic Esthephil agreement form"
         }
     },
