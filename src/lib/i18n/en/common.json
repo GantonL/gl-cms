@@ -48,7 +48,6 @@
     "confirm_dialog_title": "Additional confirmation is required",
     "delete_image_confirmation_description": "This action cannot be undone. This will permanently delete the selected image.",
     "cancel": "Cancel",
-    "menu_not_available": "Menu is not available",
     "create_project": "Create project",
     "delete_project": "Delete project",
     "are_you_sure": "Are you sure?",
