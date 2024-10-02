@@ -6,4 +6,6 @@ export interface NavigationLink {
   link: string;
   path?: string;
   icon?: ComponentType<Icon>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  hide?: (...args: any) => boolean;
 }

@@ -19,7 +19,7 @@
             item.link = `/projects/${$currentProject?.id ?? 'unknown'}/${item.path}`;
             return item;
           })
-        ] : 
+        ].filter(item => !('hide' in item) || !item.hide!($user)) : 
         [];
   let expanded = false;
   const navigationMenuExpansionStorageKey = 'navigation-menu-expanded';

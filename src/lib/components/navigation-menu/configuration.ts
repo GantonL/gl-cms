@@ -2,13 +2,17 @@ import type { NavigationLink } from "$lib/models/navigation-link";
 import { UserRole } from "$lib/enums/user-role";
 import { Barcode, ContactRound, FileSignature, Grid2X2, HandMetal, Phone, Settings, ShoppingCart, SquareUser, Users } from "lucide-svelte";
 import { ProjectType } from "$lib/enums/projects";
+import type { User } from "$lib/models/user";
 
 const sharedItemsConfiguration: NavigationLink[] = [
   { 
     label: 'common.projects', 
     icon: HandMetal, 
     path: 'projects',
-    link: ''
+    link: '',
+    hide: (user: User) => {
+      return (user?.projects?.length ?? 0) <= 1 && user.role !== UserRole.Admin;
+    }
   }, 
 ];
 
