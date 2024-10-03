@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from "$app/stores";
-	import FormPreview from "$lib/components/form-preview/form-preview.svelte";
+	import FormPreview from "$lib/components/forms/form-preview/form-preview.svelte";
 	import { FormsTypes } from "$lib/configurations/forms";
 	import { FormType } from "$lib/enums/form-type";
 	import { t } from "$lib/i18n/translations";

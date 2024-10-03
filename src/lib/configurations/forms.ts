@@ -4,6 +4,7 @@ import { ProjectType } from "$lib/enums/projects";
 export const FormsTypes: Record<ProjectType, FormType[]> = {
   [ProjectType.Clinic]: [
     FormType.AestheFillAgreement,
+    FormType.BotoxAgreement,
   ],
   [ProjectType.None]: [],
   [ProjectType.Store]: [],

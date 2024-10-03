@@ -225,6 +225,10 @@
         "aesthefill_agreement": {
             "title": "AestheFill agreement",
             "description": "Aesthetics clinic AestheFill agreement form"
+        },
+        "botox_agrreement": {
+            "title": "Botox agreement",
+            "description": "Aesthetics clinic Botox agreement form"
         }
     },
     "add": "Add",
