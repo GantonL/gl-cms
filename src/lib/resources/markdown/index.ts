@@ -1,7 +1,4 @@
-interface MarkdownResource {
-  file: Record<string, { default: Promise<unknown>, metadata: Promise<unknown> }>;
-  path: string;
-}
+import type { MarkdownResource } from "$lib/models/markdown";
 
 export const MarkdownResources: Record<string, MarkdownResource> = {
   ['site-terms-en']: {
