@@ -112,14 +112,15 @@
   }
 
   function initializePatientTreatmentHistory() {
-    fetchingPaymentsHistory = true;
     if (!patient.id) { return; };
+    fetchingPaymentsHistory = true;
     fetch(`/projects/${project.id}/patients/${patient.id}/treatments`, { method: 'GET' })
       .then((res) => {
         res?.json().then((res) => {
           patientTreatmentsHistory = res.treatmentsHistory;
           updateTotalPayments();
         })
+        .finally(() => fetchingPaymentsHistory = false)
       .finally(() => fetchingPaymentsHistory = false)
       });
   }
@@ -456,7 +457,7 @@
                       {#if fetchingPaymentsHistory}
                         <LoaderCircle size=14 class="animate-spin space-x-2"/>
                       {:else}
-                        {receivedPayments}
+                        {receivedPayments ?? 0}
                       {/if}
                     </Currency>
                   </div>
@@ -466,7 +467,7 @@
                       {#if fetchingPaymentsHistory}
                         <LoaderCircle size=14 class="animate-spin space-x-2"/>
                       {:else}
-                        -{balanceDue}
+                        -{balanceDue ?? 0}
                       {/if}
                     </Currency>
                   </div>
