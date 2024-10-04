@@ -233,5 +233,8 @@
     },
     "add": "Add",
     "remove": "Remove",
-    "preview": "Preview"
+    "preview": "Preview",
+    "clear": "Clear",
+    "signature": "Signature",
+    "confirm": "Confirm"
 }
