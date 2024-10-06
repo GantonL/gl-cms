@@ -8,6 +8,7 @@
 	import FormShadowTemplate from "../form-shadow-template/form-shadow-template.svelte";
 	import * as Dialog from "$lib/components/ui/dialog";
 	import { FormsMarkdowns } from "../markdowns";
+	import { ScrollArea } from "$lib/components/ui/scroll-area";
 
   const dispath = createEventDispatcher();
 
@@ -65,14 +66,16 @@
 </Card.Root>
 
 <Dialog.Root bind:open={previewDialogOpened}>
-  <Dialog.Content>
+  <Dialog.Content class="max-w-[800px]">
     <Dialog.Header>
       <Dialog.Title>{$t('common.preview')}</Dialog.Title>
     </Dialog.Header>
     {#if loadingFormContent}
       <LoaderCircle size=20 class="animate-spin"/>
     {:else}
-      <svelte:component this={formContent}></svelte:component>
+      <ScrollArea class="prose max-w-[800px] max-h-[80vh] prose-img:m-0 prose-headings:text-secondary-foreground prose-headings:text-center pe-4 text-secondary-foreground text-justify">
+        <svelte:component this={formContent} ></svelte:component>
+      </ScrollArea>
     {/if}
   </Dialog.Content>
 </Dialog.Root>
