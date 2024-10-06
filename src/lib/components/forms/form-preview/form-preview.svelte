@@ -26,7 +26,7 @@
   async function openFormPreview() {
     previewDialogOpened = true;
     loadingFormContent = true;
-    const resourceId = `${FormType.BotoxAgreement}_${locale.get()}`;
+    const resourceId = `${type}_${locale.get()}`;
     const file = FormsMarkdowns[resourceId].file;
     formContent = await file[FormsMarkdowns[resourceId].path].default as ComponentType;
     loadingFormContent = false;

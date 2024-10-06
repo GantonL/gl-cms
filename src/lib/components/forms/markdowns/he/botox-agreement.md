@@ -6,27 +6,34 @@ date: '05.10.2024'
 <script lang="ts">
   import SignaturePad from '$lib/components/signature-pad/signature-pad.svelte';
   import UserSignature from '$lib/components/forms/sections/user-signature.svelte';
+  import DoctorSignature from '$lib/components/forms/sections/doctor-signature.svelte';
   import UserDeclaration from '$lib/components/forms/sections/user-declaration.svelte';
   import GenericText from '$lib/components/forms/sections/generic-text.svelte';
-  
+
   export let confirmed = false;
   let declaration = false;
   let signed = false;
+  let doctorSigned = false;
   let areas = false;
 
   function onDeclerationChanged(changes: {value: boolean, state: {name: string, date: string, id: string }}) {
     declaration = changes.value;
-    confirmed = declaration && signed && areas; 
+    confirmed = declaration && signed && areas && doctorSigned; 
   }
 
   function onSignatureChanged(changes: {value: boolean, state: {name: string, date: string, signature: string }}) {
     signed = changes.value;
-    confirmed = declaration && signed && areas; 
+    confirmed = declaration && signed && areas && doctorSigned; 
+  }
+
+  function onDoctorSignatureChanged(changes: {value: boolean, state: {name: string, date: string, signature: string }}) {
+    doctorSigned = changes.value;
+    confirmed = declaration && signed && areas && doctorSigned; 
   }
 
   function onAreasChanged(changes: {value: boolean, state: {value: string}}) {
     areas = changes.value;
-    confirmed = declaration && signed && areas; 
+    confirmed = declaration && signed && areas && doctorSigned; 
   }
 </script>
 ### טופס הסכמה: הזרקת בוטוקס - BOTOX (בוטוליניום טוקסין)
@@ -58,4 +65,10 @@ date: '05.10.2024'
 זיכוי כספי משום סוג, בשל סבוך או תוצאה לא רצויה לאחר הטיפול. כמו כן, לא יכוסו כל נזק כספי או אחר
 שיגרם בקשר לטיפול כמו אובדן ימי עבודה, רכישת תרופות, נסיעות מיוחדות, אשפוז, ו/או כל נזק ישיר או
 עקיף שייגרם בהקשר ישיר או עקיף לתוצאות הטיפול אותו אעבור.
+
 <UserSignature {confirmed} on:changed={(event) => onSignatureChanged(event.detail)}/>
+
+אני מאשר/ת כי הסברתי למטופל/ת את כל האמור לעיל בפרוט הדרוש וכי החתימה בוצעה לאחר
+ששוכנעתי כי הסברי הובנו במלואם.
+
+<DoctorSignature {confirmed} on:changed={(event) => onDoctorSignatureChanged(event.detail)}/>
