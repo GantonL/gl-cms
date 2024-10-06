@@ -7,19 +7,26 @@ date: '05.10.2024'
   import SignaturePad from '$lib/components/signature-pad/signature-pad.svelte';
   import UserSignature from '$lib/components/forms/sections/user-signature.svelte';
   import UserDeclaration from '$lib/components/forms/sections/user-declaration.svelte';
+  import GenericText from '$lib/components/forms/sections/generic-text.svelte';
   
   export let confirmed = false;
   let declaration = false;
   let signed = false;
+  let areas = false;
 
   function onDeclerationChanged(changes: {value: boolean, state: {name: string, date: string, id: string }}) {
     declaration = changes.value;
-    confirmed = declaration && signed; 
+    confirmed = declaration && signed && areas; 
   }
 
   function onSignatureChanged(changes: {value: boolean, state: {name: string, date: string, signature: string }}) {
     signed = changes.value;
-    confirmed = declaration && signed; 
+    confirmed = declaration && signed && areas; 
+  }
+
+  function onAreasChanged(changes: {value: boolean, state: {value: string}}) {
+    areas = changes.value;
+    confirmed = declaration && signed && areas; 
   }
 </script>
 ### טופס הסכמה: הזרקת בוטוקס - BOTOX (בוטוליניום טוקסין)
@@ -29,6 +36,11 @@ date: '05.10.2024'
 כמו גם לעיתים לשיפור כאבי ראש.
 
 <UserDeclaration {confirmed} on:changed={(event) => onDeclerationChanged(event.detail)}/>
+
+אני מצהיר/ה בזה שקיבלתי הסבר מפורט על הזרקת בוטוליניום טוקסין A כטיפול קוסמטי רפואי בקמטים
+באזורים: <GenericText {confirmed} on:changed={(event) => onAreasChanged(event.detail)}/>. על התוצאות המקוות,
+על הסיכונים ועל דרכי הטיפול החלופיות האפשריות לרבות הסיכויים והסיכונים בכל אחד מהליכים אלה. אני
+נותן/ת בזאת את הסכמתי לביצוע הפעולה.
 
 הוסבר לי בע&quot;פ ובכתב כי הזרקת בוטוליניום לשרירי העפעפיים והמצח עלולה לגרום לדימום מקומי באזור
 ההזרקה, שטף דם תת עורי, וכן לכאב או לתחושת &quot;שריפה&quot; מקומית וחולפת. כמו כן, הוסבר לי כי בעקבות
