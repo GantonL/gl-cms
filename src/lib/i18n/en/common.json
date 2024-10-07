@@ -237,5 +237,6 @@
     "clear": "Clear",
     "signature": "Signature",
     "confirm": "Confirm",
-    "doctor_name": "Doctor name"
+    "doctor_name": "Doctor name",
+    "patient_name": "Patient name"
 }

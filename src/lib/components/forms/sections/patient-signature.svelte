@@ -24,7 +24,7 @@
 </script>
 <div class="flex flex-row gap-4 items-start flex-wrap p-4 w-full">
   <div class="flex flex-col gap-2">
-    <label for="name">{$t('common.name')}</label>
+    <label for="name">{$t('common.patient_name')}</label>
     {#if !confirmed}
       <Input id="name" type="text" bind:value={name} on:change={handleChange}/>
     {:else}

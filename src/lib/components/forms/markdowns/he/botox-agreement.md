@@ -5,7 +5,7 @@ date: '05.10.2024'
 ---
 <script lang="ts">
   import SignaturePad from '$lib/components/signature-pad/signature-pad.svelte';
-  import UserSignature from '$lib/components/forms/sections/user-signature.svelte';
+  import PatientSignature from '$lib/components/forms/sections/patient-signature.svelte';
   import DoctorSignature from '$lib/components/forms/sections/doctor-signature.svelte';
   import UserDeclaration from '$lib/components/forms/sections/user-declaration.svelte';
   import GenericText from '$lib/components/forms/sections/generic-text.svelte';
@@ -66,7 +66,7 @@ date: '05.10.2024'
 שיגרם בקשר לטיפול כמו אובדן ימי עבודה, רכישת תרופות, נסיעות מיוחדות, אשפוז, ו/או כל נזק ישיר או
 עקיף שייגרם בהקשר ישיר או עקיף לתוצאות הטיפול אותו אעבור.
 
-<UserSignature {confirmed} on:changed={(event) => onSignatureChanged(event.detail)}/>
+<PatientSignature {confirmed} on:changed={(event) => onSignatureChanged(event.detail)}/>
 
 אני מאשר/ת כי הסברתי למטופל/ת את כל האמור לעיל בפרוט הדרוש וכי החתימה בוצעה לאחר
 ששוכנעתי כי הסברי הובנו במלואם.

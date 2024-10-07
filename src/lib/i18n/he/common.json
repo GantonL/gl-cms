@@ -236,5 +236,6 @@
     "clear": "ניקוי",
     "signature": "חתימה",
     "confirm": "אישור",
-    "doctor_name": "שם הרופא"
+    "doctor_name": "שם הרופא",
+    "patient_name": "שם המטופל"
 }

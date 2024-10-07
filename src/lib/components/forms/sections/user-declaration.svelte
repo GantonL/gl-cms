@@ -4,34 +4,34 @@
 	import { createEventDispatcher } from "svelte";
 
   export let confirmed = false;
-  let name: string;
-  let date: string;
+  let firstName: string;
+  let surname: string;
   let id: string;
   const dispatch = createEventDispatcher();
 
   function handleChange() {
     dispatch('changed', {
-      value: name && date && id,
-      state: { name, date, id }
-    });  
+      value: firstName && surname && id,
+      state: { firstName, surname, id }
+    });
   }
 
 </script>
 <div class="flex flex-row gap-4 items-start flex-wrap p-4 w-full">
   <div class="flex flex-col gap-2">
-    <label for="name">{$t('common.name')}</label>
+    <label for="firstName">{$t('common.first_name')}</label>
     {#if !confirmed}
-      <Input id="name" type="text" bind:value={name} on:change={handleChange}/>
+      <Input id="firstName" type="text" bind:value={firstName} on:change={handleChange}/>
     {:else}
-      <span class="font-semibold">{name}</span>
+      <span class="font-semibold">{firstName}</span>
     {/if}
   </div>
   <div class="flex flex-col gap-2">
-    <label for="date">{$t('common.date')}</label>
+    <label for="surname">{$t('common.surname')}</label>
     {#if !confirmed}
-      <Input id="date" type="text" bind:value={date} on:change={handleChange}/>
+      <Input id="surname" type="text" bind:value={surname} on:change={handleChange}/>
     {:else}
-      <span class="font-semibold">{date}</span>
+      <span class="font-semibold">{surname}</span>
     {/if}
   </div>
   <div class="flex flex-col gap-2">
