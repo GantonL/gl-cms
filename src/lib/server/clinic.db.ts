@@ -249,6 +249,7 @@ export const createPatientTreatment = async (project: Project, treatment: Pick<C
     type: treatment.type ?? '',
     price: treatment.price ?? 0,
     payment_status: treatment.payment_status ?? 'awaiting',
+    paid: treatment.paid ?? 0,
   };
   const addRes = await treatmentsHistoryCollectionRef.add(newTreatment);
   return addRes?.id ? newTreatment : undefined;
@@ -288,7 +289,7 @@ export const getClinicTotalPayments = async (project: Project): Promise<number> 
   const app = getSecondaryApp(project);
   if (!app) { return 0 };
   const query = await getFirestore(app).collection(ClinicCollections.TreatmentsHistory)
-    .where('payment_status', '==', 'received')
+    .where('payment_status', 'in', ['received', 'partial'])
     .aggregate({
       totalPayments: AggregateField.sum('paid'),
     })
