@@ -7,7 +7,7 @@
 </script>
 <h1 class="text-2xl">{$t('common.landing_page_title')}</h1>
 <p class="text-center text-balance text-lg">{$t('common.landing_page_description')}</p>
-{#if !$user}
+{#if !$user?.id}
   <div class="flex flex-row gap-4 p-4">
     <a href="/login">
       <Button variant="default" size="lg"  class="flex flex-row gap-2 items-center">

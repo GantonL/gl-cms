@@ -46,7 +46,8 @@
 	}
 
 </script>
-<h1>{$t('common.forms')}</h1>
+<h1 class="text-xl">{$t('common.forms')}</h1>
+<p>{$t('common.forms_page_usage_description')}</p>
 <div class="flex flex-row flex-wrap gap-4 items-center mt-4">
 	{#each FormsTypes[project.type] as type, i}
 		<FormPreview {type} check={projectForms.map(t => t.type).includes(type)} on:checked={(event) => onAddOrRemoveFormType(type, event.detail, i)}/>

@@ -238,5 +238,6 @@
     "signature": "Signature",
     "confirm": "Confirm",
     "doctor_name": "Doctor name",
-    "patient_name": "Patient name"
+    "patient_name": "Patient name",
+    "forms_page_usage_description": "Editing form templates for signature. Here you can view all types of existing forms. Adding forms will allow you to send them to customers for signature from the customer page."
 }
