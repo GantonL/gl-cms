@@ -9,7 +9,7 @@
 	import { toast } from "svelte-sonner";
 	import * as AlertDialog from "$lib/components/ui/alert-dialog";
 	import { Button } from "$lib/components/ui/button";
-	import { ArrowRight, AlertTriangle, ImagePlus, LoaderCircle, Pencil, PencilOff, Pill, NotebookPen, Stethoscope, File, Image, MessageSquare } from "lucide-svelte";
+	import { ArrowRight, AlertTriangle, ImagePlus, LoaderCircle, Pencil, PencilOff, Pill, NotebookPen, Stethoscope, File, Image, MessageSquare, FileSignature, Info, ExternalLink } from "lucide-svelte";
 	import { goto } from "$app/navigation";
 	import type { ClinicPatient, ClinicTreatmentHistoryItem } from "$lib/models/clinic";
   import * as Tabs from "$lib/components/ui/tabs";
@@ -30,6 +30,8 @@
 	import { locale, t } from "$lib/i18n/translations";
 	import type { Project } from "$lib/models/project";
 	import Currency from "$lib/components/currency/currency.svelte";
+	import type { FormTemplate } from "$lib/models/form-template";
+	import ScrollArea from "$lib/components/ui/scroll-area/scroll-area.svelte";
 
   let createEditForm: SuperValidated<Infer<PatientFormSchema>>;
   let deletePatientOpened = false;
@@ -56,6 +58,7 @@
   let fetchingPaymentsHistory = false;
   let selectedPatientDataTab: string | undefined = 'treatments';
   let balanceDue: number | undefined;
+  let selectFormsDialogOpened = false;
 
   export let form: ActionData;
 
@@ -99,6 +102,8 @@
         const years = today(getLocalTimeZone()).year - parsedDate.year;
         patientDOB = `${dob} (${years})`; 
   }
+
+  $: forms = $page.data.forms as FormTemplate[];
 
   onMount(() => {
     initializeForms();
@@ -297,6 +302,11 @@
     }, 0)
   }
 
+  function openFormSelection() {
+    if (forms?.length === 0) { return };
+    selectFormsDialogOpened = true;
+  }
+
 </script>
 <Card.Root>
   <Card.Header>
@@ -344,10 +354,25 @@
         </div>
       </div>
       <div class="flex flex-col items-end gap-2">
-        <Button variant="secondary" class="flex flex-row items-center gap-2" on:click={openChat}>
+        <Button variant="secondary" class="flex flex-row items-center gap-2 w-full" on:click={openChat}>
           <MessageSquare size=16/>
           <span class="hidden sm:block">{$t('common.open_chat')}</span>
         </Button>
+        <div class="flex flex-col gap-1 w-full">
+          <Button variant="secondary" disabled={forms?.length === 0} class="flex flex-row items-center gap-2 w-full" on:click={openFormSelection}>
+            <FileSignature size=16/>
+            <span class="hidden sm:block">{$t('common.forms')}</span>
+          </Button>
+          {#if forms?.length === 0}
+            <div class="flex flex-row items-center gap-1">
+              <Info size=12/>
+              <p class="text-xs italic">
+                {$t('common.forms_select_disable_message')}
+              </p>
+            </div>
+          {/if}
+        </div>
+
       </div>
     </div>
   </Card.Header>
@@ -638,5 +663,35 @@
       on:inProgress={() => {updateTreatmentInProgress = true}}
       on:created={(event) => onTreatmentAdded(event.detail)}
       on:cancel={() => {editCreateTreatmentDialogOpened = false}}/>
+  </AlertDialog.Content>
+</AlertDialog.Root>
+
+<AlertDialog.Root bind:open={selectFormsDialogOpened} closeOnOutsideClick={true}>
+  <AlertDialog.Content>
+    <AlertDialog.Header>
+      <AlertDialog.Title>{$t('common.choose_form_to_sign')}</AlertDialog.Title>
+    </AlertDialog.Header>
+    <ScrollArea class="flex flex-col overflow-y-auto max-h-96">
+      {#each forms as formOption}
+        <Card.Root>
+          <Card.Header>
+            <Card.Title>{$t(`common.forms_types.${formOption.type}.title`)}</Card.Title>
+            <Card.Description>{$t(`common.forms_types.${formOption.type}.description`)}</Card.Description>
+          </Card.Header>
+          <Card.Footer>
+            <div class="flex flex-row gap-2 items-center">
+              <Button class="flex flex-row items-center gap-2">
+                <FileSignature size=14 />
+                <span>{$t('common.open_and_sign')}</span>
+              </Button>
+              <Button variant="secondary" class="flex flex-row items-center gap-2">
+                <ExternalLink size=14/>
+                <span>{$t('common.send')}</span>
+              </Button>
+            </div>
+          </Card.Footer>
+        </Card.Root>
+      {/each}
+    </ScrollArea>
   </AlertDialog.Content>
 </AlertDialog.Root>

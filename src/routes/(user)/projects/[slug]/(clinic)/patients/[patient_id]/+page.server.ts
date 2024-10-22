@@ -7,6 +7,8 @@ import type { ClinicPatient, ClinicTreatmentHistoryItem } from "$lib/models/clin
 import { addPatientFiles, createPatient, getPatient, updatePatient, uploadAvatar, uploadFile, addPatientImages, createPatientTreatment, updatePatientTreatment } from "$lib/server/clinic.db";
 import { ClinicStorageDirectories } from "$lib/enums/storage";
 import type { PaymentStatus } from "$lib/models/payment";
+import { getFormsTemplates } from "$lib/server/forms.db";
+import type { FormTemplate } from "$lib/models/form-template";
 
 let currentProject: Project;
 
@@ -15,12 +17,15 @@ export const load: PageServerLoad = async ({parent, params}) => {
   const project = parentData.project;
   currentProject = project;
   let patient: Partial<ClinicPatient> | undefined = {};
+  let forms: Partial<FormTemplate>[] | undefined = [];
   if (params.patient_id !== 'new') {
     patient = await getPatient(project, String(params.patient_id));
+    forms = await getFormsTemplates(project.id);
   }
   return {
     project,
     patient,
+    forms,
   }
 }
 

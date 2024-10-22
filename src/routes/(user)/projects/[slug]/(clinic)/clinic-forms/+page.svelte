@@ -14,7 +14,9 @@
 		if (toggle) {
 			createTemplate(type);
 		} else {
-			removeTemplate(projectForms[currentIndex].id, () => projectForms.splice(currentIndex, 1));
+			const formIdToRemove = projectForms.find(f=>f.type === type)?.id;
+			if (!formIdToRemove) { return };
+			removeTemplate(formIdToRemove, () => projectForms.splice(currentIndex, 1));
 		}
 	}
 

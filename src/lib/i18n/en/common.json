@@ -239,5 +239,9 @@
     "confirm": "Confirm",
     "doctor_name": "Doctor name",
     "patient_name": "Patient name",
-    "forms_page_usage_description": "Editing form templates for signature. Here you can view all types of existing forms. Adding forms will allow you to send them to customers for signature from the customer page."
+    "forms_page_usage_description": "Editing form templates for signature. Here you can view all types of existing forms. Adding forms will allow you to send them to customers for signature from the customer page.",
+    "forms_select_disable_message": "Add forms to your project first",
+    "choose_form_to_sign": "Choose a form to send for signing",
+    "send": "Send",
+    "open_and_sign": "Open & Sign"
 }
