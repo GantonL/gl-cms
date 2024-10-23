@@ -680,9 +680,11 @@
           </Card.Header>
           <Card.Footer>
             <div class="flex flex-row gap-2 items-center">
-              <Button class="flex flex-row items-center gap-2">
-                <FileSignature size=14 />
-                <span>{$t('common.open_and_sign')}</span>
+              <Button>
+                <a href={`/forms/sign/${formOption.type}`} class="flex flex-row items-center gap-2">
+                  <FileSignature size=14 />
+                  <span>{$t('common.open_and_sign')}</span>
+                </a>
               </Button>
               <Button variant="secondary" class="flex flex-row items-center gap-2">
                 <ExternalLink size=14/>

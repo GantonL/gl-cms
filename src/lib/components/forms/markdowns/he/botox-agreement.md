@@ -9,31 +9,37 @@ date: '05.10.2024'
   import DoctorSignature from '$lib/components/forms/sections/doctor-signature.svelte';
   import UserDeclaration from '$lib/components/forms/sections/user-declaration.svelte';
   import GenericText from '$lib/components/forms/sections/generic-text.svelte';
+  import {createEventDispatcher} from 'svelte';
 
   export let confirmed = false;
   let declaration = false;
   let signed = false;
   let doctorSigned = false;
   let areas = false;
+  const dispatch = createEventDispatcher();
 
   function onDeclerationChanged(changes: {value: boolean, state: {name: string, date: string, id: string }}) {
     declaration = changes.value;
-    confirmed = declaration && signed && areas && doctorSigned; 
+    confirmed = declaration && signed && areas && doctorSigned;
+    dispatch('confirmed', confirmed);
   }
 
   function onSignatureChanged(changes: {value: boolean, state: {name: string, date: string, signature: string }}) {
     signed = changes.value;
-    confirmed = declaration && signed && areas && doctorSigned; 
+    confirmed = declaration && signed && areas && doctorSigned;
+    dispatch('confirmed', confirmed);
   }
 
   function onDoctorSignatureChanged(changes: {value: boolean, state: {name: string, date: string, signature: string }}) {
     doctorSigned = changes.value;
-    confirmed = declaration && signed && areas && doctorSigned; 
+    confirmed = declaration && signed && areas && doctorSigned;
+    dispatch('confirmed', confirmed);
   }
 
   function onAreasChanged(changes: {value: boolean, state: {value: string}}) {
     areas = changes.value;
-    confirmed = declaration && signed && areas && doctorSigned; 
+    confirmed = declaration && signed && areas && doctorSigned;
+    dispatch('confirmed', confirmed); 
   }
 </script>
 ### טופס הסכמה: הזרקת בוטוקס - BOTOX (בוטוליניום טוקסין)
