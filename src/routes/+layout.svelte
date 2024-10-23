@@ -13,10 +13,10 @@
 	import type { SupportedLocales } from '$lib/types/language';
 	import { changeTheme, getTheme } from '$lib/theme/theme';
 	import { changeFont, getFont } from '$lib/font/font';
+	import { browser } from '$app/environment';
 	
 	$: path = $page.url.pathname;
 	initializeAuthentication();
-	
 	$: pageTitle = $page?.data?.seo?.title;
 	$: pageDescription = $page?.data?.seo?.description;
 	$: cookieBannerOpen = $page?.data?.cookieBannerOpen;
@@ -38,15 +38,16 @@
 		changeFont(getFont());
 	})
 </script>
-
-<ModeWatcher defaultMode='dark'/>
-<SEO title={pageTitle} description={pageDescription} slug={path}/>
-<div class="bg-background w-full h-full p-1 overflow-hidden">
-  <div class="border rounded-lg h-full overflow-hidden">
-		<Shell navigationPath={path}>
-			<slot />
-		</Shell>
+{#if browser}
+	<ModeWatcher defaultMode='dark'/>
+	<SEO title={pageTitle} description={pageDescription} slug={path}/>
+	<div class="bg-background w-full h-full p-1 overflow-hidden">
+		<div class="border rounded-lg h-full overflow-hidden">
+			<Shell navigationPath={path}>
+				<slot />
+			</Shell>
+		</div>
 	</div>
-</div>
-<CookiePreferencesBanner open={cookieBannerOpen} {preferences}/>
-<Toaster />
+	<CookiePreferencesBanner open={cookieBannerOpen} {preferences}/>
+	<Toaster />
+{/if}

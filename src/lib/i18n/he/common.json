@@ -126,7 +126,7 @@
     "patients_search_placholder": "שם, תעודת זהות או דוא\"ל...",
     "has_notes": "ישנן הערות",
     "takes_medications": "לוקח/ת תרופות",
-    "has_medical_condition": "קיים מצב רפואי כלשהו",
+    "has_medical_condition": "קיים מצב רפואי",
     "invalid_file_data": "קובץ לא תקין",
     "failed_to_updload_patient_avatar": "העלאת אווטאר למטופל נכשלה",
     "failed_to_update_patient_avatar": "עדכון אווטאר למטופל נכשל",
