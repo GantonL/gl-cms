@@ -681,7 +681,7 @@
           <Card.Footer>
             <div class="flex flex-row gap-2 items-center">
               <Button>
-                <a href={`/forms/sign/${formOption.type}`} class="flex flex-row items-center gap-2">
+                <a href={`/forms/sign/${formOption.type}?project=${project.id}&uid=${patient.id}`} class="flex flex-row items-center gap-2">
                   <FileSignature size=14 />
                   <span>{$t('common.open_and_sign')}</span>
                 </a>

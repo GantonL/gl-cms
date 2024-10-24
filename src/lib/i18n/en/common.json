@@ -243,5 +243,8 @@
     "forms_select_disable_message": "Add forms to your project first",
     "choose_form_to_sign": "Choose a form to send for signing",
     "send": "Send",
-    "open_and_sign": "Open & Sign"
+    "open_and_sign": "Open & Sign",
+    "form_sign_confirm_description": "Form is valid to complete the signing process",
+    "form_completed": "Form completed",
+    "save": "Save"
 }

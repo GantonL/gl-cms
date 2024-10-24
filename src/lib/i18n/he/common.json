@@ -242,5 +242,8 @@
     "forms_select_disable_message": "הוסיפו טפסים לפרויקט כדי לאפשר את הפעולה",
     "choose_form_to_sign": "ביחרו טופס לחתימה",
     "send": "שליחה",
-    "open_and_sign": "פתיחה וחתימה"
+    "open_and_sign": "פתיחה וחתימה",
+    "form_sign_confirm_description": "הטופס מוכן להשלמת תהליך החתימה",
+    "form_completed": "הטופס הושלם",
+    "save": "שמירה"
 }
