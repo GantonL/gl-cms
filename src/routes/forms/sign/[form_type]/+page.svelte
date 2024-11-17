@@ -18,6 +18,7 @@
   $:projectId = $page.data.projectId;
   $:userId = $page.data.userId;
   $:footer = $page.data.footer;
+  $:projectUrl = $page.data.projectUrl;
 
   onMount(async () => {
     const resourceId = `${$page.data.formType}_${locale.get()}`;
@@ -65,6 +66,9 @@
           // pdf.addImage(headerImage, 'PNG', imageX, 0.2, imageWidth, 1);
           const pageCountText = `${i}/${pageCount}`;
           pdf.text(pageCountText, baseMargin, textHight);
+          const urlTextWidth = pdf.getTextWidth(projectUrl);
+          const urlTextX = (pageWidth - urlTextWidth) / 2;
+          pdf.text(projectUrl, urlTextX, pdf.internal.pageSize.height - (baseMargin / 2))
           if (!footer) {
             continue;
           }  
