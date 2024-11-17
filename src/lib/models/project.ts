@@ -9,6 +9,9 @@ export interface Project {
   display_name?: string;
   url?: string;
   settings?: {
-    clinic?: ClinicSettings;
+    [ProjectType.Clinic]?: ClinicSettings;
+    [ProjectType.None]?: undefined;
+    [ProjectType.Store]?: undefined;
+    [ProjectType.Website]?: undefined;
   }
 }

@@ -137,7 +137,7 @@
     "successfuly_deleted_patient": "מטופל נמחק בהצלחה",
     "treatement_successfully_deleted": "טיפול נמחק בהצלחה",
     "failed_to_delete_treatment": "מחיקת טיפול נכשלה",
-    "failed_to_delete_patient_file": "מחיקת קןבץ למטופל נכשלה",
+    "failed_to_delete_patient_file": "מחיקת קובץ למטופל נכשלה",
     "successfuly_deleted_patient_file": "קובץ מטופל נמחק בהצלחה",
     "change_avatar": "החלפת אווטאר",
     "patient_details_description": "מידע כללי על המטופל/ת",
@@ -245,5 +245,6 @@
     "open_and_sign": "פתיחה וחתימה",
     "form_sign_confirm_description": "הטופס מוכן להשלמת תהליך החתימה",
     "form_completed": "הטופס הושלם",
-    "save": "שמירה"
+    "save": "שמירה",
+    "forms_footer_setting_description": "הגדרת כיתוב מאוחד שיוצג בתחתית כל טופס"
 }

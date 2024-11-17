@@ -7,6 +7,6 @@ export const load: PageServerLoad = async ({parent}) => {
     const forms = await getFormsTemplates(project.id);
     return {
         project,
-        forms
+        forms,
     }
 }

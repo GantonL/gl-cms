@@ -246,5 +246,6 @@
     "open_and_sign": "Open & Sign",
     "form_sign_confirm_description": "Form is valid to complete the signing process",
     "form_completed": "Form completed",
-    "save": "Save"
+    "save": "Save",
+    "forms_footer_setting_description": "Define a unified footer for all of your forms"
 }

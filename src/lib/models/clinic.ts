@@ -41,4 +41,7 @@ interface TreatmentType {
 export interface ClinicSettings {
     treatment_documentation_template?: string;
     treatments_types?: TreatmentType[];
+    forms?: {
+        footer?: string;
+    }
 }
