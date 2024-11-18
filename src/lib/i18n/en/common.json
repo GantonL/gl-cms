@@ -247,5 +247,6 @@
     "form_sign_confirm_description": "Form is valid to complete the signing process",
     "form_completed": "Form completed",
     "save": "Save",
-    "forms_footer_setting_description": "Define a unified footer for all of your forms"
+    "forms_footer_setting_description": "Define a unified footer for all of your forms",
+    "vivid_purple": "Vivid purple"
 }
