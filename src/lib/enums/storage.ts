@@ -1,3 +1,9 @@
+export enum ProjectsStorageDirectories {
+  Projects = 'projects',
+  Logo = 'logo',
+}
+
+
 export enum StoreStorageDirectories {
   Catgories = 'categories',
   Products = 'products'

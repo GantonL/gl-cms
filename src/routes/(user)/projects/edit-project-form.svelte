@@ -30,7 +30,7 @@
  
   const { form: formData, enhance } = form;
 </script>
-<form method="POST" action="?/edit" use:enhance>
+<form method="POST" action="?/edit" use:enhance enctype="multipart/form-data">
   <div class="grid gap-4 py-4">
     <div class="grid items-center gap-4">
       <Form.Field {form} name="display_name">
@@ -46,6 +46,15 @@
         <Form.Control let:attrs>
           <Form.Label>{$t('common.url')} <span class="text-sm text-muted-foreground">({$t('common.optional')})</span></Form.Label>
           <Input {...attrs} bind:value={$formData.url} />
+        </Form.Control>
+        <Form.FieldErrors />
+      </Form.Field>
+    </div>
+    <div class="grid items-center gap-4">
+      <Form.Field {form} name="logoFile">
+        <Form.Control let:attrs>
+          <Form.Label>{$t('common.logo')} <span class="text-sm text-muted-foreground">({$t('common.optional')})</span></Form.Label>
+          <Input type="file" {...attrs} bind:value={$formData.logoFile} />
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>

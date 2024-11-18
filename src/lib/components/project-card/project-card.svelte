@@ -14,6 +14,7 @@
 	import { zod } from "sveltekit-superforms/adapters";
 	import { editFormSchema, type EditFormSchema } from "../../../routes/(user)/projects/schema";
 	import type { SuperValidated } from "sveltekit-superforms/client";
+	import GlAvatar from "../gl-avatar/gl-avatar.svelte";
 
   let projectDeletionDialogState = false;
   let editDialogOpened = false;
@@ -68,7 +69,12 @@
     {:else}
       <a href={`/projects/${project ? project.id : undefined}/`} >
         <Card.Header>
-          <Card.Title>{project.display_name ?? project.name}</Card.Title>
+          <div class="flex flex-row items-center gap-2 justify-start">
+            {#if project.logo}
+              <GlAvatar url={project.logo.url}/>
+            {/if}
+            <Card.Title>{project.display_name ?? project.name}</Card.Title>
+          </div>
           <Card.Description></Card.Description>
         </Card.Header>
         <Card.Content>
