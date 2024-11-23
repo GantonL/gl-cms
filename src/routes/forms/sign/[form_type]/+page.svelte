@@ -51,8 +51,8 @@
     html2pdf().set(opt).from(element).toPdf().get('pdf').then((pdf) => {
       const pageCount = pdf.internal.getNumberOfPages();
       const pageWidth = pdf.internal.pageSize.width;
-      const imageWidth = 0.5; 
-      const imageHeight = 0.5; 
+      const imageWidth = 0.8; 
+      const imageHeight = 0.8; 
       const imageX = (pageWidth - imageWidth) / 2; 
       const imageY = 0.1;
       const hebrewFontFilePath = 'fonts/NotoSansHebrew-Regular.ttf'; 
