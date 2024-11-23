@@ -249,5 +249,6 @@
     "save": "Save",
     "forms_footer_setting_description": "Define a unified footer for all of your forms",
     "vivid_purple": "Vivid purple",
-    "logo": "Logo"
+    "logo": "Logo",
+    "delete_file_confirmation_description": "This action cannot be undone. This will permanently delete the request file."
 }

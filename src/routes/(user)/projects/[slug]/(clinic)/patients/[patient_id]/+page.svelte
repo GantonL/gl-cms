@@ -59,6 +59,8 @@
   let selectedPatientDataTab: string | undefined = 'treatments';
   let balanceDue: number | undefined;
   let selectFormsDialogOpened = false;
+  let deletePatientFilesDialogOpened = false;
+  let fileDeletionEventData: CustomEvent | undefined;
 
   export let form: ActionData;
 
@@ -226,21 +228,32 @@
     addPatientFilesDialogOpened = false;
   }
 
-  function deleteFile(event: CustomEvent) {
-    if (!patient?.id) return;
+  function onDeleteFile(event: CustomEvent) {
+    deletePatientFilesDialogOpened = true;
+    fileDeletionEventData = event;
+  }
+
+  function onDeleteFileCompletion() {
+    fileDeletionEventData = undefined;
+    deletePatientFilesDialogOpened = false;
+    deleteFileInProgress = false;
+  }
+
+  function deleteFile() {
+    if (!patient?.id || fileDeletionEventData === undefined) return;
     deleteFileInProgress = true;
     const body = new FormData();
-    body.append('path', event.detail.path);
-    body.append('url', event.detail.url);
-    body.append('date', event.detail.date);
+    body.append('path', fileDeletionEventData.detail.path);
+    body.append('url', fileDeletionEventData.detail.url);
+    body.append('date', fileDeletionEventData.detail.date);
     const errMsg = `common.failed_to_delete_patient_file`;
     fetch(`/projects/${project.id}/patients/${patient.id}/files`, { method: 'DELETE', body })
       .then((res) => {
         res?.json().then((res) => {
           if (res?.success) {
             toast.success(t.get('common.successfuly_deleted_patient_file'));
-            const indexHandler = (file: PateintImage) => file.path === event.detail.path && file.url === event.detail.url && file.date === event.detail.date;
-            const mainSegment = event.detail.path.split('/')[0];
+            const indexHandler = (file: PateintImage) => file.path === fileDeletionEventData!.detail.path && file.url === fileDeletionEventData!.detail.url && file.date === fileDeletionEventData!.detail.date;
+            const mainSegment = fileDeletionEventData!.detail.path.split('/')[0];
             let key: keyof Pick<ClinicPatient, 'files' | 'images'>;
             if (mainSegment === ClinicStorageDirectories.Files) {
               key = 'files'
@@ -252,14 +265,14 @@
           } else {
             toast.error(t.get(errMsg));
           }
-          deleteFileInProgress = false;
+          onDeleteFileCompletion();
         }, () => {
           toast.error(t.get(errMsg));
-          deleteFileInProgress = false;
+          onDeleteFileCompletion();
         });
       }, () => {
         toast.error(t.get(errMsg));
-        deleteFileInProgress = false;
+        onDeleteFileCompletion();
       });
   }
 
@@ -550,7 +563,7 @@
                     configuration={filesTableConfiguration} 
                     on:create={onAddFile}
                     on:view={onViewFile}
-                    on:delete={deleteFile}
+                    on:delete={onDeleteFile}
                     on:rowClicked={onViewFile}/>
                 {/if}
               </Tabs.Content>
@@ -562,7 +575,7 @@
                     scrollAreaClass="max-h-[600px]"
                     disabled={deleteFileInProgress || deletionInProgress || saveInProgress || avatarUpdateInProgress || patientFilesUploadInprogress}
                     on:create={onAddImage}
-                    on:delete={deleteFile}/>
+                    on:delete={onDeleteFile}/>
                 {/if}
               </Tabs.Content>
             </Tabs.Root>
@@ -600,6 +613,21 @@
     <AlertDialog.Footer>
       <AlertDialog.Cancel>{$t('common.cancel')}</AlertDialog.Cancel>
       <AlertDialog.Action class="bg-destructive text-destructive-foreground hover:bg-destructive/80" on:click={() => deletePatient(patient)}>{$t('common.delete').toUpperCase()}</AlertDialog.Action>
+    </AlertDialog.Footer>
+  </AlertDialog.Content>
+</AlertDialog.Root>
+
+<AlertDialog.Root bind:open={deletePatientFilesDialogOpened}>
+  <AlertDialog.Content>
+    <AlertDialog.Header>
+      <AlertDialog.Title>{$t('common.confirm_dialog_title')}</AlertDialog.Title>
+      <AlertDialog.Description>
+        {$t('common.delete_file_confirmation_description')}
+      </AlertDialog.Description>
+    </AlertDialog.Header>
+    <AlertDialog.Footer>
+      <AlertDialog.Cancel on:click={onDeleteFileCompletion}>{$t('common.cancel')}</AlertDialog.Cancel>
+      <AlertDialog.Action class="bg-destructive text-destructive-foreground hover:bg-destructive/80" on:click={() => deleteFile()}>{$t('common.delete').toUpperCase()}</AlertDialog.Action>
     </AlertDialog.Footer>
   </AlertDialog.Content>
 </AlertDialog.Root>
