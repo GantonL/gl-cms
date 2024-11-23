@@ -18,6 +18,7 @@
   $:projectId = $page.data.projectId;
   $:userId = $page.data.userId;
   $:footer = $page.data.footer;
+  $:header = $page.data.header;
   $:projectUrl = $page.data.projectUrl;
 
   onMount(async () => {
@@ -40,7 +41,7 @@
     const date = new Date();
     const baseMargin = 0.5;
     const opt = {
-      margin: [baseMargin, baseMargin, baseMargin, baseMargin],
+      margin: [baseMargin + 0.2, baseMargin, baseMargin, baseMargin],
       filename: `${formType}_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2 },
@@ -50,9 +51,10 @@
     html2pdf().set(opt).from(element).toPdf().get('pdf').then((pdf) => {
       const pageCount = pdf.internal.getNumberOfPages();
       const pageWidth = pdf.internal.pageSize.width;
-      // const headerImage = 'path/to/your/header-image.png';
-      // const imageWidth = 6; 
-      // const imageX = (pageWidth - imageWidth) / 2; // Calculate center x-position
+      const imageWidth = 0.5; 
+      const imageHeight = 0.5; 
+      const imageX = (pageWidth - imageWidth) / 2; 
+      const imageY = 0.1;
       const hebrewFontFilePath = 'fonts/NotoSansHebrew-Regular.ttf'; 
       pdf.addFileToVFS(hebrewFontFilePath, NotoHebrewBase64);
       pdf.addFont(hebrewFontFilePath, "notohebrew", "normal");
@@ -63,7 +65,7 @@
       for (let i = 1; i <= pageCount; i++) {
           pdf.setPage(i);
           const textHight = pdf.internal.pageSize.height - baseMargin;
-          // pdf.addImage(headerImage, 'PNG', imageX, 0.2, imageWidth, 1);
+          pdf.addImage(header, 'PNG', imageX, imageY, imageWidth, imageHeight);
           const pageCountText = `${i}/${pageCount}`;
           pdf.text(pageCountText, baseMargin, textHight);
           const urlTextWidth = pdf.getTextWidth(projectUrl);

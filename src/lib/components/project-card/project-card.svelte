@@ -71,7 +71,7 @@
         <Card.Header>
           <div class="flex flex-row items-center gap-2 justify-start">
             {#if project.logo}
-              <GlAvatar url={project.logo.url}/>
+              <GlAvatar url={`data:image/png;base64,${project.logo}`}/>
             {/if}
             <Card.Title>{project.display_name ?? project.name}</Card.Title>
           </div>

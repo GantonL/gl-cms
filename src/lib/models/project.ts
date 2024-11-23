@@ -1,6 +1,5 @@
 import type { ProjectType } from "$lib/enums/projects";
 import type { ClinicSettings } from "./clinic";
-import type { Image } from "./image";
 
 export interface Project {
   id: string;
@@ -15,5 +14,5 @@ export interface Project {
     [ProjectType.Store]?: undefined;
     [ProjectType.Website]?: undefined;
   },
-  logo?: Image;
+  logo?: string;
 }

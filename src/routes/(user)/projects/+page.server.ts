@@ -3,15 +3,13 @@ import { error, fail, redirect, type Actions } from "@sveltejs/kit";
 import { superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
 import { editFormSchema, formSchema } from "./schema";
-import { createProject, getProjects, updateProject, uploadFile } from "$lib/server/projects.db";
+import { createProject, getProjects, updateProject } from "$lib/server/projects.db";
 import type { PageServerLoad } from "./$types";
 import { getUser } from "$lib/server/users.db";
 import { UserPermissions } from "$lib/enums/permission";
 import type { ProjectType } from "$lib/enums/projects";
 import { t } from "$lib/i18n/translations";
 import { withFiles } from "sveltekit-superforms/server";
-import type { Image } from "$lib/models/image";
-import { ProjectsStorageDirectories } from "$lib/enums/storage";
 
 export const load: PageServerLoad = async (event) => {
   const autheticatedUser = await getAuthenticatedUser(event);
@@ -50,30 +48,22 @@ export const actions: Actions = {
           form,
         }));
     }
+    let logo = '';
+    if (form.data.logoFile) {
+      const buffer = await form.data.logoFile.arrayBuffer();
+      logo = Buffer.from(buffer).toString("base64"); 
+    }
     const projectCreated = await createProject({
       name: form.data.name,
       url: form.data.url,
       type: form.data.type as ProjectType,
+      logo,
     });
     if (!projectCreated) {
       return fail(400, 
         withFiles({
           form,
         }));
-    }
-    let logo: Image | undefined;
-    if (form.data.logoFile) {
-      const path = `${ProjectsStorageDirectories.Projects}/${projectCreated.id}/${ProjectsStorageDirectories.Logo}/${form.data.logoFile.name}`;
-      logo = await uploadFile(path, form.data.logoFile);
-      if (!logo) {
-        return fail(400, 
-          withFiles({
-            form,
-          }));
-      }
-      await updateProject(projectCreated.id!, {
-        logo,
-      });
     }
     return {
       form,
@@ -93,10 +83,10 @@ export const actions: Actions = {
           form,
         }));  
     }
-    let logo: Image | undefined;
+    let logo = '';
     if (form.data.logoFile) {
-      const path = `${ProjectsStorageDirectories.Projects}/${form.data.id}/${ProjectsStorageDirectories.Logo}/${form.data.logoFile.name}`;
-      logo = await uploadFile(path, form.data.logoFile)
+      const buffer = await form.data.logoFile.arrayBuffer();
+      logo = Buffer.from(buffer).toString("base64");
     }
     const projectUpdated = await updateProject(form.data.id!, {
       display_name: form.data.display_name,

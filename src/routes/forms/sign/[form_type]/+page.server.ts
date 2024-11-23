@@ -7,11 +7,15 @@ export const load: PageServerLoad = async (event) => {
   const projectId = event.url.searchParams.get('project');
   const userId = event.url.searchParams.get('uid');
   let footer = ''; 
+  let header = ''; 
   let projectUrl = '';
   if (projectId) {
     const project = await getProject(projectId);
     if (project?.settings) {
       footer = project.settings[project.type]?.forms?.footer ?? '';
+    }
+    if (project?.logo) {
+      header = project.logo;
     }
     projectUrl = project?.url ?? '';
   }
@@ -20,6 +24,7 @@ export const load: PageServerLoad = async (event) => {
     projectId, 
     userId,
     footer,
+    header,
     projectUrl,
     seo: {
       title: t.get(`common.forms_types.${formType}.title`),
