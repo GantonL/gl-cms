@@ -6,6 +6,7 @@
   import { Menu, X } from 'lucide-svelte';
 	import { createEventDispatcher } from "svelte";
 	import Button from "../ui/button/button.svelte";
+	import GlAvatar from "../gl-avatar/gl-avatar.svelte";
   const dispatch = createEventDispatcher();
   let menuOpened = false;
 
@@ -23,8 +24,10 @@
         <Menu size=20/>
       {/if}
     </Button>
-    <!-- Optional brand logo -->
-    <a href="/" class="text-2xl font-extrabold self-center text-nowrap max-sm:hidden">{$currentProject?.display_name ?? `${AppName} ${$currentProject ? `| ${$currentProject.name}` : ''}`}</a>
+    {#if $currentProject && $currentProject.logo}
+      <GlAvatar url={`data:image/png;base64,${$currentProject.logo}`}/>
+    {/if}
+    <a href={$currentProject ? `/projects/${$currentProject.id}` : '/'} class="text-2xl font-extrabold self-center text-nowrap max-sm:hidden">{$currentProject?.display_name ?? `${AppName} ${$currentProject ? `| ${$currentProject.name}` : ''}`}</a>
   </div>
   <div class="flex flex-row justify-end gap-2">
     <ThemeSwitcher />

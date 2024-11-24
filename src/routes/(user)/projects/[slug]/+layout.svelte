@@ -10,6 +10,7 @@
       name: project.name, 
       type: project.type,
       id: project.id,
+      logo: project.logo,
     });
   })
   onDestroy(() => {
