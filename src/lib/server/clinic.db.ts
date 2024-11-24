@@ -297,3 +297,24 @@ export const getClinicTotalPayments = async (project: Project): Promise<number> 
   const data = query?.data(); 
   return data?.totalPayments ?? 0;
 }
+
+export const getClinicTotalBalanceDue = async (project: Project): Promise<number> => {
+  const app = getSecondaryApp(project);
+  if (!app) { return 0 };
+  const balanceDueQuery = await getFirestore(app).collection(ClinicCollections.TreatmentsHistory)
+    .where('payment_status', 'in', ['awaiting', 'in_process'])
+    .aggregate({
+      balanceDue: AggregateField.sum('price'),
+    })
+    .get();
+  const awaitingBalanceDue = balanceDueQuery?.data()?.balanceDue;
+  const partialBalanceDueQuery = await getFirestore(app).collection(ClinicCollections.TreatmentsHistory)
+    .where('payment_status', '==', 'partial')
+    .aggregate({
+      price: AggregateField.sum('price'),
+      paid: AggregateField.sum('paid'),
+    })
+    .get();
+  const partialBalanceDue = (partialBalanceDueQuery?.data()?.price ?? 0) - (partialBalanceDueQuery?.data()?.paid ?? 0);
+  return (awaitingBalanceDue ?? 0) + (partialBalanceDue ?? 0);
+}

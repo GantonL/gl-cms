@@ -250,5 +250,7 @@
     "forms_footer_setting_description": "Define a unified footer for all of your forms",
     "vivid_purple": "Vivid purple",
     "logo": "Logo",
-    "delete_file_confirmation_description": "This action cannot be undone. This will permanently delete the request file."
+    "delete_file_confirmation_description": "This action cannot be undone. This will permanently delete the request file.",
+    "patients_dashboard_description": "Total accumulated patients",
+    "total_balance_due_dashboard_description": "Total accumulated balance due"
 }

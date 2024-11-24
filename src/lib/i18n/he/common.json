@@ -249,5 +249,7 @@
     "forms_footer_setting_description": "הגדרת כיתוב מאוחד שיוצג בתחתית כל טופס",
     "vivd_purple": "סגול נמרץ",
     "logo": "לוגו",
-    "delete_file_confirmation_description": "פעולה זו איננה ניתנת לשחזור והיא תמחק את הקובץ לצמיתות"
+    "delete_file_confirmation_description": "פעולה זו איננה ניתנת לשחזור והיא תמחק את הקובץ לצמיתות",
+    "patients_dashboard_description": "כל המטופלים שנצטברו עד כה",
+    "total_balance_due_dashboard_description": "סך כל היתרות לתשלום"
 }
