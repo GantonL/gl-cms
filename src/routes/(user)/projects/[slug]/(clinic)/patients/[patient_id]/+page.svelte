@@ -309,10 +309,11 @@
       acc+=curr.paid ?? 0;
       return acc;
     }, 0)
-    balanceDue = patientTreatmentsHistory.filter(t => t.payment_status === 'awaiting' || t.payment_status === 'in_process' || t.payment_status === 'partial').reduce((acc, curr) => {
-      acc+=((curr.price ?? 0) - (curr.paid ?? 0));
+    const totalPrices = patientTreatmentsHistory.reduce((acc, curr) => {
+      acc+=curr.price ?? 0;
       return acc;
-    }, 0)
+    }, 0);
+    balanceDue = totalPrices - receivedPayments; 
   }
 
   function openFormSelection() {

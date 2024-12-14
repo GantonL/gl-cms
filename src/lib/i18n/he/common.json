@@ -216,7 +216,7 @@
         "received": "התקבל"
     },
     "total_payments": "תשלומים",
-    "total_payments_dashboard_description": "סכום כל התשלומים שהתקבלו אי פעם",
+    "total_payments_dashboard_description": "סך התשלומים שהתקבלו",
     "received_payments": "תשלומים שהתקבלו",
     "balance_due": "יתרה לתשלום",
     "paid": "שולם",
@@ -250,6 +250,6 @@
     "vivd_purple": "סגול נמרץ",
     "logo": "לוגו",
     "delete_file_confirmation_description": "פעולה זו איננה ניתנת לשחזור והיא תמחק את הקובץ לצמיתות",
-    "patients_dashboard_description": "כל המטופלים שנצטברו עד כה",
-    "total_balance_due_dashboard_description": "סך כל היתרות לתשלום"
+    "patients_dashboard_description": "מטופלים פעילים",
+    "total_balance_due_dashboard_description": "סך היתרות לתשלום"
 }

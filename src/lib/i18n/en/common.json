@@ -217,7 +217,7 @@
         "received": "Received"
     },
     "total_payments": "Total payments",
-    "total_payments_dashboard_description": "A sum of all time received payments",
+    "total_payments_dashboard_description": "A sum of all received payments",
     "received_payments": "Received payments",
     "balance_due": "Blanace due",
     "paid": "Paid",
@@ -251,6 +251,6 @@
     "vivid_purple": "Vivid purple",
     "logo": "Logo",
     "delete_file_confirmation_description": "This action cannot be undone. This will permanently delete the request file.",
-    "patients_dashboard_description": "Total accumulated patients",
+    "patients_dashboard_description": "Total active patients",
     "total_balance_due_dashboard_description": "Total accumulated balance due"
 }
